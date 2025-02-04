@@ -1,0 +1,22 @@
+{
+  "name": "jaci-ui",
+  "version": "0.0.0",
+  "description": "Jaci UI Components",
+  "license": "MPL-2.0",
+  "repository": "https://github.com/ribborges/jaci",
+  "author": {
+    "name": "Richard Borges",
+    "email": "contato@richardborges.dev",
+    "url": "https://richardborges.dev"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@types/node": "^22.13.1",
+    "@types/react": "^19.0.8",
+    "react": "^19.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}

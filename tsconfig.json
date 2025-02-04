@@ -1,0 +1,31 @@
+{
+    "plugins": [],
+    "include": [
+        "./"
+    ],
+    "exclude": [
+        "node_modules",
+    ],
+    "compilerOptions": {
+        "module": "ESNext",
+        "target": "ES2024",
+        "jsx": "react-jsx",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "allowJs": true,
+        "strict": true,
+        "sourceMap": false,
+        "noEmitOnError": true,
+        "baseUrl": ".",
+        "lib": [
+            "DOM",
+            "ESNext"
+        ],
+        "types": [
+            "node"
+        ],
+        "paths": {}
+    }
+}
