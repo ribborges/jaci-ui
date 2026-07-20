@@ -60,7 +60,3 @@ the package exports and types. `pnpm fixtures:pack-check` installs the real pack
 the Vite, Next, and React Router consumer fixtures.
 
 Run `pnpm dev` to watch all available development targets together.
-
-The legacy folder is reference material only. New public APIs live in packages/ui;
-project-specific content, translations, and integrations are intentionally not part of the
-library.
