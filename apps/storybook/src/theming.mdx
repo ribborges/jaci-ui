@@ -1,0 +1,40 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Guides/Theming" />
+
+# Themes
+
+Jaci UI includes light and dark semantic tokens without a client-side provider. Set
+`data-jaci-theme` on the HTML element when the server renders the page, or on a local wrapper
+when only one area needs a different palette:
+
+```tsx
+<html data-jaci-theme="dark">...</html>
+
+// Or scope a preview without changing the rest of the application.
+<main data-jaci-theme="dark">...</main>
+```
+
+Override the documented CSS custom properties beginning with `--jaci-` in the application
+stylesheet for brand-specific values. The component API remains the same and the static CSS
+does not reset the consuming application's styles.
+
+```css
+:root {
+  --jaci-colors-accent-default: #5b21b6;
+  --jaci-colors-accent-hover: #4c1d95;
+}
+```
+
+Panda users can additionally import the optional preset to share the same token vocabulary in
+application code:
+
+```ts
+import { defineConfig } from "@pandacss/dev";
+import jaciPreset from "jaci-ui/panda-preset";
+
+export default defineConfig({
+  presets: [jaciPreset],
+  // The application still owns its own Panda output and reset policy.
+});
+```

@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "noEmit": true,
+    "types": ["vitest/globals"]
+  },
+  "include": [".storybook", "src", "vitest.config.ts"]
+}
