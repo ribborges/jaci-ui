@@ -1,0 +1,33 @@
+name: Bug report
+description: Report reproducible behavior that differs from Jaci UI documentation.
+title: "[bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for helping improve Jaci UI.
+  - type: input
+    id: version
+    attributes:
+      label: Jaci UI version
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Include a minimal repository, sandbox, or clear steps.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
