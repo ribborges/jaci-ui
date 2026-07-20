@@ -198,6 +198,19 @@ sketch
 # https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
 
 .yarn/*
+
+### Jaci UI workspace ###
+.turbo/
+**/.turbo/
+.pnpm-store/
+.artifacts/
+.fixture-pack-check/
+**/dist/
+**/styled-system/
+**/storybook-static/
+**/.next/
+playwright-report/
+test-results/
 !.yarn/releases
 !.yarn/patches
 !.yarn/plugins
