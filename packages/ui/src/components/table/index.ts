@@ -1,0 +1,31 @@
+export { Table } from "./table";
+export {
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableContainer,
+  TableEmpty,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRoot,
+  TableRow,
+  TableSelectionCell,
+  TableSelectionHeader,
+} from "./table";
+export type {
+  TableBodyProps,
+  TableCaptionProps,
+  TableCellProps,
+  TableContainerProps,
+  TableDensity,
+  TableEmptyProps,
+  TableFooterProps,
+  TableHeadProps,
+  TableHeaderProps,
+  TableRootProps,
+  TableRowProps,
+  TableSelectionCellProps,
+  TableSelectionHeaderProps,
+  TableSortDirection,
+} from "./table";

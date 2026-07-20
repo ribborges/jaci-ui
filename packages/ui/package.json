@@ -1,0 +1,107 @@
+{
+  "name": "jaci-ui",
+  "description": "Accessible, themeable React components by Jaci UI",
+  "version": "0.1.0",
+  "license": "MIT",
+  "author": {
+    "name": "Richard Borges",
+    "email": "contato@richardborges.dev",
+    "url": "https://richardborges.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ribborges/jaci-ui.git",
+    "directory": "packages/ui"
+  },
+  "bugs": {
+    "url": "https://github.com/ribborges/jaci-ui/issues"
+  },
+  "homepage": "https://github.com/ribborges/jaci-ui#readme",
+  "keywords": [
+    "react",
+    "components",
+    "design-system",
+    "panda-css",
+    "accessibility",
+    "ssr"
+  ],
+  "type": "module",
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "sideEffects": [
+    "./dist/styles.css"
+  ],
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./styles.css": "./dist/styles.css",
+    "./panda-preset": {
+      "import": {
+        "types": "./dist/panda-preset.d.ts",
+        "default": "./dist/panda-preset.js"
+      },
+      "require": {
+        "types": "./dist/panda-preset.d.cts",
+        "default": "./dist/panda-preset.cjs"
+      }
+    }
+  },
+  "peerDependencies": {
+    "@pandacss/dev": "^1.4.2",
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@pandacss/dev": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.6.0"
+  },
+  "scripts": {
+    "clean": "rimraf dist src/styled-system",
+    "panda:codegen": "panda codegen --clean --config panda.config.ts",
+    "panda:css": "panda cssgen --config panda.config.ts --outfile dist/styles.css",
+    "build": "pnpm panda:codegen && tsdown && pnpm panda:css && pnpm verify:client-boundaries",
+    "dev": "pnpm panda:codegen && tsdown --watch",
+    "lint": "biome lint src panda.config.ts tsdown.config.ts",
+    "format": "biome format --write src panda.config.ts tsdown.config.ts",
+    "format:check": "biome format src panda.config.ts tsdown.config.ts",
+    "typecheck": "pnpm panda:codegen && tsc --noEmit",
+    "test": "pnpm panda:codegen && vitest run",
+    "test:watch": "pnpm panda:codegen && vitest",
+    "verify:client-boundaries": "node scripts/verify-client-boundaries.mjs",
+    "package:check": "pnpm build && node scripts/package-check.mjs"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@pandacss/dev": "^1.11.4",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "jsdom": "^27.4.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "tsdown": "^0.22.4"
+  }
+}

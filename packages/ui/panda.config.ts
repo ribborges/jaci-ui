@@ -1,0 +1,171 @@
+import { defineConfig } from "@pandacss/dev";
+
+import {
+  accordionRecipe,
+  badgeRecipe,
+  buttonRecipe,
+  cardRecipe,
+  collapsibleRecipe,
+  controlRecipe,
+  dialogRecipe,
+  fieldRecipe,
+  gridRecipe,
+  headingRecipe,
+  inputRecipe,
+  linkRecipe,
+  menuRecipe,
+  navbarRecipe,
+  paragraphRecipe,
+  selectRecipe,
+  separatorRecipe,
+  sidebarRecipe,
+  spinnerRecipe,
+  stackRecipe,
+  switchRecipe,
+  tabsRecipe,
+  textRecipe,
+  textareaRecipe,
+  toastRecipe,
+  bottomNavigationRecipe,
+} from "./src/styles/recipes";
+import { alertRecipe } from "./src/components/alert/alert.recipe";
+import { avatarRecipe } from "./src/components/avatar/avatar.recipe";
+import { breadcrumbsRecipe } from "./src/components/breadcrumbs/breadcrumbs.recipe";
+import { checkboxRecipe } from "./src/components/controls/checkbox.recipe";
+import { checkboxGroupRecipe } from "./src/components/checkbox-group/checkbox-group.recipe";
+import { datePickerRecipe } from "./src/components/date-picker/date-picker.recipe";
+import { drawerRecipe } from "./src/components/drawer/drawer.recipe";
+import { menubarRecipe } from "./src/components/menubar/menubar.recipe";
+import { paginationRecipe } from "./src/components/pagination/pagination.recipe";
+import { popoverRecipe } from "./src/components/popover/popover.recipe";
+import { progressKeyframes, progressRecipe } from "./src/components/progress/progress.recipe";
+import { skeletonKeyframes, skeletonRecipe } from "./src/components/skeleton/skeleton.recipe";
+import { tooltipRecipe } from "./src/components/tooltip/tooltip.recipe";
+import { uploadRecipe } from "./src/components/upload/upload.recipe";
+import { optionSelectorRecipe } from "./src/components/option-selector/option-selector.recipe";
+import { fieldsetRecipe } from "./src/components/fieldset/fieldset.recipe";
+import { formRecipe } from "./src/components/form/form.recipe";
+import { visuallyHiddenRecipe } from "./src/components/visually-hidden/visually-hidden.recipe";
+import { comboboxRecipe } from "./src/components/combobox/combobox.recipe";
+import { numberFieldRecipe } from "./src/components/number-field/number-field.recipe";
+import { radioGroupRecipe } from "./src/components/radio-group/radio-group.recipe";
+import { sliderRecipe } from "./src/components/slider/slider.recipe";
+import { colorPickerRecipe } from "./src/components/color-picker/color-picker.recipe";
+import { dataViewRecipe } from "./src/components/data-view/data-view.recipe";
+import { listRecipe } from "./src/components/list/list.recipe";
+import { tableRecipe } from "./src/components/table/table.recipe";
+import { copyableRecipe } from "./src/components/copyable/copyable.recipe";
+import { scrollAreaRecipe } from "./src/components/scroll-area/scroll-area.recipe";
+import { toggleGroupRecipe } from "./src/components/toggle-group/toggle-group.recipe";
+import { toggleRecipe } from "./src/components/toggle/toggle.recipe";
+import { toolbarRecipe } from "./src/components/toolbar/toolbar.recipe";
+import { commandRecipe } from "./src/components/command/command.recipe";
+import { meterRecipe } from "./src/components/meter/meter.recipe";
+import { navigationMenuRecipe } from "./src/components/navigation-menu/navigation-menu.recipe";
+import { rangeSliderRecipe } from "./src/components/range-slider/range-slider.recipe";
+import { treeViewRecipe } from "./src/components/tree-view/tree-view.recipe";
+import { tagsInputRecipe } from "./src/components/tags-input/tags-input.recipe";
+import { jaciConditions, jaciTheme } from "./src/styles/theme";
+
+export default defineConfig({
+  jsxFramework: "react",
+  preflight: false,
+  prefix: "jaci",
+  hash: false,
+  strictTokens: true,
+  cssVarRoot: ":where(:root, [data-jaci-theme])",
+  conditions: jaciConditions,
+  include: ["./src/**/*.{ts,tsx}"],
+  exclude: ["./src/styled-system/**/*", "**/*.test.{ts,tsx}", "**/*.stories.{ts,tsx}"],
+  outdir: "src/styled-system",
+  outExtension: "js",
+  theme: {
+    ...jaciTheme,
+    extend: {
+      ...jaciTheme.extend,
+      keyframes: {
+        ...jaciTheme.extend.keyframes,
+        ...progressKeyframes,
+        ...skeletonKeyframes,
+      },
+      recipes: {
+        heading: headingRecipe,
+        text: textRecipe,
+        paragraph: paragraphRecipe,
+        link: linkRecipe,
+        badge: badgeRecipe,
+        layoutStack: stackRecipe,
+        layoutGrid: gridRecipe,
+        separator: separatorRecipe,
+        spinner: spinnerRecipe,
+        button: buttonRecipe,
+        input: inputRecipe,
+        textarea: textareaRecipe,
+        control: controlRecipe,
+        skeleton: skeletonRecipe,
+        form: formRecipe,
+        screenReaderOnly: visuallyHiddenRecipe,
+        toggle: toggleRecipe,
+      },
+      slotRecipes: {
+        accordion: accordionRecipe,
+        card: cardRecipe,
+        collapsible: collapsibleRecipe,
+        dialog: dialogRecipe,
+        drawer: drawerRecipe,
+        menubar: menubarRecipe,
+        field: fieldRecipe,
+        menu: menuRecipe,
+        navbar: navbarRecipe,
+        select: selectRecipe,
+        sidebar: sidebarRecipe,
+        tabs: tabsRecipe,
+        toast: toastRecipe,
+        bottomNavigation: bottomNavigationRecipe,
+        toggleSwitch: switchRecipe,
+        alert: alertRecipe,
+        avatar: avatarRecipe,
+        breadcrumbs: breadcrumbsRecipe,
+        datePicker: datePickerRecipe,
+        pagination: paginationRecipe,
+        popover: popoverRecipe,
+        progress: progressRecipe,
+        tooltip: tooltipRecipe,
+        upload: uploadRecipe,
+        optionSelector: optionSelectorRecipe,
+        fieldset: fieldsetRecipe,
+        combobox: comboboxRecipe,
+        checkbox: checkboxRecipe,
+        checkboxGroup: checkboxGroupRecipe,
+        numberField: numberFieldRecipe,
+        radioGroup: radioGroupRecipe,
+        slider: sliderRecipe,
+        colorPicker: colorPickerRecipe,
+        dataView: dataViewRecipe,
+        list: listRecipe,
+        table: tableRecipe,
+        copyable: copyableRecipe,
+        scrollArea: scrollAreaRecipe,
+        toggleGroup: toggleGroupRecipe,
+        toolbar: toolbarRecipe,
+        command: commandRecipe,
+        meter: meterRecipe,
+        navigationMenu: navigationMenuRecipe,
+        rangeSlider: rangeSliderRecipe,
+        treeView: treeViewRecipe,
+        tagsInput: tagsInputRecipe,
+      },
+    },
+  },
+  staticCss: {
+    recipes: "*",
+  },
+  globalCss: {
+    "[data-jaci-theme]": {
+      backgroundColor: "surface.canvas",
+      color: "fg.default",
+      colorScheme: "light dark",
+      fontFamily: "system-ui, sans-serif",
+    },
+  },
+});
