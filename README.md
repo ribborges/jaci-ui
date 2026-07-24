@@ -11,7 +11,7 @@ Panda CSS tokens, static CSS distribution, and SSR-safe components.
 
 ## Local development
 
-Use Node 22.14 or newer, then install dependencies:
+Use Node 22.18 or newer, then install dependencies:
 
 ```sh
 corepack enable
