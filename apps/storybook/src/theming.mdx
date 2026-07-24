@@ -23,7 +23,53 @@ does not reset the consuming application's styles.
 :root {
   --jaci-colors-accent-default: #5b21b6;
   --jaci-colors-accent-hover: #4c1d95;
+  --jaci-colors-fg-on-accent: #ffffff;
 }
+```
+
+## Semantic token contract
+
+The following semantic variables are stable customization points. Override them on `:root` for a
+global theme or on a `[data-jaci-theme]` scope for a local theme.
+
+| Token | CSS variable | Intended use |
+| --- | --- | --- |
+| `surface.canvas` | `--jaci-colors-surface-canvas` | App/page background |
+| `surface.default` | `--jaci-colors-surface-default` | Default control and panel background |
+| `surface.raised` | `--jaci-colors-surface-raised` | Cards, popovers and elevated surfaces |
+| `surface.subtle` | `--jaci-colors-surface-subtle` | Hover, selected and muted surfaces |
+| `surface.overlay` | `--jaci-colors-surface-overlay` | Backdrop and translucent overlays |
+| `fg.default` | `--jaci-colors-fg-default` | Primary text and icons |
+| `fg.muted` | `--jaci-colors-fg-muted` | Secondary text and descriptions |
+| `fg.onAccent` | `--jaci-colors-fg-on-accent` | Text on accent-colored controls |
+| `border.default` | `--jaci-colors-border-default` | Standard borders and dividers |
+| `border.strong` | `--jaci-colors-border-strong` | Emphasized borders |
+| `border.interactive` | `--jaci-colors-border-interactive` | Focus and interactive outlines |
+| `accent.default` | `--jaci-colors-accent-default` | Primary action and selection color |
+| `accent.hover` | `--jaci-colors-accent-hover` | Hover/active accent color |
+| `success` | `--jaci-colors-success` | Positive status |
+| `warning` | `--jaci-colors-warning` | Caution status |
+| `danger` | `--jaci-colors-danger` | Error/destructive status |
+| `link.default` | `--jaci-colors-link-default` | Link text |
+| `link.hover` | `--jaci-colors-link-hover` | Link hover text |
+
+Primitive colors (`neutral.*`, `blue.*`, `green.*`, `amber.*`, `red.*`), radii, shadows and
+durations are also available through the optional Panda preset. Components consume semantic
+tokens so applications should prefer the variables above when defining a brand theme.
+
+### Accent contrast
+
+When changing `accent.default` or `accent.hover`, always set `fg.onAccent` to a color with at
+least WCAG AA contrast (4.5:1 for normal text, 3:1 for large text and UI graphics) against both
+accent surfaces. For a user-selected accent, calculate the relative luminance in the application
+and choose black or white foreground text accordingly; do not assume the default white value is
+safe for every brand color.
+
+```ts
+const root = document.documentElement;
+root.style.setProperty("--jaci-colors-accent-default", userAccent);
+root.style.setProperty("--jaci-colors-accent-hover", userAccentHover);
+root.style.setProperty("--jaci-colors-fg-on-accent", readableForeground);
 ```
 
 Panda users can additionally import the optional preset to share the same token vocabulary in

@@ -41,9 +41,9 @@ export interface OptionSelectorProps
   defaultValue?: OptionSelectorValue;
   /** Called with the next selected value after an option changes. */
   onValueChange?: (value: OptionSelectorValue) => void;
-  /** Native change event callback kept for compatibility with the legacy API. */
+  /** Native change event callback. */
   onChange?: ChangeEventHandler<HTMLInputElement>;
-  /** Layout of the option cards. Defaults to the horizontal legacy layout. */
+  /** Layout of the option cards. Defaults to the horizontal layout. */
   orientation?: "horizontal" | "vertical";
   /** Responsive number of columns in the option grid. */
   columns?: 1 | 2 | 3 | 4;

@@ -1,0 +1,28 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Guides/Releases" />
+
+# Releases
+
+The published package is `jaci-ui`. The root workspace version is private and is not published.
+
+## Change workflow
+
+Create a Changeset for every public API, behavior, accessibility or styling change:
+
+```sh
+pnpm changeset
+```
+
+Choose `patch` for a fix, `minor` for a backwards-compatible feature and `major` for a breaking
+change. The release workflow opens a version pull request after changes reach `main`. Merge that
+pull request, then run the `Publish package` workflow after CI succeeds.
+
+The npm workflow uses GitHub Actions Trusted Publishing/OIDC. No long-lived npm token belongs in
+the repository or in GitHub secrets.
+
+## Pre-1.0 policy
+
+The package remains in the `0.x` phase while component APIs and styling contracts mature. Every
+breaking change must include migration notes. The initial `0.1.0` baseline does not carry
+historical Changesets from before the first public release.

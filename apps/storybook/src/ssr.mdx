@@ -1,0 +1,29 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Guides/SSR and Client Components" />
+
+# SSR and client components
+
+Jaci UI distributes static CSS separately from JavaScript. Import `jaci-ui/styles.css` once from
+the application root and set the initial theme in server-rendered HTML:
+
+```tsx
+<html data-jaci-theme="light">
+  <body>{children}</body>
+</html>
+```
+
+Static components such as `Heading`, `Text`, `List`, `Table`, `Meter` and `DataView` can be
+rendered directly by a server component. Interactive modules preserve their `"use client"`
+boundary. In a Next.js App Router application, compose those modules inside a client component:
+
+```tsx
+// app/components/ColorPickerField.tsx
+"use client";
+
+import { ColorPicker } from "jaci-ui";
+```
+
+Do not read `window`, `document`, storage or media queries during render. If a theme or user
+preference is persisted, resolve the initial value on the server and apply client-side updates
+only after interaction or hydration.

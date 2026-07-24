@@ -4,8 +4,9 @@ import { DatePicker, Stack, Text } from "jaci-ui";
 
 const meta = {
   title: "Forms/DatePicker",
+  component: DatePicker.Root,
   tags: ["autodocs"],
-} satisfies Meta;
+} satisfies Meta<typeof DatePicker.Root>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -65,6 +66,34 @@ export const Calendar: Story = {
       </Text>
     </Stack>
   ),
+  parameters: {
+    docs: {
+      source: {
+        language: "tsx",
+        code: `<DatePicker.Root defaultValue={new Date(2025, 3, 15, 12)} name="release-date">
+  <DatePicker.Label>Release date</DatePicker.Label>
+  <DatePicker.Control>
+    <DatePicker.Trigger>
+      <DatePicker.Value placeholder="Choose a date" />
+    </DatePicker.Trigger>
+    <DatePicker.Clear />
+  </DatePicker.Control>
+  <DatePicker.Portal>
+    <DatePicker.Positioner align="start" side="bottom" sideOffset={8}>
+      <DatePicker.Popup>
+        <DatePicker.Header>
+          <DatePicker.Previous />
+          <DatePicker.Caption />
+          <DatePicker.Next />
+        </DatePicker.Header>
+        <DatePicker.Calendar />
+      </DatePicker.Popup>
+    </DatePicker.Positioner>
+  </DatePicker.Portal>
+</DatePicker.Root>`,
+      },
+    },
+  },
 };
 
 export const Controlled: Story = {
@@ -100,6 +129,36 @@ export const Controlled: Story = {
       </Stack>
     );
   },
+  parameters: {
+    docs: {
+      source: {
+        language: "tsx",
+        code: `const [value, setValue] = useState<Date | null>(new Date());
+
+<DatePicker.Root value={value} onValueChange={setValue}>
+  <DatePicker.Label>Controlled date</DatePicker.Label>
+  <DatePicker.Control>
+    <DatePicker.Trigger>
+      <DatePicker.Value placeholder="Choose a date" />
+    </DatePicker.Trigger>
+    <DatePicker.Clear />
+  </DatePicker.Control>
+  <DatePicker.Portal>
+    <DatePicker.Positioner>
+      <DatePicker.Popup>
+        <DatePicker.Header>
+          <DatePicker.Previous />
+          <DatePicker.Caption />
+          <DatePicker.Next />
+        </DatePicker.Header>
+        <DatePicker.Calendar />
+      </DatePicker.Popup>
+    </DatePicker.Positioner>
+  </DatePicker.Portal>
+</DatePicker.Root>`,
+      },
+    },
+  },
 };
 
 export const DisabledDates: Story = {
@@ -109,6 +168,19 @@ export const DisabledDates: Story = {
       isDateDisabled={(date) => date.getDay() === 0 || date.getDay() === 6}
     />
   ),
+  parameters: {
+    docs: {
+      source: {
+        language: "tsx",
+        code: `<DatePicker.Root
+  defaultValue={null}
+  isDateDisabled={(date) => date.getDay() === 0 || date.getDay() === 6}
+>
+  {/* compose the Label, Control, Portal, Popup and Calendar parts */}
+</DatePicker.Root>`,
+      },
+    },
+  },
 };
 
 export const BoundedCalendar: Story = {
@@ -120,4 +192,37 @@ export const BoundedCalendar: Story = {
       minDate={new Date(2025, 3, 7, 12, 0, 0, 0)}
     />
   ),
+  parameters: {
+    docs: {
+      source: {
+        language: "tsx",
+        code: `<DatePicker.Root
+  defaultValue={null}
+  minDate={new Date(2025, 3, 7, 12)}
+  maxDate={new Date(2025, 3, 30, 12)}
+  isDateDisabled={(date) => date.getDay() === 0 || date.getDay() === 6}
+>
+  <DatePicker.Label>Release date</DatePicker.Label>
+  <DatePicker.Control>
+    <DatePicker.Trigger>
+      <DatePicker.Value placeholder="Choose a date" />
+    </DatePicker.Trigger>
+    <DatePicker.Clear />
+  </DatePicker.Control>
+  <DatePicker.Portal>
+    <DatePicker.Positioner>
+      <DatePicker.Popup>
+        <DatePicker.Header>
+          <DatePicker.Previous />
+          <DatePicker.Caption />
+          <DatePicker.Next />
+        </DatePicker.Header>
+        <DatePicker.Calendar />
+      </DatePicker.Popup>
+    </DatePicker.Positioner>
+  </DatePicker.Portal>
+</DatePicker.Root>`,
+      },
+    },
+  },
 };

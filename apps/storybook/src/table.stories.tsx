@@ -4,8 +4,9 @@ import { Badge, Table, Text } from "jaci-ui";
 
 const meta = {
   title: "Data Display/Table",
+  component: Table.Root,
   tags: ["autodocs"],
-} satisfies Meta;
+} satisfies Meta<typeof Table.Root>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -84,7 +85,56 @@ function InteractiveTable() {
   );
 }
 
-export const SortableAndSelectable: Story = { render: () => <InteractiveTable /> };
+const sortableSource = `const [sortDirection, setSortDirection] = useState<
+  "none" | "ascending" | "descending"
+>("none");
+const [selected, setSelected] = useState<string[]>([]);
+
+<Table.Container>
+  <Table.Root striped>
+    <Table.Caption>Workspace members</Table.Caption>
+    <Table.Header>
+      <Table.Row>
+        <Table.SelectionHeader
+          checked={selected.length === users.length}
+          indeterminate={selected.length > 0 && selected.length < users.length}
+          onCheckedChange={(checked) => setSelected(checked ? users.map((user) => user.email) : [])}
+        />
+        <Table.Head
+          sortable
+          sortDirection={sortDirection}
+          onSort={() => setSortDirection(sortDirection === "ascending" ? "descending" : "ascending")}
+        >
+          Name
+        </Table.Head>
+        <Table.Head>Email</Table.Head>
+      </Table.Row>
+    </Table.Header>
+    <Table.Body>
+      {users.map((user) => (
+        <Table.Row key={user.email} selected={selected.includes(user.email)}>
+          <Table.SelectionCell
+            checked={selected.includes(user.email)}
+            onCheckedChange={(checked) => {
+              setSelected((current) =>
+                checked
+                  ? [...current, user.email]
+                  : current.filter((email) => email !== user.email),
+              );
+            }}
+          />
+          <Table.Cell>{user.name}</Table.Cell>
+          <Table.Cell>{user.email}</Table.Cell>
+        </Table.Row>
+      ))}
+    </Table.Body>
+  </Table.Root>
+</Table.Container>`;
+
+export const SortableAndSelectable: Story = {
+  render: () => <InteractiveTable />,
+  parameters: { docs: { source: { code: sortableSource, language: "tsx" } } },
+};
 
 export const Empty: Story = {
   render: () => (
