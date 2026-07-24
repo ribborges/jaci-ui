@@ -27,20 +27,32 @@ import {
   formatMonthLabel,
   getCalendarDays,
   getDateRangeLabel,
+  getMonthLabels,
   getWeekdayLabels,
   isAfterDay,
   isBeforeDay,
   isSameDay,
   startOfMonth,
   toInputDate,
+  toInputDateTime,
+  toInputMonth,
+  toTimeInput,
 } from "./date-utils";
+import type { DatePickerGranularity } from "./date-utils";
 
 export type DatePickerSize = "sm" | "md" | "lg";
+export type { DatePickerGranularity } from "./date-utils";
+
+export interface DatePickerYearRange {
+  start: number;
+  end: number;
+}
 
 interface DatePickerContextValue {
   canNavigate: (amount: number) => boolean;
   close: () => void;
   dateDisabled: (date: Date) => boolean;
+  granularity: DatePickerGranularity;
   disabled: boolean;
   focusDate: (date: Date, direction?: number) => void;
   focusedDate: Date;
@@ -48,8 +60,12 @@ interface DatePickerContextValue {
   labelId: string;
   locale: string;
   month: Date;
+  monthDisabled: (date: Date) => boolean;
   onClear: () => void;
+  onTimeChange: (value: string) => void;
   onSelect: (date: Date) => void;
+  selectMonth: (month: number) => void;
+  selectYear: (year: number) => void;
   placeholder: ReactNode;
   registerDay: (key: string, node: HTMLButtonElement | null) => void;
   selected: Date | null;
@@ -58,8 +74,11 @@ interface DatePickerContextValue {
   size: DatePickerSize;
   styles: ReturnType<typeof datePicker>;
   today: Date;
+  timeMax: string | undefined;
+  timeMin: string | undefined;
   triggerId: string;
   weekStartsOn: number;
+  yearRange: DatePickerYearRange;
 }
 
 const DatePickerContext = createContext<DatePickerContextValue | null>(null);
@@ -93,7 +112,7 @@ export interface DatePickerRootProps extends Omit<BasePopoverRoot.Props, "childr
   value?: Date | null;
   /** Initial selected value for an uncontrolled picker. */
   defaultValue?: Date | null;
-  /** Called after a valid day is selected, or when the value is cleared. */
+  /** Called after a valid day, month, or time is selected, or when the value is cleared. */
   onValueChange?: (value: Date | null) => void;
   /** Prevents dates before this local calendar day from being selected. */
   minDate?: Date;
@@ -111,20 +130,25 @@ export interface DatePickerRootProps extends Omit<BasePopoverRoot.Props, "childr
   placeholder?: ReactNode;
   /** Shared visual size for the trigger and calendar days. */
   size?: DatePickerSize;
-  /** Adds a native hidden input using the `YYYY-MM-DD` representation. */
+  /** Controls whether the picker selects days, months, or date and time. */
+  granularity?: DatePickerGranularity;
+  /** Inclusive range used by the year selector. */
+  yearRange?: DatePickerYearRange;
+  /** Adds a native hidden input using the representation for the selected granularity. */
   name?: string;
   /** Prevents interaction and disables the hidden form input. */
   disabled?: boolean;
-  /** Closes the popup after a day is chosen. Defaults to true. */
+  /** Closes the popup after a value is chosen. Defaults to false for date-time mode and true otherwise. */
   closeOnSelect?: boolean;
   children?: ReactNode;
 }
 
 export function DatePickerRoot({
   children,
-  closeOnSelect = true,
+  closeOnSelect: closeOnSelectProp,
   defaultValue = null,
   disabled = false,
+  granularity = "day",
   isDateDisabled,
   locale = "pt-BR",
   maxDate,
@@ -136,6 +160,7 @@ export function DatePickerRoot({
   size = "md",
   value: controlledValue,
   weekStartsOn = 0,
+  yearRange: configuredYearRange,
   actionsRef: externalActionsRef,
   ...popoverProps
 }: DatePickerRootProps) {
@@ -152,6 +177,20 @@ export function DatePickerRoot({
   const styles = datePicker({ size });
   const minMonth = minDate ? startOfMonth(minDate) : undefined;
   const maxMonth = maxDate ? startOfMonth(maxDate) : undefined;
+  const closeOnSelect = closeOnSelectProp ?? granularity !== "date-time";
+  const yearRange = useMemo(() => {
+    const defaultStart = today.getFullYear() - 100;
+    const defaultEnd = today.getFullYear() + 20;
+    const start = configuredYearRange?.start ?? defaultStart;
+    const end = configuredYearRange?.end ?? defaultEnd;
+    const years = [selected?.getFullYear(), minDate?.getFullYear(), maxDate?.getFullYear()].filter(
+      (year): year is number => year !== undefined,
+    );
+    return {
+      end: Math.max(start, end, ...years),
+      start: Math.min(start, end, ...years),
+    };
+  }, [configuredYearRange?.end, configuredYearRange?.start, maxDate, minDate, selected, today]);
 
   const clampMonth = useCallback(
     (nextMonth: Date) => {
@@ -203,28 +242,121 @@ export function DatePickerRoot({
     (externalActionsRef ?? internalActionsRef).current?.close();
   }, [externalActionsRef]);
 
+  const setValue = useCallback(
+    (nextValue: Date | null) => {
+      setUncontrolledValue(nextValue);
+      onValueChange?.(nextValue);
+    },
+    [onValueChange],
+  );
+
+  const monthDisabled = useCallback(
+    (candidate: Date) => {
+      const firstDay = startOfMonth(candidate);
+      const lastDay = createCalendarDate(candidate.getFullYear(), candidate.getMonth() + 1, 0);
+      return Boolean(
+        (minDate && isBeforeDay(lastDay, minDate)) || (maxDate && isAfterDay(firstDay, maxDate)),
+      );
+    },
+    [maxDate, minDate],
+  );
+
   const onSelect = useCallback(
     (date: Date) => {
-      if (disabled || dateDisabled(date)) {
+      if (disabled || (granularity === "month" ? monthDisabled(date) : dateDisabled(date))) {
         return;
       }
 
-      const nextValue = createCalendarDate(date.getFullYear(), date.getMonth(), date.getDate());
-      setUncontrolledValue(nextValue);
+      const nextValue = createCalendarDate(
+        date.getFullYear(),
+        date.getMonth(),
+        granularity === "month" ? 1 : date.getDate(),
+      );
+      if (granularity === "date-time") {
+        nextValue.setHours(selected?.getHours() ?? 12, selected?.getMinutes() ?? 0, 0, 0);
+        if (minDate && isSameDay(nextValue, minDate) && nextValue < minDate) {
+          nextValue.setHours(minDate.getHours(), minDate.getMinutes(), 0, 0);
+        }
+        if (maxDate && isSameDay(nextValue, maxDate) && nextValue > maxDate) {
+          nextValue.setHours(maxDate.getHours(), maxDate.getMinutes(), 0, 0);
+        }
+      }
+      setValue(nextValue);
       setFocusedDate(nextValue);
       setMonth(startOfMonth(nextValue));
-      onValueChange?.(nextValue);
       if (closeOnSelect) {
         close();
       }
     },
-    [close, closeOnSelect, dateDisabled, disabled, onValueChange, setMonth],
+    [
+      close,
+      closeOnSelect,
+      dateDisabled,
+      disabled,
+      granularity,
+      maxDate,
+      monthDisabled,
+      minDate,
+      selected,
+      setMonth,
+      setValue,
+    ],
   );
 
   const onClear = useCallback(() => {
-    setUncontrolledValue(null);
-    onValueChange?.(null);
-  }, [onValueChange]);
+    setValue(null);
+  }, [setValue]);
+
+  const selectMonth = useCallback(
+    (monthIndex: number) => {
+      const nextMonth = clampMonth(createCalendarDate(month.getFullYear(), monthIndex, 1));
+      if (monthDisabled(nextMonth)) return;
+      setMonth(nextMonth);
+      if (granularity === "month") {
+        const nextValue = createCalendarDate(nextMonth.getFullYear(), nextMonth.getMonth(), 1);
+        setFocusedDate(nextValue);
+        setValue(nextValue);
+        if (closeOnSelect) close();
+      }
+    },
+    [clampMonth, close, closeOnSelect, granularity, month, monthDisabled, setMonth, setValue],
+  );
+
+  const selectYear = useCallback(
+    (year: number) => {
+      const nextMonth = clampMonth(createCalendarDate(year, month.getMonth(), 1));
+      if (monthDisabled(nextMonth)) return;
+      setMonth(nextMonth);
+      if (granularity === "month") {
+        const nextValue = createCalendarDate(nextMonth.getFullYear(), nextMonth.getMonth(), 1);
+        setFocusedDate(nextValue);
+        setValue(nextValue);
+        if (closeOnSelect) close();
+      }
+    },
+    [clampMonth, close, closeOnSelect, granularity, month, monthDisabled, setMonth, setValue],
+  );
+
+  const onTimeChange = useCallback(
+    (value: string) => {
+      const match = value.match(/^(\d{2}):(\d{2})$/);
+      if (!match) return;
+      const hours = Number(match[1]);
+      const minutes = Number(match[2]);
+      if (hours > 23 || minutes > 59) return;
+      const baseDate = selected ?? focusedDate;
+      const nextValue = createCalendarDate(
+        baseDate.getFullYear(),
+        baseDate.getMonth(),
+        baseDate.getDate(),
+      );
+      nextValue.setHours(hours, minutes, 0, 0);
+      if (minDate && isSameDay(nextValue, minDate) && nextValue < minDate) return;
+      if (maxDate && isSameDay(nextValue, maxDate) && nextValue > maxDate) return;
+      setValue(nextValue);
+    },
+    [focusedDate, maxDate, minDate, selected, setValue],
+  );
 
   const focusDate = useCallback(
     (date: Date, direction = 1) => {
@@ -265,19 +397,29 @@ export function DatePickerRoot({
     }
   }, []);
 
+  const timeMin =
+    selected && minDate && isSameDay(selected, minDate) ? toTimeInput(minDate) : undefined;
+  const timeMax =
+    selected && maxDate && isSameDay(selected, maxDate) ? toTimeInput(maxDate) : undefined;
+
   const context: DatePickerContextValue = {
     canNavigate,
     close,
     dateDisabled,
+    granularity,
     disabled,
     focusDate,
     focusedDate,
-    formatDate: (date) => formatDateLabel(date, locale, String(placeholder)),
+    formatDate: (date) => formatDateLabel(date, locale, String(placeholder), granularity),
     labelId,
     locale,
     month,
+    monthDisabled,
     onClear,
+    onTimeChange,
     onSelect,
+    selectMonth,
+    selectYear,
     placeholder,
     registerDay,
     selected,
@@ -286,8 +428,11 @@ export function DatePickerRoot({
     size,
     styles,
     today: createCalendarDate(today.getFullYear(), today.getMonth(), today.getDate()),
+    timeMax,
+    timeMin,
     triggerId,
     weekStartsOn,
+    yearRange,
   };
 
   return (
@@ -296,7 +441,18 @@ export function DatePickerRoot({
         {children}
       </BasePopover.Root>
       {name ? (
-        <input disabled={disabled} name={name} type="hidden" value={toInputDate(selected)} />
+        <input
+          disabled={disabled}
+          name={name}
+          type="hidden"
+          value={
+            granularity === "month"
+              ? toInputMonth(selected)
+              : granularity === "date-time"
+                ? toInputDateTime(selected)
+                : toInputDate(selected)
+          }
+        />
       ) : null}
     </DatePickerContext.Provider>
   );
@@ -511,6 +667,106 @@ export const DatePickerCaption = forwardRef<HTMLSpanElement, DatePickerCaptionPr
   },
 );
 
+export type DatePickerMonthSelectProps = Omit<
+  ComponentPropsWithoutRef<"select">,
+  "children" | "onChange" | "value"
+>;
+
+export const DatePickerMonthSelect = forwardRef<HTMLSelectElement, DatePickerMonthSelectProps>(
+  function DatePickerMonthSelect({ className, ...props }, ref) {
+    const { locale, month, monthDisabled, selectMonth, styles } = useDatePickerContext();
+    const labels = getMonthLabels(locale);
+
+    return (
+      <select
+        {...props}
+        aria-label={props["aria-label"] ?? "Select month"}
+        className={cx(styles.monthSelect, className)}
+        data-slot="date-picker-month-select"
+        onChange={(event) => selectMonth(Number(event.currentTarget.value))}
+        ref={ref}
+        value={month.getMonth()}
+      >
+        {labels.map((label, monthIndex) => (
+          <option
+            disabled={monthDisabled(createCalendarDate(month.getFullYear(), monthIndex, 1))}
+            key={label}
+            value={monthIndex}
+          >
+            {label}
+          </option>
+        ))}
+      </select>
+    );
+  },
+);
+
+export type DatePickerYearSelectProps = Omit<
+  ComponentPropsWithoutRef<"select">,
+  "children" | "onChange" | "value"
+>;
+
+export const DatePickerYearSelect = forwardRef<HTMLSelectElement, DatePickerYearSelectProps>(
+  function DatePickerYearSelect({ className, ...props }, ref) {
+    const { month, monthDisabled, selectYear, styles, yearRange } = useDatePickerContext();
+    const years = Array.from(
+      { length: yearRange.end - yearRange.start + 1 },
+      (_, index) => yearRange.start + index,
+    );
+
+    return (
+      <select
+        {...props}
+        aria-label={props["aria-label"] ?? "Select year"}
+        className={cx(styles.yearSelect, className)}
+        data-slot="date-picker-year-select"
+        onChange={(event) => selectYear(Number(event.currentTarget.value))}
+        ref={ref}
+        value={month.getFullYear()}
+      >
+        {years.map((year) => (
+          <option
+            disabled={monthDisabled(createCalendarDate(year, month.getMonth(), 1))}
+            key={year}
+            value={year}
+          >
+            {year}
+          </option>
+        ))}
+      </select>
+    );
+  },
+);
+
+export type DatePickerTimeFieldProps = Omit<
+  ComponentPropsWithoutRef<"input">,
+  "onChange" | "type" | "value"
+>;
+
+export const DatePickerTimeField = forwardRef<HTMLInputElement, DatePickerTimeFieldProps>(
+  function DatePickerTimeField({ className, ...props }, ref) {
+    const { disabled, granularity, onTimeChange, selected, styles, timeMax, timeMin } =
+      useDatePickerContext();
+    if (granularity !== "date-time") return null;
+
+    return (
+      <input
+        {...props}
+        aria-label={props["aria-label"] ?? "Select time"}
+        className={cx(styles.timeField, className)}
+        data-slot="date-picker-time-field"
+        disabled={disabled || !selected}
+        max={timeMax}
+        min={timeMin}
+        onChange={(event) => onTimeChange(event.currentTarget.value)}
+        ref={ref}
+        type="time"
+        value={toTimeInput(selected)}
+      />
+    );
+  },
+);
+
 export interface DatePickerNavigationProps extends ComponentPropsWithoutRef<"button"> {
   amount?: number;
 }
@@ -665,6 +921,38 @@ export const DatePickerDay = forwardRef<HTMLButtonElement, DatePickerDayProps>(
   },
 );
 
+interface DatePickerMonthButtonProps {
+  date: Date;
+}
+
+const DatePickerMonthButton = forwardRef<HTMLButtonElement, DatePickerMonthButtonProps>(
+  function DatePickerMonthButton({ date }, ref) {
+    const { disabled, granularity, locale, monthDisabled, onSelect, selected, styles } =
+      useDatePickerContext();
+    const isDisabled = disabled || monthDisabled(date);
+    const isSelected = granularity === "month" && Boolean(selected && isSameMonth(selected, date));
+
+    return (
+      // biome-ignore lint/a11y/useSemanticElements: Month choices use the calendar gridcell pattern.
+      <button
+        aria-label={new Intl.DateTimeFormat(locale, { month: "long" }).format(date)}
+        aria-selected={isSelected}
+        className={styles.month}
+        data-disabled={isDisabled || undefined}
+        data-selected={isSelected || undefined}
+        data-slot="date-picker-month"
+        disabled={isDisabled}
+        onClick={() => onSelect(date)}
+        ref={ref}
+        role="gridcell"
+        type="button"
+      >
+        {new Intl.DateTimeFormat(locale, { month: "short" }).format(date)}
+      </button>
+    );
+  },
+);
+
 export interface DatePickerCalendarProps
   extends Omit<ComponentPropsWithoutRef<"section">, "children"> {
   "aria-label"?: string;
@@ -672,9 +960,14 @@ export interface DatePickerCalendarProps
 
 export const DatePickerCalendar = forwardRef<HTMLElement, DatePickerCalendarProps>(
   function DatePickerCalendar({ "aria-label": ariaLabel, className, ...props }, ref) {
-    const { locale, month, styles, weekStartsOn } = useDatePickerContext();
+    const { granularity, locale, month, styles, weekStartsOn } = useDatePickerContext();
     const days = useMemo(() => getCalendarDays(month, weekStartsOn), [month, weekStartsOn]);
     const weekdays = useMemo(() => getWeekdayLabels(locale, weekStartsOn), [locale, weekStartsOn]);
+    const monthDates = useMemo(
+      () =>
+        Array.from({ length: 12 }, (_, index) => createCalendarDate(month.getFullYear(), index, 1)),
+      [month],
+    );
 
     return (
       <section
@@ -682,26 +975,43 @@ export const DatePickerCalendar = forwardRef<HTMLElement, DatePickerCalendarProp
         ref={ref}
         aria-label={ariaLabel ?? formatMonthLabel(month, locale)}
         className={cx(styles.calendar, className)}
+        data-granularity={granularity}
         data-slot="date-picker-calendar"
       >
-        <div aria-hidden="true" className={styles.weekdays} data-slot="date-picker-weekdays">
-          {weekdays.map((weekday) => (
-            <span className={styles.weekday} data-slot="date-picker-weekday" key={weekday}>
-              {weekday}
-            </span>
-          ))}
-        </div>
-        {/* biome-ignore lint/a11y/useSemanticElements: Calendar grids use the WAI-ARIA grid pattern for roving day focus. */}
-        <div
-          aria-label={formatMonthLabel(month, locale)}
-          className={styles.grid}
-          data-slot="date-picker-grid"
-          role="grid"
-        >
-          {days.map((date) => (
-            <DatePickerDay date={date} key={dateKey(date)} />
-          ))}
-        </div>
+        {granularity === "month" ? (
+          // biome-ignore lint/a11y/useSemanticElements: Month selection uses the calendar grid pattern.
+          <div
+            aria-label={String(month.getFullYear())}
+            className={styles.monthGrid}
+            data-slot="date-picker-month-grid"
+            role="grid"
+          >
+            {monthDates.map((date) => (
+              <DatePickerMonthButton date={date} key={dateKey(date)} />
+            ))}
+          </div>
+        ) : (
+          <>
+            <div aria-hidden="true" className={styles.weekdays} data-slot="date-picker-weekdays">
+              {weekdays.map((weekday) => (
+                <span className={styles.weekday} data-slot="date-picker-weekday" key={weekday}>
+                  {weekday}
+                </span>
+              ))}
+            </div>
+            {/* biome-ignore lint/a11y/useSemanticElements: Calendar grids use the WAI-ARIA grid pattern for roving day focus. */}
+            <div
+              aria-label={formatMonthLabel(month, locale)}
+              className={styles.grid}
+              data-slot="date-picker-grid"
+              role="grid"
+            >
+              {days.map((date) => (
+                <DatePickerDay date={date} key={dateKey(date)} />
+              ))}
+            </div>
+          </>
+        )}
       </section>
     );
   },
@@ -720,6 +1030,9 @@ export const DatePicker = {
   Close: DatePickerClose,
   Header: DatePickerHeader,
   Caption: DatePickerCaption,
+  MonthSelect: DatePickerMonthSelect,
+  YearSelect: DatePickerYearSelect,
+  TimeField: DatePickerTimeField,
   Previous: DatePickerPrevious,
   Next: DatePickerNext,
   Day: DatePickerDay,

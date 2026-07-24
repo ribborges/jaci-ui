@@ -2,7 +2,7 @@
 
 import { Popover as BasePopover } from "@base-ui/react/popover";
 import { createContext, forwardRef, useContext, useEffect, useId, useState } from "react";
-import type { ComponentPropsWithoutRef, PointerEvent, ReactNode } from "react";
+import type { ComponentPropsWithoutRef, CSSProperties, PointerEvent, ReactNode } from "react";
 import type { PopoverRoot as BasePopoverRoot } from "@base-ui/react/popover";
 
 import { cx } from "../../styled-system/css";
@@ -216,36 +216,104 @@ export const ColorPickerPopup = forwardRef<HTMLDivElement, ColorPickerPopupProps
   },
 );
 
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function formatPalettePercentage(value: number) {
+  return `${Number(value.toFixed(2))}%`;
+}
+
+function hslToPalettePosition(color: ColorModel) {
+  const lightness = clamp(color.lightness / 100, 0, 1);
+  const saturation = clamp(color.saturation / 100, 0, 1);
+  const chroma = (1 - Math.abs(2 * lightness - 1)) * saturation;
+  const value = lightness + chroma / 2;
+
+  return {
+    lightness: (1 - value) * 100,
+    saturation: value === 0 ? 0 : (chroma / value) * 100,
+  };
+}
+
+function palettePositionToHsl(
+  saturation: number,
+  lightness: number,
+  color: ColorModel,
+): ColorModel {
+  const hsvSaturation = clamp(saturation / 100, 0, 1);
+  const value = 1 - clamp(lightness / 100, 0, 1);
+  const hslLightness = value * (1 - hsvSaturation / 2);
+  const hslSaturation =
+    hslLightness === 0 || hslLightness === 1
+      ? 0
+      : ((value - hslLightness) / Math.min(hslLightness, 1 - hslLightness)) * 100;
+
+  return {
+    ...color,
+    lightness: hslLightness * 100,
+    saturation: clamp(hslSaturation, 0, 100),
+  };
+}
+
 function updateFromPoint(
   event: PointerEvent<HTMLDivElement>,
   setColor: (color: ColorModel) => void,
   color: ColorModel,
 ) {
   const rect = event.currentTarget.getBoundingClientRect();
-  const saturation = Math.round(
-    Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width)) * 100,
-  );
-  const lightness = Math.round(
-    (1 - Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height))) * 100,
-  );
-  setColor({ ...color, lightness, saturation });
+  const saturation = Math.round(clamp((event.clientX - rect.left) / rect.width, 0, 1) * 100);
+  const lightness = Math.round(clamp((event.clientY - rect.top) / rect.height, 0, 1) * 100);
+  setColor(palettePositionToHsl(saturation, lightness, color));
 }
 
 export type ColorPickerPaletteProps = Omit<ComponentPropsWithoutRef<"div">, "onChange">;
 export const ColorPickerPalette = forwardRef<HTMLDivElement, ColorPickerPaletteProps>(
-  function ColorPickerPalette({ className, onKeyDown, onPointerDown, style, ...props }, ref) {
-    const { color, setColor, value } = useColorPicker();
+  function ColorPickerPalette(
+    {
+      children,
+      className,
+      onKeyDown,
+      onPointerCancel,
+      onPointerDown,
+      onPointerMove,
+      onPointerUp,
+      style,
+      ...props
+    },
+    ref,
+  ) {
+    const { color, disabled, setColor, value } = useColorPicker();
+    const [isDragging, setIsDragging] = useState(false);
     const background = `linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, hsl(${color.hue} 100% 50%))`;
+    const palettePosition = hslToPalettePosition(color);
+    const paletteStyle = {
+      "--jaci-color-palette-lightness": formatPalettePercentage(palettePosition.lightness),
+      "--jaci-color-palette-saturation": formatPalettePercentage(palettePosition.saturation),
+      background,
+      ...style,
+    } as CSSProperties;
+
+    const releasePointer = (event: PointerEvent<HTMLDivElement>) => {
+      if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+      setIsDragging(false);
+    };
+
     return (
       <div
         {...props}
         ref={ref}
+        aria-disabled={disabled || undefined}
         aria-label={props["aria-label"] ?? "Color saturation and lightness"}
         aria-valuemax={100}
         aria-valuemin={0}
-        aria-valuenow={Math.round(color.saturation)}
+        aria-valuenow={Math.round(palettePosition.saturation)}
         aria-valuetext={value}
         className={cx(colorPicker().palette, className)}
+        data-disabled={disabled || undefined}
+        data-dragging={isDragging || undefined}
         data-slot="color-picker-palette"
         onKeyDown={(event) => {
           const step = event.shiftKey ? 10 : 1;
@@ -256,32 +324,57 @@ export const ColorPickerPalette = forwardRef<HTMLDivElement, ColorPickerPaletteP
             event.key === "ArrowDown"
           ) {
             event.preventDefault();
-            setColor({
-              ...color,
-              saturation:
-                event.key === "ArrowLeft"
-                  ? Math.max(0, color.saturation - step)
-                  : event.key === "ArrowRight"
-                    ? Math.min(100, color.saturation + step)
-                    : color.saturation,
-              lightness:
-                event.key === "ArrowDown"
-                  ? Math.max(0, color.lightness - step)
-                  : event.key === "ArrowUp"
-                    ? Math.min(100, color.lightness + step)
-                    : color.lightness,
-            });
+            const saturation =
+              event.key === "ArrowLeft"
+                ? Math.max(0, palettePosition.saturation - step)
+                : event.key === "ArrowRight"
+                  ? Math.min(100, palettePosition.saturation + step)
+                  : palettePosition.saturation;
+            const lightness =
+              event.key === "ArrowDown"
+                ? Math.min(100, palettePosition.lightness + step)
+                : event.key === "ArrowUp"
+                  ? Math.max(0, palettePosition.lightness - step)
+                  : palettePosition.lightness;
+            setColor(palettePositionToHsl(saturation, lightness, color));
           }
           onKeyDown?.(event);
         }}
         onPointerDown={(event) => {
-          updateFromPoint(event, setColor, color);
+          if (!disabled) {
+            updateFromPoint(event, setColor, color);
+            setIsDragging(true);
+            try {
+              event.currentTarget.setPointerCapture(event.pointerId);
+            } catch {
+              // Pointer capture is not available in every test environment.
+            }
+          }
           onPointerDown?.(event);
         }}
+        onPointerMove={(event) => {
+          if (!disabled && isDragging) updateFromPoint(event, setColor, color);
+          onPointerMove?.(event);
+        }}
+        onPointerUp={(event) => {
+          releasePointer(event);
+          onPointerUp?.(event);
+        }}
+        onPointerCancel={(event) => {
+          releasePointer(event);
+          onPointerCancel?.(event);
+        }}
         role="slider"
-        style={{ background, ...style }}
-        tabIndex={props.tabIndex ?? 0}
-      />
+        style={paletteStyle}
+        tabIndex={props.tabIndex ?? (disabled ? -1 : 0)}
+      >
+        <span
+          aria-hidden="true"
+          className={colorPicker().paletteIndicator}
+          data-slot="color-picker-palette-indicator"
+        />
+        {children}
+      </div>
     );
   },
 );
