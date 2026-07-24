@@ -16,6 +16,10 @@
       "dependsOn": ["^typecheck"],
       "outputs": []
     },
+    "jaci-ui#typecheck": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
     "test": {
       "dependsOn": ["build", "^build"],
       "outputs": []

@@ -36,7 +36,7 @@ export function ToastProvider(props: ToastProviderProps) {
 export type ToastViewportProps = ComponentPropsWithoutRef<typeof BaseToast.Viewport>;
 
 /**
- * A bottom-centred notification region matching the legacy Jaci toast.
+ * A bottom-centred notification region.
  */
 export const ToastViewport = forwardRef<HTMLDivElement, ToastViewportProps>(function ToastViewport(
   { className, ...props },

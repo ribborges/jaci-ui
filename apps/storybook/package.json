@@ -10,7 +10,8 @@
     "format": "biome format --write .",
     "format:check": "biome format .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "test:browser": "JACI_STORYBOOK_BROWSER=1 vitest run --passWithNoTests"
   },
   "dependencies": {
     "jaci-ui": "workspace:*",

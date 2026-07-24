@@ -14,7 +14,7 @@ import { fileURLToPath } from "node:url";
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const artifactsDirectory = join(root, ".artifacts");
 const temporaryDirectory = join(root, ".fixture-pack-check");
-const fixtureNames = ["vite", "react-router", "next"];
+const fixtureNames = ["vite", "react18", "react-router", "next"];
 
 rmSync(artifactsDirectory, { force: true, recursive: true });
 rmSync(temporaryDirectory, { force: true, recursive: true });
@@ -55,6 +55,9 @@ for (const fixtureName of fixtureNames) {
     stdio: "inherit",
   });
   execFileSync("pnpm", ["run", "check"], { cwd: destination, stdio: "inherit" });
+  if (fixtureName === "react18") {
+    execFileSync("pnpm", ["run", "typecheck:react18"], { cwd: destination, stdio: "inherit" });
+  }
 }
 
 if (!existsSync(tarball)) {

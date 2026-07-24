@@ -1876,9 +1876,9 @@ export const sidebarRecipe = defineSlotRecipe({
 });
 
 /**
- * Fixed navigation inspired by the legacy floating zinc bar. The drawer
- * slots are intentionally separate from the standard Dialog recipe because
- * they form a left-aligned mobile navigation surface instead of a modal card.
+ * Fixed navigation. The drawer slots are intentionally separate from the
+ * standard Dialog recipe because they form a left-aligned mobile navigation
+ * surface instead of a modal card.
  */
 export const navbarRecipe = defineSlotRecipe({
   className: "navbar",

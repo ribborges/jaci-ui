@@ -57,8 +57,8 @@ function NavbarExample({
       </Navbar.Root>
 
       <Text tone="muted">
-        The fixed bar uses its legacy-inspired blurred zinc surface. The menu button opens an
-        accessible Dialog drawer on small screens.
+        The fixed bar uses blurred zinc surface. The menu button opens an accessible Dialog drawer
+        on small screens.
       </Text>
     </div>
   );

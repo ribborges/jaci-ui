@@ -88,8 +88,7 @@ export const MenuItem = forwardRef<HTMLElement, MenuItemProps>(function MenuItem
 export type MenuLinkItemProps = ComponentPropsWithoutRef<typeof BaseMenu.LinkItem>;
 
 /**
- * A navigational item. This is the semantic counterpart of the legacy
- * dropdown's link option and retains Base UI's keyboard navigation.
+ * A navigational item. It retains Base UI's keyboard navigation.
  */
 export const MenuLinkItem = forwardRef<Element, MenuLinkItemProps>(function MenuLinkItem(
   { className, ...props },

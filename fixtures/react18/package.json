@@ -1,0 +1,26 @@
+{
+  "name": "@jaci-ui/fixture-react18",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "check": "pnpm build",
+    "lint": "biome lint .",
+    "typecheck:react18": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "jaci-ui": "workspace:*",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@base-ui/react": "^1.6.0",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^6.0.3",
+    "typescript": "^6.0.2",
+    "vite": "^8.1.4"
+  }
+}

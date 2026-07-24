@@ -8,6 +8,10 @@ Use Node 22.14 or newer and Corepack. Install dependencies with pnpm install, th
 pnpm storybook for component work. Run pnpm format, pnpm lint, pnpm typecheck, pnpm test
 and pnpm build before opening a pull request.
 
+The default Storybook test command is safe in restricted local environments. To run the full
+Chromium story suite locally, use `pnpm --filter @jaci-ui/storybook test:browser`; CI enables the
+same browser mode automatically.
+
 ## Component expectations
 
 Public components must use semantic HTML, expose TypeScript types, forward refs when a DOM
@@ -32,3 +36,9 @@ tests should describe the public behavior they protect. Run the package tests wi
 Add a Changeset for any public API, behavior, accessibility or styling change that warrants a
 package release. Use patch for fixes, minor for backwards-compatible features, and major for
 breaking changes.
+
+Jaci UI remains in the `0.x` phase until the public API and styling contracts have stabilized.
+During this phase, a minor release may include a backwards-compatible feature or a documented
+behavior adjustment, while breaking changes still require a major release and migration notes.
+The initial `0.1.0` release is the clean baseline; do not add Changesets for work that is already
+included in that baseline.

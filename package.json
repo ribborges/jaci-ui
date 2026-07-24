@@ -15,11 +15,11 @@
   },
   "packageManager": "pnpm@10.15.1",
   "engines": {
-    "node": ">=22.14.0"
+    "node": ">=22.18.0"
   },
   "scripts": {
     "build": "turbo run build",
-    "clean": "rimraf .turbo .artifacts .fixture-pack-check packages/ui/dist packages/ui/src/styled-system packages/ui/tsconfig.tsbuildinfo apps/storybook/storybook-static apps/storybook/tsconfig.tsbuildinfo fixtures/vite/dist fixtures/vite/tsconfig.tsbuildinfo fixtures/react-router/tsconfig.tsbuildinfo fixtures/next/.next fixtures/next/tsconfig.tsbuildinfo",
+    "clean": "rimraf .turbo .artifacts .fixture-pack-check packages/ui/dist packages/ui/src/styled-system packages/ui/tsconfig.tsbuildinfo apps/storybook/storybook-static apps/storybook/tsconfig.tsbuildinfo fixtures/vite/dist fixtures/vite/tsconfig.tsbuildinfo fixtures/react18/dist fixtures/react18/tsconfig.tsbuildinfo fixtures/react-router/tsconfig.tsbuildinfo fixtures/next/.next fixtures/next/tsconfig.tsbuildinfo",
     "dev": "turbo run dev --parallel --filter=jaci-ui --filter=@jaci-ui/storybook --filter=@jaci-ui/fixture-vite --filter=@jaci-ui/fixture-next",
     "format": "biome format --write .",
     "format:check": "biome format .",
@@ -29,7 +29,7 @@
     "storybook": "pnpm --filter jaci-ui build && pnpm --filter @jaci-ui/storybook dev",
     "storybook:build": "pnpm --filter jaci-ui build && pnpm --filter @jaci-ui/storybook build",
     "package:check": "pnpm --filter jaci-ui package:check",
-    "fixtures:check": "turbo run check --filter=@jaci-ui/fixture-next --filter=@jaci-ui/fixture-react-router --filter=@jaci-ui/fixture-vite",
+    "fixtures:check": "turbo run check --filter=@jaci-ui/fixture-next --filter=@jaci-ui/fixture-react-router --filter=@jaci-ui/fixture-vite --filter=@jaci-ui/fixture-react18",
     "fixtures:pack-check": "node scripts/check-packed-fixtures.mjs",
     "changeset": "changeset",
     "release:version": "changeset version"

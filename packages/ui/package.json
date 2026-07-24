@@ -33,7 +33,10 @@
     "./dist/styles.css"
   ],
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
   ],
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -82,6 +85,7 @@
     "panda:codegen": "panda codegen --clean --config panda.config.ts",
     "panda:css": "panda cssgen --config panda.config.ts --outfile dist/styles.css",
     "build": "pnpm panda:codegen && tsdown && pnpm panda:css && pnpm verify:client-boundaries",
+    "prepublishOnly": "pnpm build",
     "dev": "pnpm panda:codegen && tsdown --watch",
     "lint": "biome lint src panda.config.ts tsdown.config.ts",
     "format": "biome format --write src panda.config.ts tsdown.config.ts",
