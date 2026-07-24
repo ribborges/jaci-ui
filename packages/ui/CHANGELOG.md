@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0
+
+### Minor Changes
+
+- 60fe9f1: Add the optional ThemeProvider and reusable IconButton, ButtonGroup, InputGroup, and EmptyState components.
+
 ## 0.2.0
 
 ### Minor Changes
