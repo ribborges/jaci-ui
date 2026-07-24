@@ -87,6 +87,20 @@ DatePicker supports day, month and date-time values while keeping the public val
 Use `granularity="month"` to select a month normalized to its first day. Date-time popups stay
 open until `DatePicker.Close` is activated; day and month modes close after selection by default.
 
+Small composition helpers keep common layouts consistent:
+
+```tsx
+import { Button, ButtonGroup, EmptyState, IconButton, Input, InputGroup } from "jaci-ui";
+
+<IconButton aria-label="Close">×</IconButton>;
+<ButtonGroup><Button>Save</Button><Button>Cancel</Button></ButtonGroup>;
+<InputGroup><InputGroup.Addon>https://</InputGroup.Addon><Input aria-label="URL" /></InputGroup>;
+<EmptyState.Root><EmptyState.Title>No results</EmptyState.Title></EmptyState.Root>;
+```
+
+`IconButton` requires an accessible label for icon-only content. `ButtonGroup` and `InputGroup`
+also expose `.Root` aliases for compound composition.
+
 ## Server rendering and frameworks
 
 Static components are server-safe and interactive modules preserve their `"use client"` boundary.
@@ -127,6 +141,39 @@ the public CSS variables without a provider:
   --jaci-colors-accent-hover: #c4b5fd;
 }
 ```
+
+For applications that prefer a React API, `ThemeProvider` is optional. It can control the mode
+and apply token overrides to only its subtree:
+
+```tsx
+import { ThemeProvider, useTheme } from "jaci-ui";
+
+function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+  return <button onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>Toggle</button>;
+}
+
+export function App() {
+  return (
+    <ThemeProvider
+      defaultTheme="system"
+      ssrTheme="light"
+      tokens={{
+        colors: {
+          accent: { default: "#7c3aed", hover: "#6d28d9" },
+          fg: { onAccent: "#ffffff" },
+        },
+      }}
+    >
+      <ThemeToggle />
+    </ThemeProvider>
+  );
+}
+```
+
+`system` uses `ssrTheme` during server rendering and reads `prefers-color-scheme` only after
+mounting. The provider is a client module, so Next.js App Router applications should place it
+inside a client boundary. Direct `data-jaci-theme` and `--jaci-*` variables remain supported.
 
 The package exposes semantic surface, foreground, border, status, spacing, radius, shadow and
 transition tokens. See the Theming guide in Storybook for the complete token vocabulary.

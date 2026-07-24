@@ -6,13 +6,22 @@ import { Meta } from "@storybook/addon-docs/blocks";
 
 Jaci UI includes light and dark semantic tokens without a client-side provider. Set
 `data-jaci-theme` on the HTML element when the server renders the page, or on a local wrapper
-when only one area needs a different palette:
+when only one area needs a different palette. For applications that prefer a React API,
+`ThemeProvider` is optional and can scope the same attributes and variables:
 
 ```tsx
 <html data-jaci-theme="dark">...</html>
 
 // Or scope a preview without changing the rest of the application.
 <main data-jaci-theme="dark">...</main>
+
+<ThemeProvider
+  defaultTheme="system"
+  ssrTheme="light"
+  tokens={{ colors: { accent: { default: "#7c3aed", hover: "#6d28d9" } } }}
+>
+  <App />
+</ThemeProvider>
 ```
 
 Override the documented CSS custom properties beginning with `--jaci-` in the application
@@ -52,6 +61,14 @@ global theme or on a `[data-jaci-theme]` scope for a local theme.
 | `danger` | `--jaci-colors-danger` | Error/destructive status |
 | `link.default` | `--jaci-colors-link-default` | Link text |
 | `link.hover` | `--jaci-colors-link-hover` | Link hover text |
+| `info` | `--jaci-colors-info` | Informational status |
+| `focus` | `--jaci-colors-focus` | Focus ring color |
+| `disabled` | `--jaci-colors-disabled` | Disabled controls and text |
+| `selected` | `--jaci-colors-selected` | Selected surface |
+
+Radius, shadow, duration, easing and transition values use the same `--jaci-` convention:
+`--jaci-radii-*`, `--jaci-shadows-*`, `--jaci-durations-*`, `--jaci-easings-*` and
+`--jaci-transitions-*`.
 
 Primitive colors (`neutral.*`, `blue.*`, `green.*`, `amber.*`, `red.*`), radii, shadows and
 durations are also available through the optional Panda preset. Components consume semantic
