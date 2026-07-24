@@ -5,6 +5,7 @@ import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
 
 const configDir = fileURLToPath(new URL("./.storybook", import.meta.url));
+const browserTestsEnabled = process.env.JACI_STORYBOOK_BROWSER === "1" || process.env.CI === "true";
 
 export default defineConfig({
   optimizeDeps: {
@@ -36,21 +37,27 @@ export default defineConfig({
       "@base-ui/react/toolbar",
     ],
   },
-  test: {
-    projects: [
-      {
-        extends: true,
-        plugins: [storybookTest({ configDir })],
-        test: {
-          name: "storybook",
-          browser: {
-            enabled: true,
-            headless: true,
-            provider: playwright(),
-            instances: [{ browser: "chromium" }],
+  test: browserTestsEnabled
+    ? {
+        projects: [
+          {
+            extends: true,
+            plugins: [storybookTest({ configDir })],
+            test: {
+              name: "storybook",
+              browser: {
+                enabled: true,
+                headless: true,
+                provider: playwright(),
+                api: { host: "127.0.0.1", port: 0 },
+                instances: [{ browser: "chromium" }],
+              },
+            },
           },
-        },
+        ],
+      }
+    : {
+        include: [],
+        passWithNoTests: true,
       },
-    ],
-  },
 });
