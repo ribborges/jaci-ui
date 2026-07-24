@@ -3,7 +3,6 @@
   "files": {
     "includes": [
       "**",
-      "!legacy/**",
       "!**/dist/**",
       "!**/styled-system/**",
       "!**/storybook-static/**",
