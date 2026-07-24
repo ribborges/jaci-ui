@@ -18,11 +18,13 @@ function PickerComposition({
   isDateDisabled,
   maxDate,
   minDate,
+  yearRange,
 }: {
   defaultValue?: Date | null;
   isDateDisabled?: (date: Date) => boolean;
   maxDate?: Date;
   minDate?: Date;
+  yearRange?: { start: number; end: number };
 }) {
   return (
     <DatePicker.Root
@@ -32,6 +34,7 @@ function PickerComposition({
       {...(maxDate ? { maxDate } : {})}
       {...(isDateDisabled ? { isDateDisabled } : {})}
       {...(minDate ? { minDate } : {})}
+      {...(yearRange ? { yearRange } : {})}
     >
       <DatePicker.Label>Release date</DatePicker.Label>
       <DatePicker.Control>
@@ -45,7 +48,8 @@ function PickerComposition({
           <DatePicker.Popup>
             <DatePicker.Header>
               <DatePicker.Previous />
-              <DatePicker.Caption />
+              <DatePicker.MonthSelect />
+              <DatePicker.YearSelect />
               <DatePicker.Next />
             </DatePicker.Header>
             <DatePicker.Calendar />
@@ -83,7 +87,8 @@ export const Calendar: Story = {
       <DatePicker.Popup>
         <DatePicker.Header>
           <DatePicker.Previous />
-          <DatePicker.Caption />
+          <DatePicker.MonthSelect />
+          <DatePicker.YearSelect />
           <DatePicker.Next />
         </DatePicker.Header>
         <DatePicker.Calendar />
@@ -115,7 +120,8 @@ export const Controlled: Story = {
               <DatePicker.Popup>
                 <DatePicker.Header>
                   <DatePicker.Previous />
-                  <DatePicker.Caption />
+                  <DatePicker.MonthSelect />
+                  <DatePicker.YearSelect />
                   <DatePicker.Next />
                 </DatePicker.Header>
                 <DatePicker.Calendar />
@@ -148,7 +154,8 @@ export const Controlled: Story = {
       <DatePicker.Popup>
         <DatePicker.Header>
           <DatePicker.Previous />
-          <DatePicker.Caption />
+          <DatePicker.MonthSelect />
+          <DatePicker.YearSelect />
           <DatePicker.Next />
         </DatePicker.Header>
         <DatePicker.Calendar />
@@ -214,7 +221,8 @@ export const BoundedCalendar: Story = {
       <DatePicker.Popup>
         <DatePicker.Header>
           <DatePicker.Previous />
-          <DatePicker.Caption />
+          <DatePicker.MonthSelect />
+          <DatePicker.YearSelect />
           <DatePicker.Next />
         </DatePicker.Header>
         <DatePicker.Calendar />
@@ -222,6 +230,152 @@ export const BoundedCalendar: Story = {
     </DatePicker.Positioner>
   </DatePicker.Portal>
 </DatePicker.Root>`,
+      },
+    },
+  },
+};
+
+export const MonthOnly: Story = {
+  render: () => (
+    <Stack gap="sm" style={{ minWidth: "20rem" }}>
+      <DatePicker.Root
+        granularity="month"
+        name="billing-month"
+        yearRange={{ end: 2035, start: 2020 }}
+      >
+        <DatePicker.Label>Billing month</DatePicker.Label>
+        <DatePicker.Control>
+          <DatePicker.Trigger>
+            <DatePicker.Value placeholder="Choose a month" />
+          </DatePicker.Trigger>
+        </DatePicker.Control>
+        <DatePicker.Portal>
+          <DatePicker.Positioner align="start" side="bottom" sideOffset={8}>
+            <DatePicker.Popup>
+              <DatePicker.Header>
+                <DatePicker.Previous />
+                <DatePicker.MonthSelect />
+                <DatePicker.YearSelect />
+                <DatePicker.Next />
+              </DatePicker.Header>
+              <DatePicker.Calendar />
+            </DatePicker.Popup>
+          </DatePicker.Positioner>
+        </DatePicker.Portal>
+      </DatePicker.Root>
+      <Text size="sm" tone="muted">
+        The selected value is normalized to the first day of the month.
+      </Text>
+    </Stack>
+  ),
+  parameters: {
+    docs: {
+      source: {
+        language: "tsx",
+        code: `<DatePicker.Root granularity="month" yearRange={{ start: 2020, end: 2035 }}>
+  <DatePicker.Trigger><DatePicker.Value placeholder="Choose a month" /></DatePicker.Trigger>
+  <DatePicker.Portal><DatePicker.Positioner><DatePicker.Popup>
+    <DatePicker.Header><DatePicker.Previous /><DatePicker.MonthSelect /><DatePicker.YearSelect /><DatePicker.Next /></DatePicker.Header>
+    <DatePicker.Calendar />
+  </DatePicker.Popup></DatePicker.Positioner></DatePicker.Portal>
+</DatePicker.Root>`,
+      },
+    },
+  },
+};
+
+export const DateTime: Story = {
+  render: () => (
+    <Stack gap="sm" style={{ minWidth: "20rem" }}>
+      <DatePicker.Root
+        defaultValue={new Date(2025, 3, 15, 14, 30)}
+        granularity="date-time"
+        name="meeting-at"
+      >
+        <DatePicker.Label>Meeting time</DatePicker.Label>
+        <DatePicker.Control>
+          <DatePicker.Trigger>
+            <DatePicker.Value />
+          </DatePicker.Trigger>
+        </DatePicker.Control>
+        <DatePicker.Portal>
+          <DatePicker.Positioner align="start" side="bottom" sideOffset={8}>
+            <DatePicker.Popup>
+              <DatePicker.Header>
+                <DatePicker.Previous />
+                <DatePicker.MonthSelect />
+                <DatePicker.YearSelect />
+                <DatePicker.Next />
+              </DatePicker.Header>
+              <DatePicker.Calendar />
+              <DatePicker.TimeField />
+              <DatePicker.Close>Done</DatePicker.Close>
+            </DatePicker.Popup>
+          </DatePicker.Positioner>
+        </DatePicker.Portal>
+      </DatePicker.Root>
+      <Text size="sm" tone="muted">
+        Date and time mode keeps the popup open until Done is pressed.
+      </Text>
+    </Stack>
+  ),
+  parameters: {
+    docs: {
+      source: {
+        language: "tsx",
+        code: `<DatePicker.Root granularity="date-time" defaultValue={new Date(2025, 3, 15, 14, 30)}>
+  <DatePicker.Trigger><DatePicker.Value /></DatePicker.Trigger>
+  <DatePicker.Portal><DatePicker.Positioner><DatePicker.Popup>
+    <DatePicker.Header><DatePicker.Previous /><DatePicker.MonthSelect /><DatePicker.YearSelect /><DatePicker.Next /></DatePicker.Header>
+    <DatePicker.Calendar />
+    <DatePicker.TimeField />
+    <DatePicker.Close>Done</DatePicker.Close>
+  </DatePicker.Popup></DatePicker.Positioner></DatePicker.Portal>
+</DatePicker.Root>`,
+      },
+    },
+  },
+};
+
+export const BirthDate: Story = {
+  render: () => (
+    <PickerComposition
+      defaultValue={null}
+      maxDate={new Date(2026, 11, 31, 12)}
+      minDate={new Date(1900, 0, 1, 12)}
+      yearRange={{ end: 2026, start: 1900 }}
+    />
+  ),
+  parameters: {
+    docs: {
+      source: {
+        language: "tsx",
+        code: `<DatePicker.Root
+  yearRange={{ start: 1900, end: 2026 }}
+  minDate={new Date(1900, 0, 1)}
+  maxDate={new Date(2026, 11, 31)}
+/>`,
+      },
+    },
+  },
+};
+
+export const DarkTheme: Story = {
+  render: () => (
+    <div data-jaci-theme="dark" style={{ padding: "1.5rem" }}>
+      <PickerComposition />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<div data-jaci-theme="dark">
+  <DatePicker.Root defaultValue={new Date(2025, 3, 15, 12)}>
+    <DatePicker.Trigger><DatePicker.Value /></DatePicker.Trigger>
+    {/* compose the Portal, Positioner, Popup, Header and Calendar parts */}
+  </DatePicker.Root>
+</div>`,
+        language: "tsx",
       },
     },
   },

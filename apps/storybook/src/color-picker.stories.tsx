@@ -11,11 +11,18 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-function Picker({ showAlpha = false }: { showAlpha?: boolean }) {
+function Picker({
+  defaultOpen = false,
+  showAlpha = false,
+}: {
+  defaultOpen?: boolean;
+  showAlpha?: boolean;
+}) {
   const [color, setColor] = useState(showAlpha ? "rgba(37, 99, 235, 0.75)" : "#2563eb");
   return (
     <Stack gap="sm">
       <ColorPicker.Root
+        defaultOpen={defaultOpen}
         format={showAlpha ? "rgb" : "hex"}
         onValueChange={setColor}
         showAlpha={showAlpha}
@@ -96,4 +103,54 @@ export const Hex: Story = {
 export const WithAlpha: Story = {
   render: () => <Picker showAlpha />,
   parameters: { docs: { source: { code: alphaSource, language: "tsx" } } },
+};
+
+export const PaletteDrag: Story = {
+  render: () => <Picker defaultOpen />,
+  parameters: {
+    docs: {
+      description: {
+        story: "Drag across the saturation/lightness palette. The ring marks the current color.",
+      },
+      source: {
+        code: `<ColorPicker.Root defaultValue="#2563eb" defaultOpen>
+  <ColorPicker.Trigger><ColorPicker.Preview /><ColorPicker.Value /></ColorPicker.Trigger>
+  <ColorPicker.Portal><ColorPicker.Positioner><ColorPicker.Popup>
+    <ColorPicker.Palette />
+    <ColorPicker.Hue />
+    <ColorPicker.Input />
+  </ColorPicker.Popup></ColorPicker.Positioner></ColorPicker.Portal>
+</ColorPicker.Root>`,
+        language: "tsx",
+      },
+    },
+  },
+};
+
+export const OverlayBlur: Story = {
+  render: () => (
+    <div
+      style={{
+        background: "linear-gradient(135deg, #2563eb, #f59e0b)",
+        minHeight: "16rem",
+        padding: "3rem",
+      }}
+    >
+      <Picker defaultOpen />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: { story: "The open popup uses the same translucent blurred surface as Select." },
+      source: {
+        code: `<ColorPicker.Root defaultValue="#2563eb" defaultOpen>
+  <ColorPicker.Trigger><ColorPicker.Preview /><ColorPicker.Value /></ColorPicker.Trigger>
+  <ColorPicker.Portal><ColorPicker.Positioner><ColorPicker.Popup>
+    <ColorPicker.Palette /><ColorPicker.Hue /><ColorPicker.Input />
+  </ColorPicker.Popup></ColorPicker.Positioner></ColorPicker.Portal>
+</ColorPicker.Root>`,
+        language: "tsx",
+      },
+    },
+  },
 };
