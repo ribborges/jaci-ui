@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0
+
+### Minor Changes
+
+- 3e3e82c: Add blurred input popups, draggable ColorPicker palette selection, and month/date-time DatePicker modes.
+
 ## 0.1.1
 
 ### Patch Changes
