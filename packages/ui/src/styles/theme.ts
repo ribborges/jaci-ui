@@ -63,6 +63,11 @@ export const jaciTheme = {
       easings: {
         standard: { value: "cubic-bezier(0.2, 0, 0, 1)" },
       },
+      transitions: {
+        colors: { value: "background-color, border-color, box-shadow, color" },
+        transform: { value: "transform" },
+        standard: { value: "background-color, border-color, box-shadow, color, transform" },
+      },
       animations: {
         spin: { value: "spin 900ms linear infinite" },
       },
@@ -116,6 +121,14 @@ export const jaciTheme = {
         success: { value: "{colors.green.700}" },
         warning: { value: "{colors.amber.700}" },
         danger: { value: "{colors.red.600}" },
+        info: { value: "{colors.blue.600}" },
+        focus: { value: "{colors.blue.600}" },
+        disabled: {
+          value: { base: "{colors.neutral.400}", _dark: "{colors.neutral.600}" },
+        },
+        selected: {
+          value: { base: "{colors.blue.50}", _dark: "{colors.blue.950}" },
+        },
         link: {
           default: {
             value: { base: "{colors.neutral.600}", _dark: "{colors.neutral.400}" },

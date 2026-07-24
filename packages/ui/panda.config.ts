@@ -65,6 +65,10 @@ import { navigationMenuRecipe } from "./src/components/navigation-menu/navigatio
 import { rangeSliderRecipe } from "./src/components/range-slider/range-slider.recipe";
 import { treeViewRecipe } from "./src/components/tree-view/tree-view.recipe";
 import { tagsInputRecipe } from "./src/components/tags-input/tags-input.recipe";
+import { iconButtonRecipe } from "./src/components/icon-button/icon-button.recipe";
+import { buttonGroupRecipe } from "./src/components/button-group/button-group.recipe";
+import { inputGroupRecipe } from "./src/components/input-group/input-group.recipe";
+import { emptyStateRecipe } from "./src/components/empty-state/empty-state.recipe";
 import { jaciConditions, jaciTheme } from "./src/styles/theme";
 
 export default defineConfig({
@@ -106,6 +110,7 @@ export default defineConfig({
         form: formRecipe,
         screenReaderOnly: visuallyHiddenRecipe,
         toggle: toggleRecipe,
+        iconButton: iconButtonRecipe,
       },
       slotRecipes: {
         accordion: accordionRecipe,
@@ -154,6 +159,9 @@ export default defineConfig({
         rangeSlider: rangeSliderRecipe,
         treeView: treeViewRecipe,
         tagsInput: tagsInputRecipe,
+        buttonGroup: buttonGroupRecipe,
+        inputGroup: inputGroupRecipe,
+        emptyState: emptyStateRecipe,
       },
     },
   },
