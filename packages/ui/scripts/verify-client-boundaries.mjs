@@ -14,6 +14,7 @@ const expectedClientModules = [
   "components/controls/radio.js",
   "components/controls/switch.js",
   "components/controls/textarea.js",
+  "components/icon-button/icon-button.js",
   "components/date-picker/date-picker.js",
   "components/dialog/dialog.js",
   "components/drawer/drawer.js",
@@ -48,6 +49,7 @@ const expectedClientModules = [
   "components/toolbar/toolbar.js",
   "components/tree-view/tree-view.js",
   "components/upload/upload.js",
+  "theme/theme-provider.js",
 ];
 
 const emittedFiles = new Set();
