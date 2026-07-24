@@ -4,8 +4,9 @@ import { Field, FieldError, Select, Stack, Text } from "jaci-ui";
 
 const meta = {
   title: "Forms/Select",
+  component: Select.Root,
   tags: ["autodocs"],
-} satisfies Meta;
+} satisfies Meta<typeof Select.Root>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -148,4 +149,46 @@ export const DarkTheme: Story = {
       <PlanSelect />
     </div>
   ),
+};
+
+export const OverlayBlur: Story = {
+  render: () => (
+    <div
+      style={{
+        background: "linear-gradient(135deg, #16a34a, #7c3aed)",
+        minHeight: "16rem",
+        padding: "3rem",
+      }}
+    >
+      <Select.Root defaultOpen defaultValue="pro">
+        <Select.Label>Workspace plan</Select.Label>
+        <Select.Trigger>
+          <Select.Value placeholder="Choose a plan" />
+          <Select.Icon />
+        </Select.Trigger>
+        <Select.Portal>
+          <Select.Positioner align="start" side="bottom" sideOffset={8}>
+            <Select.Popup>
+              <Select.List>
+                <PlanOptions />
+              </Select.List>
+            </Select.Popup>
+          </Select.Positioner>
+        </Select.Portal>
+      </Select.Root>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<Select.Root defaultOpen defaultValue="pro">
+  <Select.Trigger><Select.Value /><Select.Icon /></Select.Trigger>
+  <Select.Portal><Select.Positioner><Select.Popup><Select.List>
+    <Select.Item value="pro"><Select.ItemText>Pro</Select.ItemText></Select.Item>
+  </Select.List></Select.Popup></Select.Positioner></Select.Portal>
+</Select.Root>`,
+        language: "tsx",
+      },
+    },
+  },
 };

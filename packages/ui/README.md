@@ -56,7 +56,36 @@ export function Example() {
 
 Interactive components support controlled and uncontrolled state where appropriate. For example,
 `value`/`onValueChange` can be paired with `defaultValue` when the application does not need to
-own the state.
+own the state. `ColorPicker.Palette` supports pointer dragging, keyboard arrows and a visible
+selection indicator.
+
+DatePicker supports day, month and date-time values while keeping the public value as a native
+`Date`. Add the month and year selectors to the header for quick navigation, and use
+`DatePicker.TimeField` for the date-time mode:
+
+```tsx
+<DatePicker.Root granularity="date-time" defaultValue={new Date()} name="meeting-at">
+  <DatePicker.Trigger><DatePicker.Value /></DatePicker.Trigger>
+  <DatePicker.Portal>
+    <DatePicker.Positioner>
+      <DatePicker.Popup>
+        <DatePicker.Header>
+          <DatePicker.Previous />
+          <DatePicker.MonthSelect />
+          <DatePicker.YearSelect />
+          <DatePicker.Next />
+        </DatePicker.Header>
+        <DatePicker.Calendar />
+        <DatePicker.TimeField />
+        <DatePicker.Close>Done</DatePicker.Close>
+      </DatePicker.Popup>
+    </DatePicker.Positioner>
+  </DatePicker.Portal>
+</DatePicker.Root>
+```
+
+Use `granularity="month"` to select a month normalized to its first day. Date-time popups stay
+open until `DatePicker.Close` is activated; day and month modes close after selection by default.
 
 ## Server rendering and frameworks
 
