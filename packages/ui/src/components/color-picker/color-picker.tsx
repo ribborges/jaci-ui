@@ -207,6 +207,7 @@ export const ColorPickerPopup = forwardRef<HTMLDivElement, ColorPickerPopupProps
     return (
       <BasePopover.Popup
         {...props}
+        aria-label={props["aria-label"] ?? "Color picker"}
         ref={ref}
         className={withRecipeClassName(colorPicker().popup, className)}
         data-jaci-component="color-picker"

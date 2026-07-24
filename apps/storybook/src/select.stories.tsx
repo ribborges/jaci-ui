@@ -179,6 +179,14 @@ export const OverlayBlur: Story = {
     </div>
   ),
   parameters: {
+    // Base UI uses intentionally focusable, aria-hidden guards around portaled
+    // popups. Axe reports those implementation details as aria-hidden-focus
+    // while the visual story is intentionally left open.
+    a11y: {
+      config: {
+        rules: [{ id: "aria-hidden-focus", enabled: false }],
+      },
+    },
     docs: {
       source: {
         code: `<Select.Root defaultOpen defaultValue="pro">
