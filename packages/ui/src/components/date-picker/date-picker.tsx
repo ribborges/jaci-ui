@@ -624,7 +624,7 @@ export const DatePickerClose = forwardRef<HTMLButtonElement, DatePickerCloseProp
       <BasePopover.Close
         {...props}
         ref={ref}
-        className={withRecipeClassName(styles.clear, className)}
+        className={withRecipeClassName(styles.close, className)}
         data-slot="date-picker-close"
       />
     );

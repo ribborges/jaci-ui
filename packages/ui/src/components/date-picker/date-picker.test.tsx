@@ -92,4 +92,20 @@ describe("DatePicker advanced modes", () => {
     act(() => setInputValue(time, "10:00"));
     expect(onValueChange.mock.calls.at(-1)?.[0]?.getHours()).toBe(10);
   });
+
+  it("uses a full-width-safe action style for the date-time close button", () => {
+    const container = renderInDocument(
+      <DatePicker.Root granularity="date-time">
+        <DatePicker.Clear />
+        <DatePicker.Close>Done</DatePicker.Close>
+      </DatePicker.Root>,
+    );
+
+    const clear = container.querySelector('[data-slot="date-picker-clear"]');
+    const close = container.querySelector<HTMLButtonElement>('[data-slot="date-picker-close"]');
+    if (!clear || !close) throw new Error("DatePicker action slots did not render.");
+
+    expect(close.textContent).toBe("Done");
+    expect(close.className).not.toBe(clear.className);
+  });
 });
