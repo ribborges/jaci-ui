@@ -283,6 +283,33 @@ function DateAndUploadHydrationFixture() {
   );
 }
 
+function AdvancedInputHydrationFixture() {
+  return (
+    <Stack gap="md">
+      <DatePicker.Root
+        defaultValue={new Date(2025, 3, 15, 12, 0, 0, 0)}
+        granularity="month"
+        name="billing-month"
+        yearRange={{ end: 2030, start: 2020 }}
+      >
+        <DatePicker.MonthSelect />
+        <DatePicker.YearSelect />
+        <DatePicker.Calendar />
+      </DatePicker.Root>
+      <DatePicker.Root
+        defaultValue={new Date(2025, 3, 15, 14, 30, 0, 0)}
+        granularity="date-time"
+        name="meeting-at"
+      >
+        <DatePicker.TimeField />
+      </DatePicker.Root>
+      <ColorPicker.Root defaultValue="#2563eb">
+        <ColorPicker.Palette />
+      </ColorPicker.Root>
+    </Stack>
+  );
+}
+
 function OptionSelectorHydrationFixture() {
   return (
     <OptionSelector
@@ -571,6 +598,25 @@ describe("SSR hydration", () => {
       container.querySelector('[data-slot="upload-progress"]')?.getAttribute("aria-valuenow"),
     ).toBe("32");
     expect(container.querySelector('input[type="file"]')).not.toBeNull();
+    expect(onRecoverableError).not.toHaveBeenCalled();
+  });
+
+  it("hydrates monthly, date-time and palette controls without mismatch", async () => {
+    const container = document.createElement("div");
+    container.innerHTML = renderToString(<AdvancedInputHydrationFixture />);
+    document.body.append(container);
+
+    const onRecoverableError = vi.fn();
+    let root: Root | undefined;
+    await act(async () => {
+      root = hydrateRoot(container, <AdvancedInputHydrationFixture />, { onRecoverableError });
+    });
+
+    expect(root).toBeDefined();
+    if (root) roots.push(root);
+    expect(container.querySelector('[data-slot="date-picker-month-select"]')).not.toBeNull();
+    expect(container.querySelector('[data-slot="date-picker-time-field"]')).not.toBeNull();
+    expect(container.querySelector('[data-slot="color-picker-palette-indicator"]')).not.toBeNull();
     expect(onRecoverableError).not.toHaveBeenCalled();
   });
 

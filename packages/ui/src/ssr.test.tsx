@@ -753,6 +753,39 @@ describe("SSR rendering", () => {
     expect(html).toContain('type="file"');
   });
 
+  it("renders advanced date and color controls without browser globals", () => {
+    const html = renderToString(
+      <>
+        <DatePicker.Root
+          defaultValue={new Date(2025, 3, 15, 14, 30)}
+          granularity="month"
+          name="billing-month"
+          yearRange={{ end: 2030, start: 2020 }}
+        >
+          <DatePicker.MonthSelect />
+          <DatePicker.YearSelect />
+          <DatePicker.Calendar />
+        </DatePicker.Root>
+        <DatePicker.Root
+          defaultValue={new Date(2025, 3, 15, 14, 30)}
+          granularity="date-time"
+          name="meeting-at"
+        >
+          <DatePicker.TimeField />
+        </DatePicker.Root>
+        <ColorPicker.Root defaultValue="#2563eb">
+          <ColorPicker.Palette />
+        </ColorPicker.Root>
+      </>,
+    );
+
+    expect(html).toContain('data-slot="date-picker-month-select"');
+    expect(html).toContain('data-slot="date-picker-time-field"');
+    expect(html).toContain('data-slot="color-picker-palette-indicator"');
+    expect(html).toContain('value="2025-04"');
+    expect(html).toContain('value="2025-04-15T14:30"');
+  });
+
   it("renders single and multiple option selectors with native form controls", () => {
     const html = renderToString(
       <form>
