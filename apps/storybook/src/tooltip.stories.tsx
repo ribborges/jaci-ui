@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Tooltip } from "jaci-ui";
 
 const meta = {
@@ -65,11 +65,11 @@ export const KeyboardFocus: Story = {
 
 export const DarkTheme: Story = {
   render: function ThemedTooltip() {
-    const portalContainer = useRef<HTMLDivElement>(null);
+    const [portalContainer, setPortalContainer] = useState<HTMLDivElement | null>(null);
 
     return (
       <div
-        ref={portalContainer}
+        ref={setPortalContainer}
         data-jaci-theme="dark"
         style={{ minHeight: "10rem", padding: "2rem" }}
       >
