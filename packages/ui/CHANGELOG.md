@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.3
+
+### Patch Changes
+
+- 8d9f4cb: Preserve the Navbar blur in Next.js by emitting a browser-safe CSS declaration for the bar surface.
+
 ## 0.6.2
 
 ### Patch Changes
