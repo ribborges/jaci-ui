@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0
+
+### Minor Changes
+
+- bd92571: Add Calendar, DateRangePicker, and PinInput components, plus richer form field, input, tags, upload, and selection APIs.
+
 ## 0.3.0
 
 ### Minor Changes
