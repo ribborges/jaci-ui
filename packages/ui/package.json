@@ -78,7 +78,8 @@
     }
   },
   "dependencies": {
-    "@base-ui/react": "^1.6.0"
+    "@base-ui/react": "^1.6.0",
+    "date-fns": "^4.1.0"
   },
   "scripts": {
     "clean": "rimraf dist src/styled-system",
