@@ -5,7 +5,7 @@ import { TreeView, Text } from "jaci-ui";
 const meta = {
   title: "Navigation/TreeView",
   component: TreeView.Root,
-  tags: ["autodocs"],
+  tags: ["autodocs", "test"],
 } satisfies Meta<typeof TreeView.Root>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -126,4 +126,43 @@ export const MultipleSelection: Story = {
       },
     },
   },
+};
+
+export const LazyLoading: Story = {
+  render: () => (
+    <TreeView.Root defaultExpanded={["packages"]} aria-label="Packages">
+      <TreeView.Item id="packages" hasChildren loading>
+        <TreeView.Toggle aria-label="Toggle packages" />
+        <TreeView.Label>packages</TreeView.Label>
+      </TreeView.Item>
+      <TreeView.Loading>Loading package children…</TreeView.Loading>
+    </TreeView.Root>
+  ),
+  parameters: {
+    docs: {
+      source: {
+        language: "tsx",
+        code: `<TreeView.Root defaultExpanded={["packages"]} aria-label="Packages">
+  <TreeView.Item id="packages" hasChildren loading>
+    <TreeView.Toggle aria-label="Toggle packages" />
+    <TreeView.Label>packages</TreeView.Label>
+  </TreeView.Item>
+  <TreeView.Loading>Loading package children…</TreeView.Loading>
+</TreeView.Root>`,
+      },
+    },
+  },
+};
+
+export const EmptyAndError: Story = {
+  render: () => (
+    <div style={{ display: "grid", gap: "0.75rem" }}>
+      <TreeView.Root aria-label="Empty tree">
+        <TreeView.Empty>No files in this folder.</TreeView.Empty>
+      </TreeView.Root>
+      <TreeView.Root aria-label="Failed tree">
+        <TreeView.Error>Could not load this folder.</TreeView.Error>
+      </TreeView.Root>
+    </div>
+  ),
 };

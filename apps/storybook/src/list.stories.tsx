@@ -3,7 +3,7 @@ import { Button, List } from "jaci-ui";
 
 const meta = {
   title: "Data Display/List",
-  tags: ["autodocs"],
+  tags: ["autodocs", "test"],
 } satisfies Meta;
 
 export default meta;
@@ -38,7 +38,7 @@ export const Divided: Story = {
 
 export const OrderedCards: Story = {
   render: () => (
-    <List.Root gap="sm" ordered variant="card">
+    <List.Root density="compact" gap="sm" ordered variant="card">
       <List.Item>
         <List.ItemContent>
           <List.ItemTitle>Install</List.ItemTitle>
@@ -59,4 +59,19 @@ export const OrderedCards: Story = {
       </List.Item>
     </List.Root>
   ),
+  parameters: {
+    docs: {
+      source: {
+        language: "tsx",
+        code: `<List.Root ordered variant="card" density="compact" gap="sm">
+  <List.Item>
+    <List.ItemContent>
+      <List.ItemTitle>Install</List.ItemTitle>
+      <List.ItemDescription>Add jaci-ui to your app.</List.ItemDescription>
+    </List.ItemContent>
+  </List.Item>
+</List.Root>`,
+      },
+    },
+  },
 };

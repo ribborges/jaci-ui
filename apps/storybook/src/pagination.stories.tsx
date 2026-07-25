@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 import { Pagination } from "jaci-ui";
 
 const meta = {
   title: "Navigation/Pagination",
-  tags: ["autodocs"],
+  tags: ["autodocs", "test"],
   component: Pagination.Root,
 } satisfies Meta<typeof Pagination.Root>;
 
@@ -52,6 +53,53 @@ export const ResponsiveLayout: Story = {
       <PageLinks />
     </div>
   ),
+};
+
+export const GeneratedPages: Story = {
+  render: () => <Pagination.Root defaultPage={5} pageCount={12} showFirstLast siblingCount={1} />,
+  parameters: {
+    docs: {
+      source: {
+        language: "tsx",
+        code: `<Pagination.Root
+  defaultPage={5}
+  pageCount={12}
+  showFirstLast
+  siblingCount={1}
+  onPageChange={setPage}
+/>`,
+      },
+    },
+  },
+};
+
+export const ControlledCompact: Story = {
+  render: function ControlledPagination() {
+    const [page, setPage] = useState(1);
+    return (
+      <Pagination.Root
+        density="compact"
+        page={page}
+        pageCount={5}
+        onPageChange={setPage}
+        showFirstLast
+      />
+    );
+  },
+  parameters: {
+    docs: {
+      source: {
+        language: "tsx",
+        code: `<Pagination.Root
+  density="compact"
+  page={page}
+  pageCount={5}
+  onPageChange={setPage}
+  showFirstLast
+/>`,
+      },
+    },
+  },
 };
 
 export const FocusAndDisabled: Story = {
