@@ -79,8 +79,7 @@ export const NavigationMenuRoot = forwardRef<HTMLElement, NavigationMenuRootProp
 
     useEffect(() => {
       if (resolvedValue === null) return;
-
-      const handleOutsideClick = (event: MouseEvent) => {
+      const handleOutsidePress = (event: MouseEvent) => {
         const target = event.target;
         if (!(target instanceof Element)) return;
         if (rootElementRef.current?.contains(target)) return;
@@ -93,9 +92,8 @@ export const NavigationMenuRoot = forwardRef<HTMLElement, NavigationMenuRootProp
         }
         close();
       };
-
-      document.addEventListener("click", handleOutsideClick);
-      return () => document.removeEventListener("click", handleOutsideClick);
+      document.addEventListener("click", handleOutsidePress);
+      return () => document.removeEventListener("click", handleOutsidePress);
     }, [close, resolvedValue]);
 
     const setRootRef = (element: HTMLElement | null) => {

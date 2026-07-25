@@ -1,10 +1,12 @@
 "use client";
 
+import { Dialog as BaseDialog } from "@base-ui/react/dialog";
 import { createContext, forwardRef, useCallback, useContext, useMemo, useState } from "react";
 import type { ComponentPropsWithoutRef, MouseEvent, ReactNode } from "react";
 
 import { cx } from "../../styled-system/css";
 import { sidebar } from "../../styled-system/recipes";
+import { withRecipeClassName } from "../base-ui";
 
 export interface SidebarContextValue {
   /** Whether the sidebar is visually expanded. */
@@ -44,6 +46,16 @@ export interface SidebarRootProps extends ComponentPropsWithoutRef<"aside"> {
   defaultOpen?: boolean;
   /** Called after the requested expanded state changes. */
   onOpenChange?: (open: boolean) => void;
+  /** Renders the sidebar as a modal mobile surface when set to overlay. */
+  mode?: "static" | "overlay";
+  /** Allows Escape to be disabled for overlay mode. */
+  closeOnEscape?: boolean;
+  /** Allows outside presses to be disabled for overlay mode. */
+  closeOnOutsidePress?: boolean;
+  /** Restores focus to the element that opened the overlay. */
+  restoreFocus?: boolean;
+  /** Controls whether the overlay traps focus and locks page scroll. */
+  modal?: boolean | "trap-focus";
   children?: ReactNode;
 }
 
@@ -51,7 +63,19 @@ export interface SidebarRootProps extends ComponentPropsWithoutRef<"aside"> {
  * The sidebar container. It supports both controlled and uncontrolled state.
  */
 export const SidebarRoot = forwardRef<HTMLElement, SidebarRootProps>(function SidebarRoot(
-  { children, className, defaultOpen = true, onOpenChange, open: controlledOpen, ...props },
+  {
+    children,
+    className,
+    closeOnEscape = true,
+    closeOnOutsidePress = true,
+    defaultOpen = true,
+    modal = true,
+    mode = "static",
+    onOpenChange,
+    open: controlledOpen,
+    restoreFocus = true,
+    ...props
+  },
   ref,
 ) {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
@@ -79,22 +103,82 @@ export const SidebarRoot = forwardRef<HTMLElement, SidebarRootProps>(function Si
   );
   const styles = sidebar({ open });
 
-  return (
-    <SidebarContext.Provider value={context}>
-      <aside
-        {...props}
-        ref={ref}
-        className={cx(styles.root, className)}
-        data-jaci-component="sidebar"
-        data-open={open}
-        data-slot="sidebar"
-        data-state={open ? "open" : "closed"}
-      >
-        {children}
-      </aside>
-    </SidebarContext.Provider>
+  const surface = (
+    <aside
+      {...props}
+      ref={ref}
+      className={cx(styles.root, className)}
+      data-jaci-component="sidebar"
+      data-open={open}
+      data-slot="sidebar"
+      data-state={open ? "open" : "closed"}
+    >
+      {children}
+    </aside>
   );
+
+  if (mode === "overlay") {
+    return (
+      <SidebarContext.Provider value={context}>
+        <BaseDialog.Root
+          open={open}
+          modal={modal}
+          onOpenChange={(nextOpen, details) => {
+            if (
+              !nextOpen &&
+              ((!closeOnEscape && details.reason === "escape-key") ||
+                (!closeOnOutsidePress && details.reason === "outside-press"))
+            ) {
+              details.cancel();
+              return;
+            }
+            setOpen(nextOpen);
+          }}
+        >
+          <BaseDialog.Portal>
+            <BaseDialog.Backdrop
+              className={cx(styles.backdrop)}
+              data-jaci-component="sidebar"
+              data-slot="sidebar-backdrop"
+            />
+            <BaseDialog.Viewport className={cx(styles.viewport)} data-slot="sidebar-viewport">
+              <BaseDialog.Popup
+                aria-label={props["aria-label"] ?? "Sidebar navigation"}
+                className={cx(styles.popup)}
+                data-jaci-component="sidebar"
+                data-slot="sidebar-popup"
+                finalFocus={restoreFocus}
+                initialFocus
+              >
+                {surface}
+              </BaseDialog.Popup>
+            </BaseDialog.Viewport>
+          </BaseDialog.Portal>
+        </BaseDialog.Root>
+      </SidebarContext.Provider>
+    );
+  }
+
+  return <SidebarContext.Provider value={context}>{surface}</SidebarContext.Provider>;
 });
+
+export type SidebarPortalProps = ComponentPropsWithoutRef<typeof BaseDialog.Portal>;
+export const SidebarPortal: typeof BaseDialog.Portal = BaseDialog.Portal;
+
+export type SidebarBackdropProps = ComponentPropsWithoutRef<typeof BaseDialog.Backdrop>;
+export const SidebarBackdrop = forwardRef<HTMLDivElement, SidebarBackdropProps>(
+  function SidebarBackdrop({ className, ...props }, ref) {
+    const { open } = useSidebar();
+    return (
+      <BaseDialog.Backdrop
+        {...props}
+        className={withRecipeClassName(sidebar({ open }).backdrop, className)}
+        data-slot="sidebar-backdrop"
+        ref={ref}
+      />
+    );
+  },
+);
 
 export type SidebarToggleProps = ComponentPropsWithoutRef<"button">;
 
@@ -233,6 +317,8 @@ export const SidebarLabel = forwardRef<HTMLSpanElement, SidebarLabelProps>(funct
 
 export const Sidebar = {
   Root: SidebarRoot,
+  Portal: SidebarPortal,
+  Backdrop: SidebarBackdrop,
   Toggle: SidebarToggle,
   Header: SidebarHeader,
   Content: SidebarContent,

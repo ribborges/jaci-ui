@@ -39,12 +39,14 @@ export type ToastViewportProps = ComponentPropsWithoutRef<typeof BaseToast.Viewp
  * A bottom-centred notification region.
  */
 export const ToastViewport = forwardRef<HTMLDivElement, ToastViewportProps>(function ToastViewport(
-  { className, ...props },
+  { "aria-label": ariaLabel, "aria-live": ariaLive, className, ...props },
   ref,
 ) {
   return (
     <BaseToast.Viewport
       {...props}
+      aria-label={ariaLabel ?? "Notifications"}
+      aria-live={ariaLive ?? "polite"}
       ref={ref}
       className={withRecipeClassName(toastRecipe().viewport, className)}
       data-jaci-component="toast-viewport"
