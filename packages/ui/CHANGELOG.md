@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.1
+
+### Patch Changes
+
+- 06fa9ee: Make the compound `Navbar` namespace compatible with Next.js App Router Server Components.
+
 ## 0.6.0
 
 ### Minor Changes
