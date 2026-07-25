@@ -13,6 +13,7 @@ export const calendarRecipe = defineSlotRecipe({
     "weekdays",
     "weekday",
     "grid",
+    "row",
     "day",
   ],
   base: {
@@ -114,9 +115,13 @@ export const calendarRecipe = defineSlotRecipe({
       textTransform: "uppercase",
     },
     grid: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "1",
+    },
+    row: {
       display: "grid",
       gridTemplateColumns: "repeat(7, minmax(0, 1fr))",
-      rowGap: "1",
     },
     day: {
       alignItems: "center",
@@ -140,7 +145,9 @@ export const calendarRecipe = defineSlotRecipe({
         outlineOffset: "-2px",
       },
       _hover: { backgroundColor: "surface.subtle" },
-      "&[data-outside-month]": { color: "fg.muted", opacity: "0.65" },
+      // Muted text already meets the contrast requirement. Reducing it with
+      // opacity would make outside-month days fail the WCAG contrast check.
+      "&[data-outside-month]": { color: "fg.muted" },
       "&[data-selected]": {
         backgroundColor: "accent.default",
         color: "fg.onAccent",

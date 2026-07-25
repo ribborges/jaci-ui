@@ -145,8 +145,8 @@ export const LoadingAndEmpty: Story = {
         <Select.Portal>
           <Select.Positioner>
             <Select.Popup>
-              <Select.List />
               <Select.Loading>Loading plans…</Select.Loading>
+              <Select.List />
             </Select.Popup>
           </Select.Positioner>
         </Select.Portal>
@@ -160,9 +160,8 @@ export const LoadingAndEmpty: Story = {
         <Select.Portal>
           <Select.Positioner>
             <Select.Popup>
-              <Select.List>
-                <Select.Empty>No plans found.</Select.Empty>
-              </Select.List>
+              <Select.Empty>No plans found.</Select.Empty>
+              <Select.List />
             </Select.Popup>
           </Select.Positioner>
         </Select.Portal>

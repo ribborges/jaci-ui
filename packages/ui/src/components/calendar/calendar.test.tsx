@@ -15,6 +15,10 @@ describe("Calendar", () => {
       </Calendar.Root>,
     );
     expect(container.querySelector("[data-slot='calendar-day-grid']")).toBeTruthy();
+    expect(container.querySelectorAll("[data-slot='calendar-week'][role='row']")).toHaveLength(6);
+    expect(
+      container.querySelectorAll("[data-slot='calendar-week'] [role='gridcell']"),
+    ).toHaveLength(42);
     const day = container.querySelector<HTMLButtonElement>("[data-date='2025-04-15']");
     if (!day) throw new Error("Calendar day was not rendered.");
     act(() => day.click());

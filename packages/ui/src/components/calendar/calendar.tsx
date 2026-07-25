@@ -517,6 +517,13 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
 ) {
   const { locale, month, styles, weekStartsOn } = useCalendarContext();
   const days = useMemo(() => getCalendarDays(month, weekStartsOn), [month, weekStartsOn]);
+  const weeks = useMemo(
+    () =>
+      Array.from({ length: Math.ceil(days.length / 7) }, (_, index) =>
+        days.slice(index * 7, index * 7 + 7),
+      ),
+    [days],
+  );
   const weekdays = useMemo(() => getWeekdayLabels(locale, weekStartsOn), [locale, weekStartsOn]);
   return (
     <div {...props} className={cx(styles.calendar, className)} data-slot="calendar-grid" ref={ref}>
@@ -534,8 +541,18 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
         data-slot="calendar-day-grid"
         role="grid"
       >
-        {days.map((date) => (
-          <CalendarDay date={date} key={dateKey(date)} />
+        {weeks.map((week, index) => (
+          <div
+            aria-rowindex={index + 1}
+            className={styles.row}
+            data-slot="calendar-week"
+            key={dateKey(week[0])}
+            role="row"
+          >
+            {week.map((date) => (
+              <CalendarDay date={date} key={dateKey(date)} />
+            ))}
+          </div>
         ))}
       </div>
     </div>
