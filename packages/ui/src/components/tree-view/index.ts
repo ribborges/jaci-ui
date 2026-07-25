@@ -1,8 +1,11 @@
 export {
   TreeView,
+  TreeViewEmpty,
+  TreeViewError,
   TreeViewGroup,
   TreeViewItem,
   TreeViewLabel,
+  TreeViewLoading,
   TreeViewRoot,
   TreeViewToggle,
 } from "./tree-view";
@@ -13,5 +16,6 @@ export type {
   TreeViewRootProps,
   TreeViewSelection,
   TreeViewSelectionMode,
+  TreeViewStateProps,
   TreeViewToggleProps,
 } from "./tree-view";

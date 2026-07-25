@@ -76,4 +76,25 @@ describe("TreeView", () => {
     expect(groups[0]?.hasAttribute("hidden")).toBe(false);
     expect(groups[1]?.hasAttribute("hidden")).toBe(true);
   });
+
+  it("supports declarative lazy children and loading state", () => {
+    const container = renderInDocument(
+      <TreeView.Root aria-label="Packages">
+        <TreeView.Item id="packages" hasChildren loading>
+          <TreeView.Toggle aria-label="Toggle packages" />
+          <TreeView.Label>packages</TreeView.Label>
+        </TreeView.Item>
+        <TreeView.Loading>Loading children…</TreeView.Loading>
+      </TreeView.Root>,
+    );
+    const item = container.querySelector<HTMLElement>('[data-slot="tree-view-item"]');
+    const toggle = container.querySelector<HTMLButtonElement>('[data-slot="tree-view-toggle"]');
+    if (!item || !toggle) throw new Error("Lazy tree item was not rendered.");
+
+    expect(item.getAttribute("aria-busy")).toBe("true");
+    expect(item.getAttribute("aria-expanded")).toBe("false");
+    expect(container.querySelector('[data-slot="tree-view-loading"]')).not.toBeNull();
+    act(() => toggle.click());
+    expect(item.getAttribute("aria-expanded")).toBe("true");
+  });
 });

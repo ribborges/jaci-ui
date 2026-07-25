@@ -23,6 +23,8 @@ interface TreeNodeRecord {
   id: string;
   parentId: string | undefined;
   disabled: boolean;
+  hasChildren: boolean;
+  loading: boolean;
   selectable: boolean;
   order: number;
   element: HTMLDivElement | null;
@@ -132,7 +134,9 @@ export const TreeViewRoot = forwardRef<HTMLDivElement, TreeViewRootProps>(functi
   }, []);
 
   const hasChildren = useCallback(
-    (id: string) => nodes.some((node) => node.parentId === id),
+    (id: string) =>
+      nodes.some((node) => node.parentId === id) ||
+      Boolean(nodes.find((node) => node.id === id)?.hasChildren),
     [nodes],
   );
   const isVisible = useCallback(
@@ -314,6 +318,8 @@ export const TreeViewRoot = forwardRef<HTMLDivElement, TreeViewRootProps>(functi
 export interface TreeViewItemProps extends Omit<ComponentPropsWithoutRef<"div">, "id"> {
   id: string;
   disabled?: boolean;
+  hasChildren?: boolean;
+  loading?: boolean;
   selectable?: boolean;
 }
 
@@ -322,6 +328,8 @@ export const TreeViewItem = forwardRef<HTMLDivElement, TreeViewItemProps>(functi
     children,
     className,
     disabled = false,
+    hasChildren: hasChildrenProp = false,
+    loading = false,
     onClick,
     onFocus,
     onKeyDown,
@@ -336,8 +344,18 @@ export const TreeViewItem = forwardRef<HTMLDivElement, TreeViewItemProps>(functi
   const parentId = useContext(TreeParentContext);
   const styles = treeView();
   useEffect(
-    () => context.registerNode({ id, parentId, disabled, selectable, order: 0, element: null }),
-    [context.registerNode, disabled, id, parentId, selectable],
+    () =>
+      context.registerNode({
+        id,
+        parentId,
+        disabled,
+        hasChildren: hasChildrenProp,
+        loading,
+        selectable,
+        order: 0,
+        element: null,
+      }),
+    [context.registerNode, disabled, hasChildrenProp, id, loading, parentId, selectable],
   );
   const siblings = context.getSiblings(id);
   const registeredNode = context.nodes.find((candidate) => candidate.id === id);
@@ -366,6 +384,7 @@ export const TreeViewItem = forwardRef<HTMLDivElement, TreeViewItemProps>(functi
           }}
           aria-disabled={disabled || undefined}
           aria-expanded={context.hasChildren(id) ? context.expanded.has(id) : undefined}
+          aria-busy={loading || undefined}
           aria-level={registeredNode ? context.getDepth(id) : parentId ? 2 : 1}
           aria-posinset={siblingIndex >= 0 ? siblingIndex + 1 : 1}
           aria-setsize={siblings.length || 1}
@@ -375,6 +394,7 @@ export const TreeViewItem = forwardRef<HTMLDivElement, TreeViewItemProps>(functi
           data-expanded={context.expanded.has(id) || undefined}
           data-jaci-component="tree-view"
           data-selected={selected || undefined}
+          data-loading={loading || undefined}
           data-slot="tree-view-item"
           onClick={(event) => {
             event.stopPropagation();
@@ -444,13 +464,17 @@ export const TreeViewToggle = forwardRef<HTMLButtonElement, TreeViewToggleProps>
     const context = useTreeViewContext();
     const itemId = useContext(TreeItemContext);
     const id = itemId;
+    const item = id ? context.nodes.find((candidate) => candidate.id === id) : undefined;
+    const disabled = context.disabled || Boolean(item?.disabled);
     return (
       <button
         {...props}
         ref={ref}
         aria-expanded={id ? context.expanded.has(id) : undefined}
+        aria-disabled={disabled || undefined}
         className={cx(treeView().toggle, className)}
         data-slot="tree-view-toggle"
+        disabled={disabled || props.disabled}
         onClick={(event) => {
           event.stopPropagation();
           onClick?.(event);
@@ -480,10 +504,78 @@ export const TreeViewLabel = forwardRef<HTMLSpanElement, TreeViewLabelProps>(fun
   );
 });
 
+export interface TreeViewStateProps extends ComponentPropsWithoutRef<"div"> {
+  children?: ReactNode;
+}
+
+export const TreeViewLoading = forwardRef<HTMLDivElement, TreeViewStateProps>(
+  function TreeViewLoading({ children = "Loading…", className, ...props }, ref) {
+    return (
+      <div
+        {...props}
+        ref={ref}
+        aria-disabled="true"
+        aria-live="polite"
+        aria-level={1}
+        className={cx(treeView().loading, className)}
+        data-slot="tree-view-loading"
+        role="treeitem"
+        tabIndex={-1}
+      >
+        {children}
+      </div>
+    );
+  },
+);
+
+export const TreeViewEmpty = forwardRef<HTMLDivElement, TreeViewStateProps>(function TreeViewEmpty(
+  { children = "No items found.", className, ...props },
+  ref,
+) {
+  return (
+    <div
+      {...props}
+      ref={ref}
+      aria-disabled="true"
+      aria-level={1}
+      className={cx(treeView().empty, className)}
+      data-slot="tree-view-empty"
+      role="treeitem"
+      tabIndex={-1}
+    >
+      {children}
+    </div>
+  );
+});
+
+export const TreeViewError = forwardRef<HTMLDivElement, TreeViewStateProps>(function TreeViewError(
+  { children = "Something went wrong.", className, ...props },
+  ref,
+) {
+  return (
+    <div
+      {...props}
+      ref={ref}
+      aria-disabled="true"
+      aria-live="assertive"
+      aria-level={1}
+      className={cx(treeView().error, className)}
+      data-slot="tree-view-error"
+      role="treeitem"
+      tabIndex={-1}
+    >
+      {children}
+    </div>
+  );
+});
+
 export const TreeView = {
   Root: TreeViewRoot,
   Item: TreeViewItem,
   Group: TreeViewGroup,
   Toggle: TreeViewToggle,
   Label: TreeViewLabel,
+  Loading: TreeViewLoading,
+  Empty: TreeViewEmpty,
+  Error: TreeViewError,
 };
