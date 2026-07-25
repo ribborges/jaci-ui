@@ -25,6 +25,8 @@ export interface ComboboxRootProps<Value, Multiple extends boolean | undefined =
   size?: ComboboxSize;
   /** Marks the field invalid when an external validator owns its state. */
   invalid?: boolean;
+  /** Shows a loading state through the optional Loading slot. */
+  loading?: boolean;
   /** Direct error content rendered through the surrounding Field context. */
   errors?: ReactNode | ReactNode[];
   children?: ReactNode;
@@ -41,6 +43,7 @@ export function ComboboxRoot<Value = string, Multiple extends boolean | undefine
   className,
   errors,
   invalid,
+  loading: _loading,
   name,
   size = "md",
   ...props
@@ -287,6 +290,23 @@ export const ComboboxClear = forwardRef<HTMLButtonElement, ComboboxClearProps>(
   },
 );
 
+export type ComboboxLoadingProps = ComponentPropsWithoutRef<"div">;
+export const ComboboxLoading = forwardRef<HTMLDivElement, ComboboxLoadingProps>(
+  function ComboboxLoading({ children = "Loading…", className, ...props }, ref) {
+    return (
+      <div
+        {...props}
+        ref={ref}
+        aria-live="polite"
+        className={cx(useComboboxStyles().loading, className)}
+        data-slot="combobox-loading"
+      >
+        {children}
+      </div>
+    );
+  },
+);
+
 export type ComboboxStatusProps = ComponentPropsWithoutRef<typeof BaseCombobox.Status>;
 export const ComboboxStatus = forwardRef<HTMLDivElement, ComboboxStatusProps>(
   function ComboboxStatus({ className, ...props }, ref) {
@@ -333,6 +353,7 @@ export const Combobox = {
   Group: ComboboxGroup,
   GroupLabel: ComboboxGroupLabel,
   Empty: ComboboxEmpty,
+  Loading: ComboboxLoading,
   Clear: ComboboxClear,
   Status: ComboboxStatus,
   Arrow: ComboboxArrow,

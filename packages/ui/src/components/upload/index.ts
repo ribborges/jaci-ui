@@ -1,5 +1,6 @@
 export {
   Upload,
+  UploadCancel,
   UploadDropzone,
   UploadError,
   UploadHint,
@@ -9,6 +10,7 @@ export {
   UploadList,
   UploadRemove,
   UploadRoot,
+  UploadStatus,
   UploadPreview,
   UploadProgress,
   UploadText,
@@ -28,6 +30,10 @@ export type {
   UploadRejectionReason,
   UploadRemoveProps,
   UploadRootProps,
+  UploadStatusProps,
+  UploadCancelProps,
+  UploadFileState,
+  UploadFileStatus,
   UploadTextProps,
   UploadTriggerProps,
 } from "./upload";

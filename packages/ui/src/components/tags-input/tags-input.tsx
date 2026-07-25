@@ -6,7 +6,9 @@ import type {
   ChangeEventHandler,
   ComponentPropsWithoutRef,
   FocusEvent,
+  KeyboardEvent,
   MouseEvent,
+  ClipboardEvent,
   ReactNode,
 } from "react";
 
@@ -36,6 +38,9 @@ export interface TagsInputProps
   onChange?: ChangeEventHandler<HTMLInputElement>;
   /** Optional callback useful when a controlled query is cleared by selecting a tag. */
   onInputValueChange?: (value: string) => void;
+  allowDuplicates?: boolean;
+  delimiter?: string | RegExp;
+  editable?: boolean;
 }
 
 function changedEvent(event: ChangeEvent<HTMLInputElement>, value: string) {
@@ -54,16 +59,31 @@ function changedEvent(event: ChangeEvent<HTMLInputElement>, value: string) {
   } as ChangeEvent<HTMLInputElement>;
 }
 
+function tagKey(tag: string, index: number) {
+  return `${tag}-${index}`;
+}
+
+function hasDelimiter(value: string, delimiter: string | RegExp) {
+  if (typeof delimiter === "string") return delimiter.length > 0 && value.includes(delimiter);
+  delimiter.lastIndex = 0;
+  const result = delimiter.test(value);
+  delimiter.lastIndex = 0;
+  return result;
+}
+
 export const TagsInput = forwardRef<HTMLInputElement, TagsInputProps>(function TagsInput(
   {
     "aria-describedby": ariaDescribedBy,
     "aria-invalid": ariaInvalid,
     "aria-label": ariaLabel,
+    allowDuplicates = false,
     className,
     data = [],
     defaultTags = [],
     defaultValue = "",
     disabled = false,
+    delimiter = /[,\n]/u,
+    editable = false,
     id: providedId,
     label,
     onBlur,
@@ -83,6 +103,8 @@ export const TagsInput = forwardRef<HTMLInputElement, TagsInputProps>(function T
   const [uncontrolledTags, setUncontrolledTags] = useState<string[]>(() => [...defaultTags]);
   const [uncontrolledInputValue, setUncontrolledInputValue] = useState(defaultValue);
   const [focused, setFocused] = useState(false);
+  const [composing, setComposing] = useState(false);
+  const [editingTag, setEditingTag] = useState<{ index: number; value: string } | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const styles = tagsInput();
   const selectedTags = controlledTags === undefined ? uncontrolledTags : [...controlledTags];
@@ -109,12 +131,44 @@ export const TagsInput = forwardRef<HTMLInputElement, TagsInputProps>(function T
   const addTag = useCallback(
     (rawTag: string, event?: ChangeEvent<HTMLInputElement>) => {
       const tag = rawTag.trim();
-      if (tag && !selectedTags.includes(tag) && data.includes(tag)) {
-        updateTags([...selectedTags, tag]);
+      const isAllowed = data.length === 0 || data.includes(tag);
+      const duplicate = selectedTags.includes(tag);
+      if (tag && isAllowed && (allowDuplicates || !duplicate)) {
+        if (editingTag) {
+          updateTags([
+            ...selectedTags.slice(0, editingTag.index),
+            tag,
+            ...selectedTags.slice(editingTag.index),
+          ]);
+          setEditingTag(null);
+        } else {
+          updateTags([...selectedTags, tag]);
+        }
+      } else if (editingTag) {
+        return;
       }
       clearInput(event);
     },
-    [clearInput, data, selectedTags, updateTags],
+    [allowDuplicates, clearInput, data, editingTag, selectedTags, updateTags],
+  );
+
+  const addDelimited = useCallback(
+    (rawValue: string, event?: ChangeEvent<HTMLInputElement>) => {
+      const separator =
+        typeof delimiter === "string" && delimiter.length === 0 ? /\r?\n/u : delimiter;
+      const values = rawValue
+        .split(separator)
+        .map((value) => value.trim())
+        .filter(Boolean);
+      const nextTags = [...selectedTags];
+      for (const value of values) {
+        const isAllowed = data.length === 0 || data.includes(value);
+        if (isAllowed && (allowDuplicates || !nextTags.includes(value))) nextTags.push(value);
+      }
+      if (nextTags.length !== selectedTags.length) updateTags(nextTags);
+      clearInput(event);
+    },
+    [allowDuplicates, clearInput, data, delimiter, selectedTags, updateTags],
   );
 
   const suggestions = useMemo(() => {
@@ -134,8 +188,8 @@ export const TagsInput = forwardRef<HTMLInputElement, TagsInputProps>(function T
       return;
     }
 
-    if (nextValue.endsWith(",")) {
-      addTag(nextValue.slice(0, -1), event);
+    if (!composing && hasDelimiter(nextValue, delimiter)) {
+      addDelimited(nextValue, event);
       return;
     }
 
@@ -147,6 +201,40 @@ export const TagsInput = forwardRef<HTMLInputElement, TagsInputProps>(function T
   function handleBlur(event: FocusEvent<HTMLInputElement>) {
     setFocused(false);
     onBlur?.(event);
+  }
+
+  function handlePaste(event: ClipboardEvent<HTMLInputElement>) {
+    const pasted = event.clipboardData.getData("text");
+    if (!pasted || (!hasDelimiter(pasted, delimiter) && !pasted.includes("\n"))) return;
+    event.preventDefault();
+    addDelimited(pasted);
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.nativeEvent.isComposing || composing) return;
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (inputValue.trim()) addTag(inputValue);
+      else if (editingTag) setEditingTag(null);
+    } else if (event.key === "Escape" && editingTag) {
+      event.preventDefault();
+      updateTags([
+        ...selectedTags.slice(0, editingTag.index),
+        editingTag.value,
+        ...selectedTags.slice(editingTag.index),
+      ]);
+      clearInput();
+      setEditingTag(null);
+    } else if (event.key === "Backspace" && !inputValue && editable && selectedTags.length > 0) {
+      const index = selectedTags.length - 1;
+      const tag = selectedTags[index];
+      if (tag === undefined) return;
+      setEditingTag({ index, value: tag });
+      updateTags(selectedTags.slice(0, -1));
+      if (controlledInputValue === undefined) setUncontrolledInputValue(tag);
+      onInputValueChange?.(tag);
+    }
+    props.onKeyDown?.(event);
   }
 
   function removeTag(index: number) {
@@ -173,7 +261,7 @@ export const TagsInput = forwardRef<HTMLInputElement, TagsInputProps>(function T
       >
         <div className={styles.tagList} data-slot="tags-input-tag-list">
           {selectedTags.map((tag, index) => (
-            <span className={styles.tag} data-slot="tags-input-tag" key={tag}>
+            <span className={styles.tag} data-slot="tags-input-tag" key={tagKey(tag, index)}>
               <span className={styles.tagLabel} data-slot="tags-input-tag-label">
                 {tag}
               </span>
@@ -201,10 +289,14 @@ export const TagsInput = forwardRef<HTMLInputElement, TagsInputProps>(function T
           id={id}
           onBlur={handleBlur}
           onChange={handleChange}
+          onCompositionEnd={() => setComposing(false)}
+          onCompositionStart={() => setComposing(true)}
           onFocus={(event) => {
             setFocused(true);
             onFocus?.(event);
           }}
+          onKeyDown={handleKeyDown}
+          onPaste={handlePaste}
           placeholder={placeholder}
           ref={ref}
           type="text"

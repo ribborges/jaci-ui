@@ -16,7 +16,15 @@ import type { ChangeEvent, ComponentPropsWithoutRef, ReactNode, RefObject } from
 import { cx } from "../../styled-system/css";
 import { upload } from "../../styled-system/recipes";
 
-export type UploadRejectionReason = "type" | "size" | "count" | "duplicate";
+export type UploadRejectionReason = "type" | "size" | "count" | "duplicate" | "validation";
+
+export type UploadFileStatus = "queued" | "uploading" | "success" | "error" | "canceled";
+
+export interface UploadFileState {
+  status: UploadFileStatus;
+  progress?: number;
+  error?: ReactNode;
+}
 
 export interface UploadRejection {
   file: File;
@@ -32,10 +40,12 @@ interface UploadContextValue {
   files: File[];
   inputId: string;
   inputRef: RefObject<HTMLInputElement | null>;
+  fileState: ((file: File) => UploadFileState | undefined) | undefined;
   maxFiles: number | undefined;
   maxSize: number | undefined;
   multiple: boolean;
   removeFile: (file: File) => void;
+  cancelFile: (file: File) => void;
   rejections: UploadRejection[];
   setDropActive: (active: boolean) => void;
   styles: ReturnType<typeof upload>;
@@ -98,12 +108,19 @@ export interface UploadRootProps extends Omit<ComponentPropsWithoutRef<"div">, "
   multiple?: boolean;
   /** Disables file selection and drag-and-drop. */
   disabled?: boolean;
+  /** Optional asynchronous validation. Return an error message to reject a file. */
+  validateFile?: (file: File) => string | null | Promise<string | null>;
+  /** Controlled status used by the status, progress and cancel slots. */
+  fileState?: (file: File) => UploadFileState | undefined;
+  /** Called when a consumer cancels an upload. */
+  onCancel?: (file: File) => void;
   children?: ReactNode;
 }
 
 export const UploadRoot = forwardRef<HTMLDivElement, UploadRootProps>(function UploadRoot(
   {
     accept,
+    fileState,
     children,
     className,
     defaultFiles = [],
@@ -113,7 +130,9 @@ export const UploadRoot = forwardRef<HTMLDivElement, UploadRootProps>(function U
     maxSize,
     multiple = false,
     onFilesChange,
+    onCancel,
     onReject,
+    validateFile,
     ...props
   },
   ref,
@@ -129,10 +148,17 @@ export const UploadRoot = forwardRef<HTMLDivElement, UploadRootProps>(function U
 
   const updateFiles = useCallback(
     (nextFiles: File[]) => {
-      setUncontrolledFiles(nextFiles);
+      if (controlledFiles === undefined) setUncontrolledFiles(nextFiles);
       onFilesChange?.(nextFiles);
     },
-    [onFilesChange],
+    [controlledFiles, onFilesChange],
+  );
+
+  const removeFile = useCallback(
+    (file: File) => {
+      updateFiles(currentFiles.filter((current) => fileKey(current) !== fileKey(file)));
+    },
+    [currentFiles, updateFiles],
   );
 
   const addFiles = useCallback(
@@ -142,6 +168,7 @@ export const UploadRoot = forwardRef<HTMLDivElement, UploadRootProps>(function U
       const candidates = Array.from(fileList);
       const acceptedFiles: File[] = [];
       const nextRejections: UploadRejection[] = [];
+      const pendingValidations = new Map<File, Promise<string | null>>();
       const existingKeys = new Set(currentFiles.map(fileKey));
 
       for (const file of candidates) {
@@ -182,12 +209,44 @@ export const UploadRoot = forwardRef<HTMLDivElement, UploadRootProps>(function U
           });
           continue;
         }
+        if (validateFile) {
+          const validation = validateFile(file);
+          if (validation && typeof validation !== "object") {
+            nextRejections.push({ file, reason: "validation", message: validation });
+            continue;
+          }
+          if (validation && typeof validation === "object" && "then" in validation) {
+            pendingValidations.set(file, Promise.resolve(validation));
+          }
+        }
         acceptedFiles.push(file);
       }
 
       const nextFiles = multiple ? [...currentFiles, ...acceptedFiles] : acceptedFiles.slice(0, 1);
       if (acceptedFiles.length > 0) {
         updateFiles(nextFiles);
+      }
+      if (validateFile) {
+        for (const file of acceptedFiles) {
+          const validation = pendingValidations.get(file);
+          if (validation) {
+            void validation
+              .then((message) => {
+                if (!message) return;
+                const rejection = { file, reason: "validation" as const, message };
+                updateFiles(nextFiles.filter((current) => fileKey(current) !== fileKey(file)));
+                setRejections((current) => [...current, rejection]);
+                onReject?.([rejection]);
+              })
+              .catch((error: unknown) => {
+                const message = error instanceof Error ? error.message : "File validation failed.";
+                const rejection = { file, reason: "validation" as const, message };
+                updateFiles(nextFiles.filter((current) => fileKey(current) !== fileKey(file)));
+                setRejections((current) => [...current, rejection]);
+                onReject?.([rejection]);
+              });
+          }
+        }
       }
       if (nextRejections.length > 0) {
         setRejections(nextRejections);
@@ -196,25 +255,32 @@ export const UploadRoot = forwardRef<HTMLDivElement, UploadRootProps>(function U
         setRejections([]);
       }
     },
-    [accept, currentFiles, disabled, fileLimit, maxSize, multiple, onReject, updateFiles],
+    [
+      accept,
+      currentFiles,
+      disabled,
+      fileLimit,
+      maxSize,
+      multiple,
+      onReject,
+      updateFiles,
+      validateFile,
+    ],
   );
 
-  const removeFile = useCallback(
-    (file: File) => {
-      updateFiles(currentFiles.filter((current) => fileKey(current) !== fileKey(file)));
-    },
-    [currentFiles, updateFiles],
-  );
+  const cancelFile = useCallback((file: File) => onCancel?.(file), [onCancel]);
 
   const context = useMemo<UploadContextValue>(
     () => ({
       accept,
       addFiles,
+      cancelFile,
       disabled,
       dropActive,
       files: currentFiles,
       inputId,
       inputRef,
+      fileState,
       maxFiles: fileLimit,
       maxSize,
       multiple,
@@ -226,10 +292,12 @@ export const UploadRoot = forwardRef<HTMLDivElement, UploadRootProps>(function U
     [
       accept,
       addFiles,
+      cancelFile,
       currentFiles,
       disabled,
       dropActive,
       fileLimit,
+      fileState,
       inputId,
       maxSize,
       multiple,
@@ -475,12 +543,19 @@ export interface UploadProgressProps extends Omit<ComponentPropsWithoutRef<"div"
   value?: number;
   /** Accessible label and optional visible status text. */
   label?: ReactNode;
+  file?: File;
 }
 
 export const UploadProgress = forwardRef<HTMLDivElement, UploadProgressProps>(
-  function UploadProgress({ className, label = "Uploading", value, ...props }, ref) {
-    const { styles } = useUploadContext();
-    const normalizedValue = value === undefined ? undefined : Math.min(100, Math.max(0, value));
+  function UploadProgress({ className, file, label = "Uploading", value, ...props }, ref) {
+    const { fileState, styles } = useUploadContext();
+    const state = file ? fileState?.(file) : undefined;
+    const normalizedValue =
+      value === undefined
+        ? state?.progress === undefined
+          ? undefined
+          : Math.min(100, Math.max(0, state.progress))
+        : Math.min(100, Math.max(0, value));
 
     return (
       <div
@@ -580,6 +655,60 @@ export const UploadRemove = forwardRef<HTMLButtonElement, UploadRemoveProps>(fun
   );
 });
 
+export interface UploadStatusProps extends ComponentPropsWithoutRef<"span"> {
+  file: File;
+}
+
+export const UploadStatus = forwardRef<HTMLSpanElement, UploadStatusProps>(function UploadStatus(
+  { children, className, file, ...props },
+  ref,
+) {
+  const { fileState, styles } = useUploadContext();
+  const state = fileState?.(file);
+  const content = children ?? state?.error ?? state?.status ?? "queued";
+  return (
+    <span
+      {...props}
+      aria-live="polite"
+      className={cx(styles.status, className)}
+      data-status={state?.status}
+      data-slot="upload-status"
+      ref={ref}
+    >
+      {content}
+    </span>
+  );
+});
+
+export interface UploadCancelProps extends ComponentPropsWithoutRef<"button"> {
+  file: File;
+}
+
+export const UploadCancel = forwardRef<HTMLButtonElement, UploadCancelProps>(function UploadCancel(
+  { children = "Cancel", className, file, onClick, ...props },
+  ref,
+) {
+  const { cancelFile, disabled, fileState, styles } = useUploadContext();
+  const state = fileState?.(file);
+  return (
+    <button
+      {...props}
+      aria-label={props["aria-label"] ?? `Cancel ${file.name}`}
+      className={cx(styles.cancel, className)}
+      data-slot="upload-cancel"
+      disabled={disabled || state?.status === "canceled" || state?.status === "success"}
+      onClick={(event) => {
+        cancelFile(file);
+        onClick?.(event);
+      }}
+      ref={ref}
+      type="button"
+    >
+      {children}
+    </button>
+  );
+});
+
 export type UploadErrorProps = ComponentPropsWithoutRef<"p">;
 
 export const UploadError = forwardRef<HTMLParagraphElement, UploadErrorProps>(function UploadError(
@@ -615,5 +744,7 @@ export const Upload = {
   List: UploadList,
   Item: UploadItem,
   Remove: UploadRemove,
+  Status: UploadStatus,
+  Cancel: UploadCancel,
   Error: UploadError,
 };

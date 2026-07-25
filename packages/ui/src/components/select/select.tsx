@@ -1,8 +1,8 @@
 "use client";
 
 import { Select as BaseSelect } from "@base-ui/react/select";
-import { createContext, forwardRef, useContext } from "react";
-import type { ComponentPropsWithoutRef } from "react";
+import { createContext, forwardRef, useContext, useState } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import type { SelectRoot as BaseSelectRoot } from "@base-ui/react/select";
 
 import { cx } from "../../styled-system/css";
@@ -12,6 +12,7 @@ import { withRecipeClassName } from "../base-ui";
 export type SelectSize = "sm" | "md" | "lg";
 
 const SelectSizeContext = createContext<SelectSize>("md");
+const SelectAuxContext = createContext<{ clear: () => void; disabled: boolean } | null>(null);
 
 function useSelectStyles() {
   return select({ size: useContext(SelectSizeContext) });
@@ -27,15 +28,43 @@ function useSelectStyles() {
 export interface SelectRootProps<Value, Multiple extends boolean | undefined = false>
   extends BaseSelectRoot.Props<Value, Multiple> {
   size?: SelectSize;
+  loading?: boolean;
 }
 
 export function SelectRoot<Value = unknown, Multiple extends boolean | undefined = false>({
+  defaultValue,
+  disabled = false,
+  loading: _loading,
+  multiple,
+  onValueChange,
   size = "md",
+  value: controlledValue,
   ...props
 }: SelectRootProps<Value, Multiple>) {
+  const [uncontrolledValue, setUncontrolledValue] = useState<unknown>(
+    defaultValue ?? (multiple ? [] : null),
+  );
+  const value = controlledValue === undefined ? uncontrolledValue : controlledValue;
+  const clear = () => {
+    const nextValue = multiple ? [] : null;
+    if (controlledValue === undefined) setUncontrolledValue(nextValue);
+    onValueChange?.(nextValue as never, undefined as never);
+  };
   return (
     <SelectSizeContext.Provider value={size}>
-      <BaseSelect.Root {...props} />
+      <SelectAuxContext.Provider value={{ clear, disabled }}>
+        <BaseSelect.Root
+          {...props}
+          disabled={disabled}
+          defaultValue={undefined}
+          multiple={multiple}
+          onValueChange={(nextValue, details) => {
+            if (controlledValue === undefined) setUncontrolledValue(nextValue);
+            onValueChange?.(nextValue, details);
+          }}
+          value={value as SelectRootProps<Value, Multiple>["value"]}
+        />
+      </SelectAuxContext.Provider>
     </SelectSizeContext.Provider>
   );
 }
@@ -265,6 +294,81 @@ export const SelectSeparator = forwardRef<HTMLDivElement, SelectSeparatorProps>(
   },
 );
 
+export interface SelectClearProps extends ComponentPropsWithoutRef<"button"> {
+  children?: ReactNode;
+}
+export const SelectClear = forwardRef<HTMLButtonElement, SelectClearProps>(function SelectClear(
+  { children = "×", className, ...props },
+  ref,
+) {
+  const context = useContext(SelectAuxContext);
+  const styles = useSelectStyles();
+  return (
+    <button
+      {...props}
+      aria-label={props["aria-label"] ?? "Clear selection"}
+      className={cx(styles.clear, className)}
+      data-slot="select-clear"
+      disabled={props.disabled || context?.disabled}
+      onClick={(event) => {
+        context?.clear();
+        props.onClick?.(event);
+      }}
+      ref={ref}
+      type="button"
+    >
+      {children}
+    </button>
+  );
+});
+
+export type SelectEmptyProps = ComponentPropsWithoutRef<"div">;
+export const SelectEmpty = forwardRef<HTMLDivElement, SelectEmptyProps>(function SelectEmpty(
+  { className, ...props },
+  ref,
+) {
+  return (
+    <div
+      {...props}
+      className={cx(useSelectStyles().empty, className)}
+      data-slot="select-empty"
+      ref={ref}
+    />
+  );
+});
+export type SelectLoadingProps = ComponentPropsWithoutRef<"div">;
+export const SelectLoading = forwardRef<HTMLDivElement, SelectLoadingProps>(function SelectLoading(
+  { children = "Loading…", className, ...props },
+  ref,
+) {
+  return (
+    <div
+      {...props}
+      aria-live="polite"
+      className={cx(useSelectStyles().loading, className)}
+      data-slot="select-loading"
+      ref={ref}
+    >
+      {children}
+    </div>
+  );
+});
+export type SelectStatusProps = ComponentPropsWithoutRef<"div">;
+export const SelectStatus = forwardRef<HTMLDivElement, SelectStatusProps>(function SelectStatus(
+  { className, ...props },
+  ref,
+) {
+  return (
+    <div
+      {...props}
+      aria-live="polite"
+      className={cx(useSelectStyles().status, className)}
+      data-slot="select-status"
+      ref={ref}
+    />
+  );
+});
+
 export const Select = {
   Root: SelectRoot,
   Label: SelectLabel,
@@ -281,4 +385,8 @@ export const Select = {
   Group: SelectGroup,
   GroupLabel: SelectGroupLabel,
   Separator: SelectSeparator,
+  Clear: SelectClear,
+  Empty: SelectEmpty,
+  Loading: SelectLoading,
+  Status: SelectStatus,
 };
