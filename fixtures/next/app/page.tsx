@@ -22,6 +22,7 @@ import {
   MenubarMenu,
   MenubarRoot,
   MenubarTrigger,
+  Navbar,
   Stack,
   TableBody,
   TableCell,
@@ -57,6 +58,11 @@ export default function Page() {
                 <MenubarTrigger>File</MenubarTrigger>
               </MenubarMenu>
             </MenubarRoot>
+            <Navbar.Root>
+              <Navbar.Bar aria-label="Primary navigation">
+                <Navbar.Item href="#overview">Overview</Navbar.Item>
+              </Navbar.Bar>
+            </Navbar.Root>
             <TableRoot aria-label="Next members">
               <TableBody>
                 <TableRow id="server-rendered-row">

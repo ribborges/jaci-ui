@@ -220,12 +220,28 @@ also expose `.Root` aliases for compound composition.
 ## Server rendering and frameworks
 
 Static components are server-safe and interactive modules preserve their `"use client"` boundary.
-In Next.js App Router, render interactive compositions inside a client component and import the
-global stylesheet from `app/layout.tsx`:
+In Next.js App Router, import the global stylesheet from `app/layout.tsx`:
 
 ```tsx
 // app/layout.tsx
 import "jaci-ui/styles.css";
+```
+
+The compound `Navbar` namespace is safe to use directly from a Server Component; controlled
+navigation state and event handlers should live in a client component as usual:
+
+```tsx
+import { Navbar } from "jaci-ui";
+
+export default function Page() {
+  return (
+    <Navbar.Root>
+      <Navbar.Bar aria-label="Primary navigation">
+        <Navbar.Item href="/docs">Documentation</Navbar.Item>
+      </Navbar.Bar>
+    </Navbar.Root>
+  );
+}
 ```
 
 Vite, React Router, Remix and other client entry points can import the stylesheet from their
