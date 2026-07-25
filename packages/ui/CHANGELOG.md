@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0
+
+### Minor Changes
+
+- 343c729: Add controlled data-display primitives for tables, views, lists and pagination, plus the new
+  DataToolbar composition. Command and TreeView gain more robust filtering, selection, keyboard
+  navigation and declarative loading states.
+
 ## 0.4.0
 
 ### Minor Changes
