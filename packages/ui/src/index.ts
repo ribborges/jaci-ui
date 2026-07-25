@@ -26,6 +26,7 @@ export * from "./components/color-picker";
 export * from "./components/command";
 export * from "./components/copyable";
 export * from "./components/data-view";
+export * from "./components/data-toolbar";
 export * from "./components/empty-state";
 export * from "./components/icon-button";
 export * from "./components/input-group";

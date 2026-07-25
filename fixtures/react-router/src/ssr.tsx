@@ -88,7 +88,7 @@ const html = renderToString(
         </Menubar.Root>
         <Table.Root aria-label="Router members">
           <Table.Body>
-            <Table.Row>
+            <Table.Row id="ssr-row">
               <Table.Cell>SSR row</Table.Cell>
             </Table.Row>
           </Table.Body>

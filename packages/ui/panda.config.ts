@@ -72,6 +72,7 @@ import { iconButtonRecipe } from "./src/components/icon-button/icon-button.recip
 import { buttonGroupRecipe } from "./src/components/button-group/button-group.recipe";
 import { inputGroupRecipe } from "./src/components/input-group/input-group.recipe";
 import { emptyStateRecipe } from "./src/components/empty-state/empty-state.recipe";
+import { dataToolbarRecipe } from "./src/components/data-toolbar/data-toolbar.recipe";
 import { jaciConditions, jaciTheme } from "./src/styles/theme";
 
 export default defineConfig({
@@ -168,6 +169,7 @@ export default defineConfig({
         buttonGroup: buttonGroupRecipe,
         inputGroup: inputGroupRecipe,
         emptyState: emptyStateRecipe,
+        dataToolbar: dataToolbarRecipe,
       },
     },
   },

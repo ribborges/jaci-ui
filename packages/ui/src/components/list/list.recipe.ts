@@ -64,6 +64,12 @@ export const listRecipe = defineSlotRecipe({
     },
   },
   variants: {
+    density: {
+      compact: {
+        item: { paddingBlock: "2", paddingInline: "3" },
+      },
+      comfortable: {},
+    },
     variant: {
       plain: {
         item: { borderBottom: "0" },
@@ -93,6 +99,6 @@ export const listRecipe = defineSlotRecipe({
       lg: { root: { gap: "4" } },
     },
   },
-  defaultVariants: { gap: "md", variant: "plain" },
+  defaultVariants: { density: "comfortable", gap: "md", variant: "plain" },
   staticCss: ["*"],
 });

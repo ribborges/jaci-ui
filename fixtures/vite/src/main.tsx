@@ -18,6 +18,7 @@ import {
   Collapsible,
   ColorPicker,
   ContextMenu,
+  DataToolbar,
   DataView as JaciDataView,
   Dialog,
   DatePicker,
@@ -511,11 +512,18 @@ function App() {
                 <JaciDataView.Toolbar>
                   <Text style={{ fontWeight: 600 }}>Data display</Text>
                 </JaciDataView.Toolbar>
+                <DataToolbar.Root aria-label="Fixture data tools">
+                  <DataToolbar.Search aria-label="Search fixture data" placeholder="Search" />
+                  <DataToolbar.Sort aria-label="Sort fixture data">
+                    <option value="name">Name</option>
+                    <option value="status">Status</option>
+                  </DataToolbar.Sort>
+                </DataToolbar.Root>
                 <JaciDataView.Content>
                   <Table.Container>
                     <Table.Root aria-label="Fixture members">
                       <Table.Body>
-                        <Table.Row>
+                        <Table.Row id="jaci-ui">
                           <Table.Cell>Jaci UI</Table.Cell>
                           <Table.Cell>Ready</Table.Cell>
                         </Table.Row>

@@ -6,6 +6,7 @@ export const tableRecipe = defineSlotRecipe({
     "container",
     "root",
     "caption",
+    "description",
     "header",
     "body",
     "footer",
@@ -39,6 +40,11 @@ export const tableRecipe = defineSlotRecipe({
       paddingBlock: "3",
       textAlign: "left",
     },
+    description: {
+      color: "fg.muted",
+      fontSize: "sm",
+      marginBlock: "2",
+    },
     header: {
       backgroundColor: "surface.default",
     },
@@ -69,6 +75,12 @@ export const tableRecipe = defineSlotRecipe({
       textTransform: "uppercase",
       verticalAlign: "middle",
       whiteSpace: "nowrap",
+      "&[data-align=start]": { textAlign: "left" },
+      "&[data-align=center]": { textAlign: "center" },
+      "&[data-align=end]": { textAlign: "right" },
+      "&[data-hide-below=sm]": { display: { base: "none", sm: "table-cell" } },
+      "&[data-hide-below=md]": { display: { base: "none", md: "table-cell" } },
+      "&[data-hide-below=lg]": { display: { base: "none", lg: "table-cell" } },
     },
     sortButton: {
       alignItems: "center",
@@ -94,6 +106,12 @@ export const tableRecipe = defineSlotRecipe({
       paddingBlock: "3",
       paddingInline: "4",
       verticalAlign: "middle",
+      "&[data-align=start]": { textAlign: "left" },
+      "&[data-align=center]": { textAlign: "center" },
+      "&[data-align=end]": { textAlign: "right" },
+      "&[data-hide-below=sm]": { display: { base: "none", sm: "table-cell" } },
+      "&[data-hide-below=md]": { display: { base: "none", md: "table-cell" } },
+      "&[data-hide-below=lg]": { display: { base: "none", lg: "table-cell" } },
     },
     selection: {
       paddingInline: "3",
@@ -133,6 +151,16 @@ export const tableRecipe = defineSlotRecipe({
         head: { position: "sticky", top: "0", zIndex: "1" },
       },
       false: {},
+    },
+    align: {
+      start: {},
+      center: {},
+      end: {},
+    },
+    hideBelow: {
+      sm: {},
+      md: {},
+      lg: {},
     },
   },
   defaultVariants: {

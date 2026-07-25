@@ -19,6 +19,7 @@ import {
   ContextMenu,
   ColorPicker,
   Copyable,
+  DataToolbar,
   DataView as JaciDataView,
   DatePicker,
   Dialog,
@@ -180,12 +181,12 @@ describe("SSR rendering", () => {
           <Table.Root>
             <Table.Caption>Members</Table.Caption>
             <Table.Header>
-              <Table.Row>
+              <Table.Row id="ssr-header-row">
                 <Table.Head>Name</Table.Head>
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              <Table.Row>
+              <Table.Row id="ssr-body-row">
                 <Table.Cell>Jaci</Table.Cell>
               </Table.Row>
               <Table.Empty colSpan={1} />
@@ -203,6 +204,13 @@ describe("SSR rendering", () => {
           <JaciDataView.Content>Cards</JaciDataView.Content>
           <JaciDataView.Empty>No cards</JaciDataView.Empty>
         </JaciDataView.Root>
+        <DataToolbar.Root aria-label="Data tools">
+          <DataToolbar.Search aria-label="Search data" />
+          <DataToolbar.Sort aria-label="Sort data">
+            <option value="name">Name</option>
+          </DataToolbar.Sort>
+        </DataToolbar.Root>
+        <Pagination.Root pageCount={3} defaultPage={2} />
         <ColorPicker.Root defaultValue="#2563eb">
           <ColorPicker.Label>Brand color</ColorPicker.Label>
           <ColorPicker.Trigger>

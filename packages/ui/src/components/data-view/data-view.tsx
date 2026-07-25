@@ -6,15 +6,17 @@ import { dataView } from "../../styled-system/recipes";
 
 export type DataViewLayout = "table" | "list" | "grid";
 export type DataViewColumns = 1 | 2 | 3 | 4;
+export type DataViewStatus = "idle" | "loading" | "empty" | "error" | "ready";
 
 export interface DataViewRootProps extends Omit<ComponentPropsWithoutRef<"section">, "children"> {
   children?: ReactNode;
   columns?: DataViewColumns;
   layout?: DataViewLayout;
+  status?: DataViewStatus;
 }
 
 export const DataViewRoot = forwardRef<HTMLElement, DataViewRootProps>(function DataViewRoot(
-  { children, className, columns = 3, layout = "list", ...props },
+  { children, className, columns = 3, layout = "list", status = "idle", ...props },
   ref,
 ) {
   const styles = dataView({ columns: String(columns) as "1" | "2" | "3" | "4", layout });
@@ -24,9 +26,11 @@ export const DataViewRoot = forwardRef<HTMLElement, DataViewRootProps>(function 
       {...props}
       ref={ref}
       className={cx(styles.root, className)}
+      aria-busy={props["aria-busy"] ?? (status === "loading" || undefined)}
       data-columns={columns}
       data-jaci-component="data-view"
       data-layout={layout}
+      data-status={status}
       data-slot="data-view"
     >
       {children}
@@ -48,6 +52,20 @@ export const DataViewToolbar = forwardRef<HTMLDivElement, DataViewToolbarProps>(
   },
 );
 
+export type DataViewFiltersProps = ComponentPropsWithoutRef<"div">;
+export const DataViewFilters = forwardRef<HTMLDivElement, DataViewFiltersProps>(
+  function DataViewFilters({ className, ...props }, ref) {
+    return (
+      <div
+        {...props}
+        ref={ref}
+        className={cx(dataView().filters, className)}
+        data-slot="data-view-filters"
+      />
+    );
+  },
+);
+
 export type DataViewContentProps = ComponentPropsWithoutRef<"div">;
 export const DataViewContent = forwardRef<HTMLDivElement, DataViewContentProps>(
   function DataViewContent({ className, ...props }, ref) {
@@ -57,6 +75,34 @@ export const DataViewContent = forwardRef<HTMLDivElement, DataViewContentProps>(
         ref={ref}
         className={cx(dataView().content, className)}
         data-slot="data-view-content"
+      />
+    );
+  },
+);
+
+export type DataViewFooterProps = ComponentPropsWithoutRef<"div">;
+export const DataViewFooter = forwardRef<HTMLDivElement, DataViewFooterProps>(
+  function DataViewFooter({ className, ...props }, ref) {
+    return (
+      <div
+        {...props}
+        ref={ref}
+        className={cx(dataView().footer, className)}
+        data-slot="data-view-footer"
+      />
+    );
+  },
+);
+
+export type DataViewPaginationProps = ComponentPropsWithoutRef<"div">;
+export const DataViewPagination = forwardRef<HTMLDivElement, DataViewPaginationProps>(
+  function DataViewPagination({ className, ...props }, ref) {
+    return (
+      <div
+        {...props}
+        ref={ref}
+        className={cx(dataView().pagination, className)}
+        data-slot="data-view-pagination"
       />
     );
   },
@@ -120,7 +166,10 @@ export const DataViewError = forwardRef<HTMLDivElement, DataViewStateProps>(func
 export const DataView = {
   Root: DataViewRoot,
   Toolbar: DataViewToolbar,
+  Filters: DataViewFilters,
   Content: DataViewContent,
+  Footer: DataViewFooter,
+  Pagination: DataViewPagination,
   Loading: DataViewLoading,
   Empty: DataViewEmpty,
   Error: DataViewError,
