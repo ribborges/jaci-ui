@@ -48,6 +48,7 @@ export * from "./components/slider";
 export * from "./components/sidebar";
 export * from "./components/scroll-area";
 export * from "./components/skeleton";
+export * from "./components/stepper";
 export * from "./components/tabs";
 export * from "./components/table";
 export * from "./components/tags-input";
