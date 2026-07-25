@@ -1966,11 +1966,10 @@ export const navbarRecipe = defineSlotRecipe({
   base: {
     bar: {
       alignItems: "center",
-      // Keep the blur as a concrete declaration in the distributed CSS. Some
-      // framework CSS pipelines (notably Next.js) can drop Panda's composed
-      // backdrop-filter custom-property declaration when it is imported as a
-      // package stylesheet.
-      backdropFilter: "blur(4px)",
+      // Keep this as a literal CSS property so Panda does not emit a paired
+      // -webkit declaration. Next's Lightning CSS drops the standard property
+      // when both forms are already present in the imported stylesheet.
+      "backdrop-filter": "var(--jaci-navbar-backdrop-filter, blur(4px))" as never,
       backgroundColor: "surface.overlay",
       borderColor: "border.default",
       borderRadius: "2xl",
@@ -2040,7 +2039,8 @@ export const navbarRecipe = defineSlotRecipe({
       _hover: { backgroundColor: "surface.subtle" },
     },
     drawerBackdrop: {
-      backdropFilter: "blur(4px)",
+      // See the Navbar bar note above; this remains a CSS-only fallback.
+      "backdrop-filter": "var(--jaci-navbar-backdrop-filter, blur(4px))" as never,
       backgroundColor: "surface.overlay",
       inset: "0",
       position: "fixed",
@@ -2062,7 +2062,8 @@ export const navbarRecipe = defineSlotRecipe({
     },
     drawer: {
       backgroundColor: "surface.default",
-      backdropFilter: "blur(8px)",
+      // See the Navbar bar note above; this remains a CSS-only fallback.
+      "backdrop-filter": "var(--jaci-navbar-drawer-backdrop-filter, blur(8px))" as never,
       borderColor: "border.default",
       borderRightStyle: "solid",
       borderRightWidth: "1px",
