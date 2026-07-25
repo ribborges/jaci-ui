@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 import { Sidebar } from "jaci-ui";
 
 const meta = {
@@ -60,4 +61,44 @@ export const Collapsed: Story = {
 
 export const FocusedToggle: Story = {
   render: () => <SidebarExample autoFocusToggle />,
+};
+
+export const MobileOverlay: Story = {
+  render: function MobileOverlayStory() {
+    const [open, setOpen] = useState(false);
+
+    return (
+      <div style={{ minHeight: "24rem", width: "20rem" }}>
+        <button type="button" onClick={() => setOpen(true)}>
+          Open navigation
+        </button>
+        <Sidebar.Root
+          aria-label="Mobile navigation"
+          mode="overlay"
+          open={open}
+          onOpenChange={setOpen}
+        >
+          <Sidebar.Header>
+            <Sidebar.Label>Jaci UI</Sidebar.Label>
+          </Sidebar.Header>
+          <Sidebar.Toggle />
+          <Sidebar.Content>
+            <Sidebar.Item active href="#overview">
+              Overview
+            </Sidebar.Item>
+            <Sidebar.Item href="#projects">Projects</Sidebar.Item>
+            <Sidebar.Item href="#settings">Settings</Sidebar.Item>
+          </Sidebar.Content>
+        </Sidebar.Root>
+        <p>Open the overlay and press Escape or click outside to close it.</p>
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `<button onClick={() => setOpen(true)}>Open navigation</button>\n<Sidebar.Root mode="overlay" open={open} onOpenChange={setOpen}>\n  <Sidebar.Toggle />\n  <Sidebar.Content>...</Sidebar.Content>\n</Sidebar.Root>`,
+      },
+    },
+  },
 };
