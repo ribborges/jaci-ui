@@ -15,6 +15,7 @@ import {
   Combobox,
   ColorPicker,
   Copyable,
+  DataToolbar,
   DataView as JaciDataView,
   ContextMenu,
   DatePicker,
@@ -63,7 +64,7 @@ function HydrationFixture() {
       <Switch aria-label="Enable notifications" defaultChecked={false} />
       <Table.Root aria-label="Hydrated members">
         <Table.Body>
-          <Table.Row>
+          <Table.Row id="hydrated-row">
             <Table.Cell>Jaci</Table.Cell>
           </Table.Row>
         </Table.Body>
@@ -74,6 +75,10 @@ function HydrationFixture() {
       <JaciDataView.Root>
         <JaciDataView.Content>Hydrated data</JaciDataView.Content>
       </JaciDataView.Root>
+      <DataToolbar.Root aria-label="Data tools">
+        <DataToolbar.Search aria-label="Search data" defaultValue="projects" />
+      </DataToolbar.Root>
+      <Pagination.Root pageCount={3} defaultPage={2} />
       <ColorPicker.Root defaultValue="#2563eb">
         <ColorPicker.Trigger>
           <ColorPicker.Preview />

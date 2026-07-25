@@ -6,12 +6,13 @@ import {
   CardTitle,
   DataView as JaciDataView,
   List,
+  Pagination,
   Text,
 } from "jaci-ui";
 
 const meta = {
   title: "Data Display/DataView",
-  tags: ["autodocs"],
+  tags: ["autodocs", "test"],
 } satisfies Meta;
 
 export default meta;
@@ -67,10 +68,39 @@ export const ListLayout: Story = {
 
 export const States: Story = {
   render: () => (
-    <JaciDataView.Root>
+    <JaciDataView.Root status="loading" aria-label="Project results">
+      <JaciDataView.Toolbar>
+        <Text>Project results</Text>
+      </JaciDataView.Toolbar>
+      <JaciDataView.Filters>
+        <Text size="sm" tone="muted">
+          Filters are controlled by the app.
+        </Text>
+      </JaciDataView.Filters>
       <JaciDataView.Loading />
       <JaciDataView.Empty>No matching records.</JaciDataView.Empty>
       <JaciDataView.Error>Unable to load records.</JaciDataView.Error>
+      <JaciDataView.Footer>
+        <JaciDataView.Pagination>
+          <Pagination.Root page={1} pageCount={3} />
+        </JaciDataView.Pagination>
+      </JaciDataView.Footer>
     </JaciDataView.Root>
   ),
+  parameters: {
+    docs: {
+      source: {
+        language: "tsx",
+        code: `<DataView.Root layout="table" status="loading" aria-busy="true">
+  <DataView.Toolbar>Projects</DataView.Toolbar>
+  <DataView.Filters>{/* app-controlled filters */}</DataView.Filters>
+  <DataView.Content>{/* Table.Root, List.Root or cards */}</DataView.Content>
+  <DataView.Loading />
+  <DataView.Footer>
+    <DataView.Pagination><Pagination.Root pageCount={3} /></DataView.Pagination>
+  </DataView.Footer>
+</DataView.Root>`,
+      },
+    },
+  },
 };

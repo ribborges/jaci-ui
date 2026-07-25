@@ -2,7 +2,7 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const treeViewRecipe = defineSlotRecipe({
   className: "tree-view",
-  slots: ["root", "itemWrapper", "item", "group", "toggle", "label"],
+  slots: ["root", "itemWrapper", "item", "group", "toggle", "label", "loading", "empty", "error"],
   base: {
     root: {
       color: "fg.default",
@@ -78,6 +78,9 @@ export const treeViewRecipe = defineSlotRecipe({
       textOverflow: "ellipsis",
       whiteSpace: "nowrap",
     },
+    loading: { color: "fg.muted", fontSize: "sm", padding: "2" },
+    empty: { color: "fg.muted", fontSize: "sm", padding: "2" },
+    error: { color: "danger", fontSize: "sm", padding: "2" },
   },
   staticCss: ["*"],
 });

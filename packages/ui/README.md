@@ -135,6 +135,43 @@ auto-advance, password masking and native form submission:
 </PinInput.Root>
 ```
 
+For data-heavy screens, compose `DataToolbar`, `DataView`, `Table` and `Pagination` explicitly.
+The library does not fetch, filter or virtualize data for you, so the application remains the
+source of truth for query, sort, selection and page state:
+
+```tsx
+<DataToolbar.Root aria-label="Project tools">
+  <DataToolbar.Search value={search} onValueChange={setSearch} />
+  <DataToolbar.Sort value={sort} onValueChange={setSort}>
+    <option value="name">Name</option>
+  </DataToolbar.Sort>
+  <DataToolbar.Selection count={selected.length} onClear={() => setSelected([])}>
+    <DataToolbar.ClearSelection />
+  </DataToolbar.Selection>
+</DataToolbar.Root>
+
+<DataView.Root layout="table" status={loading ? "loading" : "ready"}>
+  <DataView.Content>
+    <Table.Root
+      selectionMode="multiple"
+      selectedRowIds={selected}
+      onSelectionChange={setSelected}
+    >
+      <Table.Header>{/* Table.Row, Table.SelectionHeader and Table.Head */}</Table.Header>
+      <Table.Body>{/* Table.Row and Table.Cell */}</Table.Body>
+    </Table.Root>
+  </DataView.Content>
+  <DataView.Footer>
+    <Pagination.Root page={page} pageCount={pageCount} onPageChange={setPage} />
+  </DataView.Footer>
+</DataView.Root>
+```
+
+`Table` supports controlled sorting (`sort`/`onSortChange`), single or multiple selection,
+disabled rows, loading/empty/error states, compact density, alignment and responsive columns.
+`List` remains a semantic `ul`/`ol`, and `Command` and `TreeView` expose their keyboard and
+selection state without requiring a data engine.
+
 Small composition helpers keep common layouts consistent:
 
 ```tsx

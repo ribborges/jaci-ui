@@ -3,7 +3,7 @@ import { defineSlotRecipe } from "@pandacss/dev";
 /** Static Panda slot recipe for navigational pagination controls. */
 export const paginationRecipe = defineSlotRecipe({
   className: "pagination",
-  slots: ["root", "list", "item", "link", "previous", "next", "ellipsis"],
+  slots: ["root", "list", "item", "link", "first", "previous", "next", "last", "ellipsis"],
   base: {
     root: {
       fontFamily: "system-ui, sans-serif",
@@ -53,6 +53,8 @@ export const paginationRecipe = defineSlotRecipe({
     },
     previous: {},
     next: {},
+    first: {},
+    last: {},
     ellipsis: {
       alignItems: "center",
       color: "fg.muted",
@@ -65,6 +67,18 @@ export const paginationRecipe = defineSlotRecipe({
     },
   },
   variants: {
+    density: {
+      compact: {
+        link: {
+          fontSize: "sm",
+          minHeight: "8",
+          minWidth: "8",
+          px: "2",
+        },
+        ellipsis: { minHeight: "8", minWidth: "8" },
+      },
+      comfortable: {},
+    },
     active: {
       true: {
         link: {
@@ -89,6 +103,7 @@ export const paginationRecipe = defineSlotRecipe({
   },
   defaultVariants: {
     active: false,
+    density: "comfortable",
     disabled: false,
   },
   staticCss: ["*"],

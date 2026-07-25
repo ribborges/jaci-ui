@@ -2,7 +2,17 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const dataViewRecipe = defineSlotRecipe({
   className: "data-view",
-  slots: ["root", "toolbar", "content", "loading", "empty", "error"],
+  slots: [
+    "root",
+    "toolbar",
+    "filters",
+    "content",
+    "footer",
+    "pagination",
+    "loading",
+    "empty",
+    "error",
+  ],
   base: {
     root: {
       color: "fg.default",
@@ -54,7 +64,25 @@ export const dataViewRecipe = defineSlotRecipe({
       gap: "3",
       justifyContent: "space-between",
     },
+    filters: {
+      alignItems: "center",
+      display: "flex",
+      flexWrap: "wrap",
+      gap: "2",
+      minWidth: "0",
+    },
     content: {
+      minWidth: "0",
+      width: "100%",
+    },
+    footer: {
+      alignItems: "center",
+      display: "flex",
+      flexWrap: "wrap",
+      gap: "3",
+      justifyContent: "space-between",
+    },
+    pagination: {
       minWidth: "0",
       width: "100%",
     },

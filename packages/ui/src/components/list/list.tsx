@@ -6,19 +6,29 @@ import { list } from "../../styled-system/recipes";
 
 export type ListVariant = "plain" | "divided" | "card";
 export type ListGap = "none" | "sm" | "md" | "lg";
+export type ListDensity = "compact" | "comfortable";
 
 export interface ListRootProps extends Omit<ComponentPropsWithoutRef<"ul">, "children"> {
   children?: ReactNode;
+  density?: ListDensity;
   gap?: ListGap;
   ordered?: boolean;
   variant?: ListVariant;
 }
 
 export const ListRoot = forwardRef<HTMLElement, ListRootProps>(function ListRoot(
-  { children, className, gap = "md", ordered = false, variant = "plain", ...props },
+  {
+    children,
+    className,
+    density = "comfortable",
+    gap = "md",
+    ordered = false,
+    variant = "plain",
+    ...props
+  },
   ref,
 ) {
-  const styles = list({ gap, variant });
+  const styles = list({ density, gap, variant });
   const Component = ordered ? "ol" : "ul";
 
   return (
@@ -27,6 +37,7 @@ export const ListRoot = forwardRef<HTMLElement, ListRootProps>(function ListRoot
       ref={ref as never}
       className={cx(styles.root, className)}
       data-gap={gap}
+      data-density={density}
       data-jaci-component="list"
       data-ordered={ordered || undefined}
       data-slot="list"

@@ -37,10 +37,12 @@ interface CommandContextValue {
   highlighted: string | null;
   listId: string;
   matches: (item: Pick<CommandItemRecord, "value" | "keywords">) => boolean;
+  handleKeyDown: (event: KeyboardEvent<HTMLElement>) => void;
   registerItem: (item: CommandItemRecord) => () => void;
   setItemElement: (id: string, element: HTMLDivElement | null) => void;
   setHighlighted: (value: string | null) => void;
-  selectItem: (value: string) => void;
+  selectItem: (id: string) => void;
+  disabled: boolean;
 }
 
 const CommandContext = createContext<CommandContextValue | null>(null);
@@ -66,6 +68,7 @@ export interface CommandRootProps extends Omit<ComponentPropsWithoutRef<"div">, 
   filter?: CommandFilter;
   shouldFilter?: boolean;
   loopFocus?: boolean;
+  disabled?: boolean;
   loading?: boolean;
   children?: ReactNode;
 }
@@ -75,6 +78,7 @@ export const CommandRoot = forwardRef<HTMLDivElement, CommandRootProps>(function
     children,
     className,
     defaultSearch = "",
+    disabled = false,
     filter = defaultFilter,
     loading = false,
     onKeyDown,
@@ -107,7 +111,10 @@ export const CommandRoot = forwardRef<HTMLDivElement, CommandRootProps>(function
       !shouldFilter || filter(item.value, search, item.keywords),
     [filter, search, shouldFilter],
   );
-  const visibleItems = items.filter((item) => !item.disabled && matches(item));
+  const visibleItems = useMemo(
+    () => items.filter((item) => !item.disabled && matches(item)),
+    [items, matches],
+  );
 
   const registerItem = useCallback((item: CommandItemRecord) => {
     itemsRef.current.set(item.id, item);
@@ -124,46 +131,52 @@ export const CommandRoot = forwardRef<HTMLDivElement, CommandRootProps>(function
   }, []);
 
   const selectItem = useCallback(
-    (value: string) => {
-      const item = itemsRef.current.get(value);
+    (id: string) => {
+      const item = itemsRef.current.get(id);
       if (item && !item.disabled && matches(item)) item.onSelect?.(item.value);
     },
     [matches],
   );
 
   useEffect(() => {
-    if (!visibleItems.some((item) => item.value === highlighted)) {
-      setHighlighted(visibleItems[0]?.value ?? null);
+    if (!visibleItems.some((item) => item.id === highlighted)) {
+      setHighlighted(visibleItems[0]?.id ?? null);
     }
   }, [highlighted, visibleItems]);
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    onKeyDown?.(event);
-    if (event.defaultPrevented) return;
-    const currentIndex = visibleItems.findIndex((item) => item.value === highlighted);
-    if ((event.key === "ArrowDown" || event.key === "ArrowUp") && visibleItems.length > 0) {
-      event.preventDefault();
-      const direction = event.key === "ArrowDown" ? 1 : -1;
-      let nextIndex = currentIndex + direction;
-      if (loopFocus) nextIndex = (nextIndex + visibleItems.length) % visibleItems.length;
-      if (nextIndex >= 0 && nextIndex < visibleItems.length) {
-        setHighlighted(visibleItems[nextIndex]?.value ?? null);
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLElement>) => {
+      onKeyDown?.(event as KeyboardEvent<HTMLDivElement>);
+      if (event.defaultPrevented) return;
+      if (disabled) return;
+      const currentIndex = visibleItems.findIndex((item) => item.id === highlighted);
+      if ((event.key === "ArrowDown" || event.key === "ArrowUp") && visibleItems.length > 0) {
+        event.preventDefault();
+        const direction = event.key === "ArrowDown" ? 1 : -1;
+        let nextIndex = currentIndex + direction;
+        if (loopFocus) nextIndex = (nextIndex + visibleItems.length) % visibleItems.length;
+        if (nextIndex >= 0 && nextIndex < visibleItems.length) {
+          setHighlighted(visibleItems[nextIndex]?.id ?? null);
+        }
+      } else if (event.key === "Home" || event.key === "End") {
+        event.preventDefault();
+        setHighlighted((event.key === "Home" ? visibleItems[0] : visibleItems.at(-1))?.id ?? null);
+      } else if (event.key === "Enter" && highlighted) {
+        event.preventDefault();
+        selectItem(highlighted);
+      } else if (event.key === "Escape") {
+        event.preventDefault();
       }
-    } else if (event.key === "Home" || event.key === "End") {
-      event.preventDefault();
-      setHighlighted((event.key === "Home" ? visibleItems[0] : visibleItems.at(-1))?.value ?? null);
-    } else if (event.key === "Enter" && highlighted) {
-      event.preventDefault();
-      selectItem(highlighted);
-    } else if (event.key === "Escape") {
-      event.preventDefault();
-    }
-  };
+    },
+    [disabled, highlighted, loopFocus, onKeyDown, selectItem, visibleItems],
+  );
 
   const context = useMemo<CommandContextValue>(
     () => ({
       search,
       setSearch,
+      disabled,
+      handleKeyDown,
       loading,
       shouldFilter,
       items,
@@ -177,6 +190,8 @@ export const CommandRoot = forwardRef<HTMLDivElement, CommandRootProps>(function
     }),
     [
       highlighted,
+      disabled,
+      handleKeyDown,
       items,
       listId,
       loading,
@@ -199,11 +214,10 @@ export const CommandRoot = forwardRef<HTMLDivElement, CommandRootProps>(function
           else if (ref) ref.current = node;
         }}
         className={cx(styles.root, className)}
-        data-disabled={props["aria-disabled"] || undefined}
+        data-disabled={disabled || undefined}
         data-jaci-component="command"
         data-slot="command"
-        onKeyDown={handleKeyDown}
-        role="application"
+        aria-disabled={disabled || undefined}
       >
         {children}
       </div>
@@ -213,10 +227,11 @@ export const CommandRoot = forwardRef<HTMLDivElement, CommandRootProps>(function
 
 export type CommandInputProps = ComponentPropsWithoutRef<"input">;
 export const CommandInput = forwardRef<HTMLInputElement, CommandInputProps>(function CommandInput(
-  { className, onChange, ...props },
+  { className, onChange, onKeyDown, ...props },
   ref,
 ) {
-  const { highlighted, listId, search, setHighlighted, setSearch } = useCommandContext();
+  const { disabled, handleKeyDown, highlighted, listId, search, setHighlighted, setSearch } =
+    useCommandContext();
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChange?.(event);
     const next = event.target.value;
@@ -228,13 +243,20 @@ export const CommandInput = forwardRef<HTMLInputElement, CommandInputProps>(func
     <input
       {...props}
       ref={ref}
-      aria-activedescendant={highlighted ? `command-item-${highlighted}` : undefined}
+      aria-activedescendant={highlighted ?? undefined}
       aria-controls={listId}
+      role="combobox"
       aria-haspopup="listbox"
+      aria-expanded="true"
       className={cx(command().input, className)}
       data-slot="command-input"
+      disabled={disabled || props.disabled}
       onChange={(event) => {
         handleChange(event);
+      }}
+      onKeyDown={(event) => {
+        onKeyDown?.(event);
+        handleKeyDown(event);
       }}
       value={search}
     />
@@ -246,8 +268,7 @@ export const CommandList = forwardRef<HTMLDivElement, CommandListProps>(function
   { className, id, ...props },
   ref,
 ) {
-  const { items, listId, matches } = useCommandContext();
-  const hasVisibleItems = items.some((item) => !item.disabled && matches(item));
+  const { listId } = useCommandContext();
   return (
     <div
       {...props}
@@ -255,7 +276,7 @@ export const CommandList = forwardRef<HTMLDivElement, CommandListProps>(function
       id={id ?? listId}
       className={cx(command().list, className)}
       data-slot="command-list"
-      role={hasVisibleItems ? "listbox" : undefined}
+      role="listbox"
     />
   );
 });
@@ -269,19 +290,18 @@ export const CommandGroup = forwardRef<HTMLDivElement, CommandGroupProps>(functi
 ) {
   const context = useCommandContext();
   const groupId = useId();
-  const hasRegisteredItems = context.items.some((item) => item.groupId === groupId);
   const hasVisibleItems = context.items.some(
-    (item) => item.groupId === groupId && context.matches(item),
+    (item) => item.groupId === groupId && !item.disabled && context.matches(item),
   );
   return (
     <CommandGroupContext.Provider value={groupId}>
       <div
         {...props}
         ref={ref}
-        aria-hidden={hasRegisteredItems && !hasVisibleItems ? true : undefined}
+        aria-hidden={!hasVisibleItems || undefined}
         className={cx(command().group, className)}
         data-slot="command-group"
-        hidden={hasRegisteredItems && !hasVisibleItems}
+        hidden={!hasVisibleItems}
       >
         {heading ? (
           <div className={command().groupHeading} data-slot="command-group-heading">
@@ -316,14 +336,14 @@ export const CommandItem = forwardRef<HTMLDivElement, CommandItemProps>(function
 ) {
   const context = useCommandContext();
   const groupId = useContext(CommandGroupContext);
-  const id = `command-item-${value}`;
+  const id = `command-item-${useId().replace(/:/g, "")}`;
   const keywords = itemKeywords ?? EMPTY_KEYWORDS;
   const visible = context.matches({ value, keywords });
 
   useEffect(
     () =>
       context.registerItem({
-        id: value,
+        id,
         value,
         keywords,
         disabled,
@@ -331,7 +351,7 @@ export const CommandItem = forwardRef<HTMLDivElement, CommandItemProps>(function
         onSelect,
         element: null,
       }),
-    [context.registerItem, disabled, groupId, keywords, onSelect, value],
+    [context.registerItem, disabled, groupId, id, keywords, onSelect, value],
   );
 
   if (!visible) {
@@ -342,29 +362,29 @@ export const CommandItem = forwardRef<HTMLDivElement, CommandItemProps>(function
     <div
       {...props}
       ref={(node) => {
-        context.setItemElement(value, node);
+        context.setItemElement(id, node);
         if (typeof ref === "function") ref(node);
         else if (ref) ref.current = node;
       }}
       aria-disabled={disabled || undefined}
-      aria-selected={context.highlighted === value}
+      aria-selected={context.highlighted === id}
       className={cx(command().item, className)}
       data-disabled={disabled || undefined}
-      data-highlighted={context.highlighted === value || undefined}
+      data-highlighted={context.highlighted === id || undefined}
       data-slot="command-item"
       id={id}
       onClick={(event) => {
         onClick?.(event);
-        if (!event.defaultPrevented && !disabled) context.selectItem(value);
+        if (!event.defaultPrevented && !disabled) context.selectItem(id);
       }}
       onMouseEnter={(event) => {
         onMouseEnter?.(event);
-        if (!disabled) context.setHighlighted(value);
+        if (!disabled) context.setHighlighted(id);
       }}
       onKeyDown={(event) => {
         if ((event.key === "Enter" || event.key === " ") && !disabled) {
           event.preventDefault();
-          context.selectItem(value);
+          context.selectItem(id);
         }
       }}
       role="option"
@@ -397,11 +417,7 @@ export const CommandEmpty = forwardRef<HTMLDivElement, CommandEmptyProps>(functi
   ref,
 ) {
   const context = useCommandContext();
-  if (
-    context.loading ||
-    context.items.length === 0 ||
-    context.items.some((item) => context.matches(item))
-  )
+  if (context.loading || context.items.some((item) => !item.disabled && context.matches(item)))
     return null;
   return (
     <div
@@ -409,8 +425,10 @@ export const CommandEmpty = forwardRef<HTMLDivElement, CommandEmptyProps>(functi
       ref={ref}
       className={cx(command().empty, className)}
       aria-live="polite"
+      aria-disabled="true"
       data-slot="command-empty"
-      role="presentation"
+      role="option"
+      tabIndex={-1}
     />
   );
 });
@@ -426,8 +444,10 @@ export const CommandLoading = forwardRef<HTMLDivElement, CommandLoadingProps>(
         ref={ref}
         className={cx(command().loading, className)}
         aria-live="polite"
+        aria-disabled="true"
         data-slot="command-loading"
-        role="presentation"
+        role="option"
+        tabIndex={-1}
       />
     );
   },

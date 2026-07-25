@@ -59,7 +59,7 @@ export default function Page() {
             </MenubarRoot>
             <TableRoot aria-label="Next members">
               <TableBody>
-                <TableRow>
+                <TableRow id="server-rendered-row">
                   <TableCell>Server-rendered row</TableCell>
                 </TableRow>
               </TableBody>
