@@ -21,6 +21,8 @@ export function NavbarRoot<Payload = unknown>(props: NavbarRootProps<Payload>) {
   return <BaseDialog.Root {...props} />;
 }
 
+export const NavbarCreateHandle = BaseDialog.createHandle;
+
 export type NavbarBarProps = ComponentPropsWithoutRef<"nav">;
 
 /** A fixed, translucent zinc navigation surface. */
@@ -191,19 +193,6 @@ export const NavbarItem = forwardRef<HTMLAnchorElement, NavbarItemProps>(functio
     />
   );
 });
-
-export const Navbar = {
-  Root: NavbarRoot,
-  Bar: NavbarBar,
-  Start: NavbarStart,
-  Center: NavbarCenter,
-  End: NavbarEnd,
-  Toggle: NavbarToggle,
-  Drawer: NavbarDrawer,
-  Close: NavbarClose,
-  Item: NavbarItem,
-  createHandle: BaseDialog.createHandle,
-};
 
 export type BottomNavigationProps = ComponentPropsWithoutRef<"nav">;
 

@@ -2,7 +2,6 @@ export {
   BottomNavigation,
   BottomNavigationItem,
   BottomNavigationRoot,
-  Navbar,
   NavbarBar,
   NavbarCenter,
   NavbarClose,
@@ -13,6 +12,7 @@ export {
   NavbarStart,
   NavbarToggle,
 } from "./navigation";
+export { Navbar } from "./navbar-namespace";
 export type {
   BottomNavigationItemProps,
   BottomNavigationProps,
