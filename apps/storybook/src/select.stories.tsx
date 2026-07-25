@@ -112,6 +112,65 @@ export const Controlled: Story = {
   },
 };
 
+export const Multiple: Story = {
+  render: () => (
+    <Select.Root multiple defaultValue={["pro", "team"]}>
+      <Select.Label>Workspace plans</Select.Label>
+      <Select.Trigger>
+        <Select.Value placeholder="Choose plans" />
+        <Select.Icon />
+      </Select.Trigger>
+      <Select.Portal>
+        <Select.Positioner>
+          <Select.Popup>
+            <Select.List>
+              <PlanOptions />
+            </Select.List>
+          </Select.Popup>
+        </Select.Positioner>
+      </Select.Portal>
+    </Select.Root>
+  ),
+};
+
+export const LoadingAndEmpty: Story = {
+  render: () => (
+    <Stack gap="md" style={{ minWidth: "20rem" }}>
+      <Select.Root loading defaultOpen>
+        <Select.Label>Loading plans</Select.Label>
+        <Select.Trigger>
+          <Select.Value placeholder="Loading…" />
+          <Select.Icon />
+        </Select.Trigger>
+        <Select.Portal>
+          <Select.Positioner>
+            <Select.Popup>
+              <Select.List />
+              <Select.Loading>Loading plans…</Select.Loading>
+            </Select.Popup>
+          </Select.Positioner>
+        </Select.Portal>
+      </Select.Root>
+      <Select.Root defaultOpen>
+        <Select.Label>No plans</Select.Label>
+        <Select.Trigger>
+          <Select.Value placeholder="No plans" />
+          <Select.Icon />
+        </Select.Trigger>
+        <Select.Portal>
+          <Select.Positioner>
+            <Select.Popup>
+              <Select.List>
+                <Select.Empty>No plans found.</Select.Empty>
+              </Select.List>
+            </Select.Popup>
+          </Select.Positioner>
+        </Select.Portal>
+      </Select.Root>
+    </Stack>
+  ),
+};
+
 export const KeyboardNavigation: Story = {
   parameters: {
     docs: {

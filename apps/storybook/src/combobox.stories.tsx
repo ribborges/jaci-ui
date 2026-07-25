@@ -56,6 +56,28 @@ export const Multiple: Story = {
   render: () => <FrameworkCombobox multiple />,
 };
 
+export const Loading: Story = {
+  render: () => (
+    <Combobox.Root items={[]} loading defaultOpen>
+      <Combobox.Label>Framework</Combobox.Label>
+      <Combobox.InputGroup>
+        <Combobox.Input placeholder="Loading frameworks…" />
+        <Combobox.Trigger aria-label="Open framework options">
+          <Combobox.Icon />
+        </Combobox.Trigger>
+      </Combobox.InputGroup>
+      <Combobox.Portal>
+        <Combobox.Positioner>
+          <Combobox.Popup>
+            <Combobox.List />
+            <Combobox.Loading>Loading frameworks…</Combobox.Loading>
+          </Combobox.Popup>
+        </Combobox.Positioner>
+      </Combobox.Portal>
+    </Combobox.Root>
+  ),
+};
+
 export const Controlled: Story = {
   render: function ControlledCombobox() {
     const [value, setValue] = useState<string | null>("React");

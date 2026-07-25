@@ -87,6 +87,54 @@ DatePicker supports day, month and date-time values while keeping the public val
 Use `granularity="month"` to select a month normalized to its first day. Date-time popups stay
 open until `DatePicker.Close` is activated; day and month modes close after selection by default.
 
+`Calendar` is the standalone, server-renderable calendar engine. Pass `referenceDate` when the
+initial view must be deterministic during SSR or tests:
+
+```tsx
+<Calendar.Root
+  defaultValue={new Date(2025, 3, 15, 12)}
+  referenceDate={new Date(2025, 3, 1, 12)}
+  locale="en-US"
+>
+  <Calendar.Header>
+    <Calendar.Previous />
+    <Calendar.MonthSelect />
+    <Calendar.YearSelect />
+    <Calendar.Next />
+  </Calendar.Header>
+  <Calendar.Grid />
+</Calendar.Root>
+```
+
+`DateRangePicker` keeps its value as local `Date` objects and supports native form fields,
+previewing and optional closing after the second date:
+
+```tsx
+<DateRangePicker.Root name="period" closeOnSelect={false} referenceDate={new Date(2025, 3, 1, 12)}>
+  <DateRangePicker.Label>Period</DateRangePicker.Label>
+  <DateRangePicker.Trigger><DateRangePicker.Value /></DateRangePicker.Trigger>
+  <DateRangePicker.Portal>
+    <DateRangePicker.Positioner>
+      <DateRangePicker.Popup>
+        <DateRangePicker.Calendar />
+        <DateRangePicker.Preview />
+        <DateRangePicker.Close>Done</DateRangePicker.Close>
+      </DateRangePicker.Popup>
+    </DateRangePicker.Positioner>
+  </DateRangePicker.Portal>
+</DateRangePicker.Root>
+```
+
+For one-time codes, `PinInput` generates one accessible input per character and supports paste,
+auto-advance, password masking and native form submission:
+
+```tsx
+<PinInput.Root length={6} name="verification-code" otp onComplete={verifyCode}>
+  <PinInput.Label>Verification code</PinInput.Label>
+  <PinInput.Control><PinInput.Inputs /></PinInput.Control>
+</PinInput.Root>
+```
+
 Small composition helpers keep common layouts consistent:
 
 ```tsx
