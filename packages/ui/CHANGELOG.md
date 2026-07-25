@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0
+
+### Minor Changes
+
+- 165083c: Improve navigation and overlay dismissal, focus, scroll-lock and responsive behavior, and add the accessible controlled `Stepper` component.
+
 ## 0.5.0
 
 ### Minor Changes
