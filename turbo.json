@@ -22,7 +22,8 @@
     },
     "test": {
       "dependsOn": ["build", "^build"],
-      "outputs": []
+      "outputs": [],
+      "env": ["CI", "JACI_STORYBOOK_BROWSER"]
     },
     "check": {
       "dependsOn": ["^build"],

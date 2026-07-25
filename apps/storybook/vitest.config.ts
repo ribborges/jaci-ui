@@ -7,6 +7,10 @@ import { defineConfig } from "vitest/config";
 const configDir = fileURLToPath(new URL("./.storybook", import.meta.url));
 const browserTestsEnabled = process.env.JACI_STORYBOOK_BROWSER === "1" || process.env.CI === "true";
 
+// The addon checks VITEST while its plugin factory is evaluated. Vitest sets that
+// flag after loading the config, so set it explicitly for the opt-in browser job.
+if (browserTestsEnabled) process.env.VITEST = "1";
+
 export default defineConfig({
   optimizeDeps: {
     include: [
