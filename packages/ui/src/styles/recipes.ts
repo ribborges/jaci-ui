@@ -1966,8 +1966,11 @@ export const navbarRecipe = defineSlotRecipe({
   base: {
     bar: {
       alignItems: "center",
-      backdropBlur: "xs",
-      backdropFilter: "auto",
+      // Keep the blur as a concrete declaration in the distributed CSS. Some
+      // framework CSS pipelines (notably Next.js) can drop Panda's composed
+      // backdrop-filter custom-property declaration when it is imported as a
+      // package stylesheet.
+      backdropFilter: "blur(4px)",
       backgroundColor: "surface.overlay",
       borderColor: "border.default",
       borderRadius: "2xl",
@@ -2037,8 +2040,7 @@ export const navbarRecipe = defineSlotRecipe({
       _hover: { backgroundColor: "surface.subtle" },
     },
     drawerBackdrop: {
-      backdropBlur: "xs",
-      backdropFilter: "auto",
+      backdropFilter: "blur(4px)",
       backgroundColor: "surface.overlay",
       inset: "0",
       position: "fixed",
@@ -2060,8 +2062,7 @@ export const navbarRecipe = defineSlotRecipe({
     },
     drawer: {
       backgroundColor: "surface.default",
-      backdropBlur: "sm",
-      backdropFilter: "auto",
+      backdropFilter: "blur(8px)",
       borderColor: "border.default",
       borderRightStyle: "solid",
       borderRightWidth: "1px",
