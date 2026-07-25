@@ -542,12 +542,14 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
         role="grid"
       >
         {weeks.map((week, index) => (
+          // biome-ignore lint/a11y/useSemanticElements: Calendar rows use ARIA grid semantics while the day controls remain buttons.
           <div
             aria-rowindex={index + 1}
             className={styles.row}
             data-slot="calendar-week"
-            key={dateKey(week[0])}
+            key={week.map(dateKey).join("-")}
             role="row"
+            tabIndex={-1}
           >
             {week.map((date) => (
               <CalendarDay date={date} key={dateKey(date)} />
