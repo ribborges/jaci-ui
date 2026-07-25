@@ -172,6 +172,37 @@ disabled rows, loading/empty/error states, compact density, alignment and respon
 `List` remains a semantic `ul`/`ol`, and `Command` and `TreeView` expose their keyboard and
 selection state without requiring a data engine.
 
+Navigation overlays keep focus and dismissal behavior in the Base UI primitive. Dialog-like
+surfaces lock page scroll, restore focus to their trigger, and close with Escape or an outside
+press by default. Popovers and menus stay within the viewport and accept the native Base UI
+`initialFocus`, `finalFocus`, `modal` and `disablePointerDismissal` options.
+
+Use `Stepper` for linear or freely navigable workflows. Its public value is a string and it can
+submit the current step through a native hidden field:
+
+```tsx
+<Stepper.Root value={step} onValueChange={setStep} linear name="checkout-step">
+  <Stepper.List>
+    <Stepper.Item value="account">
+      <Stepper.Trigger>
+        <Stepper.Indicator />
+        <Stepper.Title>Account</Stepper.Title>
+      </Stepper.Trigger>
+      <Stepper.Content>Profile details</Stepper.Content>
+    </Stepper.Item>
+    <Stepper.Item value="payment">
+      <Stepper.Trigger>
+        <Stepper.Indicator />
+        <Stepper.Title>Payment</Stepper.Title>
+      </Stepper.Trigger>
+      <Stepper.Content>Billing information</Stepper.Content>
+    </Stepper.Item>
+  </Stepper.List>
+  <Stepper.Previous />
+  <Stepper.Next />
+</Stepper.Root>
+```
+
 Small composition helpers keep common layouts consistent:
 
 ```tsx

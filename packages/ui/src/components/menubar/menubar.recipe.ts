@@ -20,6 +20,7 @@ export const menubarRecipe = defineSlotRecipe({
       minWidth: "0",
       width: "fit-content",
       flexWrap: "wrap",
+      overflow: "hidden",
     },
     trigger: {
       alignItems: "center",
@@ -53,6 +54,7 @@ export const menubarRecipe = defineSlotRecipe({
         outlineOffset: "2px",
       },
       _hover: { backgroundColor: "surface.subtle" },
+      _motionReduce: { transitionDuration: "0ms", transitionProperty: "none" },
       "&[data-popup-open]": { backgroundColor: "surface.subtle" },
     },
   },

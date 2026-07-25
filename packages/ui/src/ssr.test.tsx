@@ -48,6 +48,7 @@ import {
   Sidebar,
   Skeleton,
   Slider,
+  Stepper,
   Stack,
   Table,
   TagsInput,
@@ -461,6 +462,33 @@ describe("SSR rendering", () => {
     expect(html).toContain('data-slot="sidebar-toggle"');
     expect(html).toContain('aria-expanded="false"');
     expect(html).toContain('aria-current="page"');
+  });
+
+  it("renders a controlled stepper and native form value without browser globals", () => {
+    const html = renderToString(
+      <Stepper.Root defaultValue="account" name="checkout-step" aria-label="Checkout progress">
+        <Stepper.List>
+          <Stepper.Item value="account">
+            <Stepper.Trigger>
+              <Stepper.Indicator />
+              <Stepper.Title>Account</Stepper.Title>
+            </Stepper.Trigger>
+            <Stepper.Content>Account details</Stepper.Content>
+          </Stepper.Item>
+          <Stepper.Item value="payment">
+            <Stepper.Trigger>
+              <Stepper.Indicator />
+              <Stepper.Title>Payment</Stepper.Title>
+            </Stepper.Trigger>
+            <Stepper.Content>Payment details</Stepper.Content>
+          </Stepper.Item>
+        </Stepper.List>
+      </Stepper.Root>,
+    );
+
+    expect(html).toContain('data-jaci-component="stepper"');
+    expect(html).toContain('aria-current="step"');
+    expect(html).toContain('name="checkout-step"');
   });
 
   it("renders fixed navigation and its accessible mobile trigger safely on the server", () => {

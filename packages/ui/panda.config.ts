@@ -73,6 +73,7 @@ import { buttonGroupRecipe } from "./src/components/button-group/button-group.re
 import { inputGroupRecipe } from "./src/components/input-group/input-group.recipe";
 import { emptyStateRecipe } from "./src/components/empty-state/empty-state.recipe";
 import { dataToolbarRecipe } from "./src/components/data-toolbar/data-toolbar.recipe";
+import { stepperRecipe } from "./src/components/stepper/stepper.recipe";
 import { jaciConditions, jaciTheme } from "./src/styles/theme";
 
 export default defineConfig({
@@ -170,6 +171,7 @@ export default defineConfig({
         inputGroup: inputGroupRecipe,
         emptyState: emptyStateRecipe,
         dataToolbar: dataToolbarRecipe,
+        stepper: stepperRecipe,
       },
     },
   },
@@ -177,6 +179,14 @@ export default defineConfig({
     recipes: "*",
   },
   globalCss: {
+    "@media (prefers-reduced-motion: reduce)": {
+      "[data-jaci-component], [data-jaci-component] *": {
+        animationDuration: "0ms",
+        animationIterationCount: "1",
+        scrollBehavior: "auto",
+        transitionDuration: "0ms",
+      },
+    },
     "[data-jaci-theme]": {
       backgroundColor: "surface.canvas",
       color: "fg.default",

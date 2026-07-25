@@ -78,6 +78,9 @@ export const drawerRecipe = defineSlotRecipe({
       transitionProperty: "opacity, transform",
       transitionTimingFunction: "standard",
       width: "100%",
+      maxWidth: "100vw",
+      overflow: "hidden",
+      _motionReduce: { transitionDuration: "0ms", transitionProperty: "none" },
       "&[data-side=bottom]": {
         borderBottomWidth: "0",
         borderRadius: "2xl 2xl 0 0",
@@ -163,6 +166,7 @@ export const drawerRecipe = defineSlotRecipe({
       gap: "2",
       justifyContent: "flex-end",
       p: { base: "4", md: "6" },
+      "& > *": { maxWidth: "100%", minWidth: "0" },
     },
     close: {
       alignItems: "center",

@@ -43,6 +43,7 @@ const expectedClientModules = [
   "components/select/select.js",
   "components/slider/slider.js",
   "components/sidebar/sidebar.js",
+  "components/stepper/stepper.js",
   "components/scroll-area/scroll-area.js",
   "components/tabs/tabs.js",
   "components/table/table.js",
