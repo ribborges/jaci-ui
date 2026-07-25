@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.2
+
+### Patch Changes
+
+- 513422d: Ensure the Navbar blur is preserved when the package stylesheet is consumed by Next.js and improve its Storybook controls and usage examples.
+
 ## 0.6.1
 
 ### Patch Changes
