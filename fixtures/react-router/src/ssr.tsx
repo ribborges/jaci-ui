@@ -3,11 +3,13 @@ import { StaticRouter } from "react-router";
 import {
   AlertDialog,
   Button,
+  Calendar,
   Checkbox,
   ColorPicker,
   Combobox,
   ContextMenu,
   DataView as JaciDataView,
+  DateRangePicker,
   Drawer,
   Field,
   FieldError,
@@ -18,6 +20,7 @@ import {
   Input,
   List,
   NumberField,
+  PinInput,
   Menubar,
   RadioGroup,
   Stack,
@@ -101,6 +104,23 @@ const html = renderToString(
             <ColorPicker.Preview />
           </ColorPicker.Trigger>
         </ColorPicker.Root>
+        <Calendar.Root referenceDate={new Date(2025, 3, 1, 12)} aria-label="Calendar">
+          <Calendar.Header>
+            <Calendar.Previous />
+            <Calendar.Caption />
+            <Calendar.Next />
+          </Calendar.Header>
+          <Calendar.Grid />
+        </Calendar.Root>
+        <DateRangePicker.Root referenceDate={new Date(2025, 3, 1, 12)}>
+          <DateRangePicker.Trigger aria-label="Choose period" />
+        </DateRangePicker.Root>
+        <PinInput.Root length={4} defaultValue="1234" name="pin">
+          <PinInput.Label>PIN</PinInput.Label>
+          <PinInput.Control>
+            <PinInput.Inputs />
+          </PinInput.Control>
+        </PinInput.Root>
         <Form errors={{ email: "Use a valid email address." }} onFormSubmit={() => undefined}>
           <Fieldset.Root>
             <Fieldset.Legend>Contact</Fieldset.Legend>
@@ -182,7 +202,10 @@ if (
   !html.includes('data-slot="table-cell"') ||
   !html.includes('data-jaci-component="list"') ||
   !html.includes('data-jaci-component="data-view"') ||
-  !html.includes('data-slot="color-picker-trigger"')
+  !html.includes('data-slot="color-picker-trigger"') ||
+  !html.includes('data-slot="calendar"') ||
+  !html.includes('data-jaci-component="date-range-picker"') ||
+  !html.includes('data-jaci-component="pin-input"')
 ) {
   throw new Error("Jaci UI did not render as expected in the React Router SSR fixture");
 }

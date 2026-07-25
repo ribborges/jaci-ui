@@ -1151,6 +1151,10 @@ export const selectRecipe = defineSlotRecipe({
     "group",
     "groupLabel",
     "separator",
+    "clear",
+    "empty",
+    "loading",
+    "status",
   ],
   base: {
     label: {
@@ -1331,6 +1335,25 @@ export const selectRecipe = defineSlotRecipe({
       "&[data-orientation=horizontal]": { borderTopWidth: "1px", width: "100%" },
       "&[data-orientation=vertical]": { alignSelf: "stretch", borderLeftWidth: "1px" },
     },
+    clear: {
+      alignItems: "center",
+      backgroundColor: "transparent",
+      border: "0",
+      borderRadius: "sm",
+      color: "fg.muted",
+      cursor: "pointer",
+      display: "inline-flex",
+      flexShrink: "0",
+      fontSize: "lg",
+      justifyContent: "center",
+      minHeight: "6",
+      minWidth: "6",
+      _focusVisible: { outline: "2px solid", outlineColor: "accent.default", outlineOffset: "1px" },
+      _disabled: { cursor: "not-allowed", opacity: "0.55" },
+    },
+    empty: { color: "fg.muted", fontSize: "sm", px: "3", py: "2" },
+    loading: { color: "fg.muted", fontSize: "sm", px: "3", py: "2" },
+    status: { color: "fg.muted", fontSize: "sm" },
   },
   variants: {
     size: {

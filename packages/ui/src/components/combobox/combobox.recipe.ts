@@ -18,6 +18,7 @@ export const comboboxRecipe = defineSlotRecipe({
     "group",
     "groupLabel",
     "empty",
+    "loading",
     "clear",
     "status",
     "arrow",
@@ -208,6 +209,7 @@ export const comboboxRecipe = defineSlotRecipe({
       p: "3",
       textAlign: "center",
     },
+    loading: { color: "fg.muted", fontSize: "sm", p: "3", textAlign: "center" },
     clear: {
       alignItems: "center",
       backgroundColor: "transparent",

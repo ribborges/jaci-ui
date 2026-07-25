@@ -134,6 +134,8 @@ export interface DatePickerRootProps extends Omit<BasePopoverRoot.Props, "childr
   granularity?: DatePickerGranularity;
   /** Inclusive range used by the year selector. */
   yearRange?: DatePickerYearRange;
+  /** Reference date used when no value is selected, useful for deterministic SSR and tests. */
+  referenceDate?: Date;
   /** Adds a native hidden input using the representation for the selected granularity. */
   name?: string;
   /** Prevents interaction and disables the hidden form input. */
@@ -161,19 +163,22 @@ export function DatePickerRoot({
   value: controlledValue,
   weekStartsOn = 0,
   yearRange: configuredYearRange,
+  referenceDate,
   actionsRef: externalActionsRef,
   ...popoverProps
 }: DatePickerRootProps) {
   const [uncontrolledValue, setUncontrolledValue] = useState<Date | null>(defaultValue);
   const selected = controlledValue === undefined ? uncontrolledValue : controlledValue;
-  const [month, setMonthState] = useState(() => startOfMonth(selected ?? new Date()));
-  const [focusedDate, setFocusedDate] = useState(selected ?? month);
+  const [month, setMonthState] = useState(() =>
+    startOfMonth(selected ?? referenceDate ?? new Date()),
+  );
+  const [focusedDate, setFocusedDate] = useState(selected ?? referenceDate ?? month);
   const previousMonthRef = useRef(month);
   const internalActionsRef = useRef<BasePopoverRoot.Actions | null>(null);
   const dayRefs = useRef(new Map<string, HTMLButtonElement>());
   const labelId = useId();
   const triggerId = useId();
-  const today = useMemo(() => new Date(), []);
+  const today = useMemo(() => referenceDate ?? new Date(), [referenceDate]);
   const styles = datePicker({ size });
   const minMonth = minDate ? startOfMonth(minDate) : undefined;
   const maxMonth = maxDate ? startOfMonth(maxDate) : undefined;
@@ -244,10 +249,10 @@ export function DatePickerRoot({
 
   const setValue = useCallback(
     (nextValue: Date | null) => {
-      setUncontrolledValue(nextValue);
+      if (controlledValue === undefined) setUncontrolledValue(nextValue);
       onValueChange?.(nextValue);
     },
-    [onValueChange],
+    [controlledValue, onValueChange],
   );
 
   const monthDisabled = useCallback(
@@ -830,6 +835,7 @@ export const DatePickerDay = forwardRef<HTMLButtonElement, DatePickerDayProps>(
       selected,
       styles,
       today,
+      weekStartsOn,
     } = useDatePickerContext();
     const key = dateKey(date);
     const outsideMonth = !isSameMonth(date, month);
@@ -859,10 +865,10 @@ export const DatePickerDay = forwardRef<HTMLButtonElement, DatePickerDayProps>(
           nextDate = addDays(date, 7);
           break;
         case "Home":
-          nextDate = addDays(date, -date.getDay());
+          nextDate = addDays(date, -((date.getDay() - weekStartsOn + 7) % 7));
           break;
         case "End":
-          nextDate = addDays(date, 6 - date.getDay());
+          nextDate = addDays(date, 6 - ((date.getDay() - weekStartsOn + 7) % 7));
           break;
         case "PageUp":
           nextDate = addMonths(date, event.shiftKey ? -12 : -1);

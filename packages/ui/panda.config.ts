@@ -31,9 +31,12 @@ import {
 import { alertRecipe } from "./src/components/alert/alert.recipe";
 import { avatarRecipe } from "./src/components/avatar/avatar.recipe";
 import { breadcrumbsRecipe } from "./src/components/breadcrumbs/breadcrumbs.recipe";
+import { calendarRecipe } from "./src/components/calendar/calendar.recipe";
 import { checkboxRecipe } from "./src/components/controls/checkbox.recipe";
 import { checkboxGroupRecipe } from "./src/components/checkbox-group/checkbox-group.recipe";
 import { datePickerRecipe } from "./src/components/date-picker/date-picker.recipe";
+import { dateRangePickerRecipe } from "./src/components/date-range-picker/date-range-picker.recipe";
+import { pinInputRecipe } from "./src/components/pin-input/pin-input.recipe";
 import { drawerRecipe } from "./src/components/drawer/drawer.recipe";
 import { menubarRecipe } from "./src/components/menubar/menubar.recipe";
 import { paginationRecipe } from "./src/components/pagination/pagination.recipe";
@@ -131,7 +134,10 @@ export default defineConfig({
         alert: alertRecipe,
         avatar: avatarRecipe,
         breadcrumbs: breadcrumbsRecipe,
+        calendar: calendarRecipe,
         datePicker: datePickerRecipe,
+        dateRangePicker: dateRangePickerRecipe,
+        pinInput: pinInputRecipe,
         pagination: paginationRecipe,
         popover: popoverRecipe,
         progress: progressRecipe,

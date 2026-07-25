@@ -1,0 +1,45 @@
+import { defineSlotRecipe } from "@pandacss/dev";
+
+export const pinInputRecipe = defineSlotRecipe({
+  className: "pinInput",
+  slots: ["root", "label", "control", "inputs", "input", "description", "error", "hiddenInput"],
+  base: {
+    root: { display: "flex", flexDirection: "column", gap: "2", maxWidth: "100%", minWidth: "0" },
+    label: { color: "fg.default", fontSize: "sm", fontWeight: "600" },
+    control: { display: "flex", maxWidth: "100%", minWidth: "0" },
+    inputs: { display: "flex", flexWrap: "wrap", gap: "2", maxWidth: "100%" },
+    input: {
+      backgroundColor: "surface.canvas",
+      borderColor: "border.default",
+      borderRadius: "md",
+      borderStyle: "solid",
+      borderWidth: "1px",
+      color: "fg.default",
+      fontFamily: "inherit",
+      fontSize: "lg",
+      fontWeight: "600",
+      height: "12",
+      minWidth: "0",
+      outline: "none",
+      textAlign: "center",
+      width: "3rem",
+      _focusVisible: {
+        borderColor: "accent.default",
+        boxShadow: "0 0 0 3px token(colors.focus.ring)",
+      },
+      _disabled: { backgroundColor: "surface.subtle", cursor: "not-allowed", opacity: "0.65" },
+      _invalid: { borderColor: "danger.default" },
+    },
+    description: { color: "fg.muted", fontSize: "sm" },
+    error: { color: "danger.default", fontSize: "sm" },
+    hiddenInput: {
+      position: "absolute",
+      width: "1px",
+      height: "1px",
+      overflow: "hidden",
+      clip: "rect(0 0 0 0)",
+      whiteSpace: "nowrap",
+    },
+  },
+  staticCss: ["*"],
+});
