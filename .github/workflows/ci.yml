@@ -40,12 +40,27 @@ jobs:
       - run: pnpm fixtures:check
       - run: pnpm performance:check
       - run: pnpm package:contract
-      - run: mkdir -p .artifacts && pnpm --filter jaci-ui pack --pack-destination .artifacts
-      - run: JACI_TARBALL="$(find .artifacts -maxdepth 1 -name '*.tgz' -print -quit)" pnpm fixtures:pack-check
+      - name: Pack publish tarball
+        run: |
+          artifact_dir="$GITHUB_WORKSPACE/.artifacts"
+          rm -rf "$artifact_dir"
+          mkdir -p "$artifact_dir"
+          pnpm --filter jaci-ui pack --pack-destination "$artifact_dir"
+
+          mapfile -t tarballs < <(find "$artifact_dir" -maxdepth 1 -type f -name '*.tgz' -print)
+          if [ "${#tarballs[@]}" -ne 1 ]; then
+            echo "Expected exactly one package tarball, found ${#tarballs[@]}"
+            find "$artifact_dir" -maxdepth 1 -type f -print
+            exit 1
+          fi
+
+          echo "JACI_TARBALL=${tarballs[0]}" >> "$GITHUB_ENV"
+      - name: Validate packed fixtures
+        run: pnpm fixtures:pack-check
       - uses: actions/upload-artifact@v4
         with:
           name: jaci-ui-tarball
-          path: .artifacts/*.tgz
+          path: ${{ github.workspace }}/.artifacts/*.tgz
           if-no-files-found: error
 
   framework-compatibility:
