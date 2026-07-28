@@ -1,7 +1,7 @@
 {
   "name": "jaci-ui",
   "description": "Accessible, themeable React components by Jaci UI",
-  "version": "0.6.3",
+  "version": "0.7.0",
   "license": "MIT",
   "author": {
     "name": "Richard Borges",
