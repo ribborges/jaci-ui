@@ -4,7 +4,10 @@
     { "path": "./packages/ui" },
     { "path": "./apps/storybook" },
     { "path": "./fixtures/vite" },
+    { "path": "./fixtures/react18" },
     { "path": "./fixtures/react-router" },
-    { "path": "./fixtures/next" }
+    { "path": "./fixtures/next" },
+    { "path": "./fixtures/remix" },
+    { "path": "./fixtures/tree-shaking" }
   ]
 }

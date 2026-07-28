@@ -86,7 +86,11 @@ if (missing.length > 0) {
   throw new Error(`tsdown did not preserve the expected module structure: ${missing.join(", ")}`);
 }
 
-const withoutDirective = expectedClientModules.filter((file) => {
+const expectedClientArtifacts = expectedClientModules.flatMap((file) => [
+  file,
+  file.replace(/\.js$/, ".cjs"),
+]);
+const withoutDirective = expectedClientArtifacts.filter((file) => {
   const content = readFileSync(join(root, file), "utf8").trimStart();
   return !content.startsWith('"use client";') && !content.startsWith("'use client';");
 });
@@ -95,5 +99,34 @@ if (withoutDirective.length > 0) {
   throw new Error(
     "The following interactive public modules lost their use client directive: " +
       withoutDirective.join(", "),
+  );
+}
+
+const unexpectedClientArtifacts = [...emittedFiles].filter((file) => {
+  if (!file.endsWith(".js") && !file.endsWith(".cjs")) return false;
+  if (expectedClientArtifacts.includes(file)) return false;
+  const content = readFileSync(join(root, file), "utf8").trimStart();
+  return content.startsWith('"use client";') || content.startsWith("'use client';");
+});
+
+if (unexpectedClientArtifacts.length > 0) {
+  throw new Error(
+    "Unexpected use client directives in server-safe artifacts: " +
+      unexpectedClientArtifacts.join(", "),
+  );
+}
+
+const browserGlobals = /\b(window|document|navigator|localStorage|sessionStorage|matchMedia)\b/;
+const serverSafeArtifacts = [...emittedFiles].filter(
+  (file) =>
+    (file.endsWith(".js") || file.endsWith(".cjs")) && !expectedClientArtifacts.includes(file),
+);
+const browserGlobalReferences = serverSafeArtifacts.filter((file) =>
+  browserGlobals.test(readFileSync(join(root, file), "utf8")),
+);
+
+if (browserGlobalReferences.length > 0) {
+  throw new Error(
+    `Server-safe artifacts reference browser globals: ${browserGlobalReferences.join(", ")}`,
   );
 }
