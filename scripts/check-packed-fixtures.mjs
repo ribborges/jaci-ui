@@ -14,24 +14,38 @@ import { fileURLToPath } from "node:url";
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const artifactsDirectory = join(root, ".artifacts");
 const temporaryDirectory = join(root, ".fixture-pack-check");
-const fixtureNames = ["vite", "react18", "react-router", "next"];
+const fixtureNames = process.env.JACI_FIXTURE
+  ? [process.env.JACI_FIXTURE]
+  : ["vite", "react18", "react-router", "next", "remix", "tree-shaking"];
+const suppliedTarball = process.env.JACI_TARBALL
+  ? resolve(root, process.env.JACI_TARBALL)
+  : undefined;
 
-rmSync(artifactsDirectory, { force: true, recursive: true });
+if (!suppliedTarball) {
+  rmSync(artifactsDirectory, { force: true, recursive: true });
+}
 rmSync(temporaryDirectory, { force: true, recursive: true });
-mkdirSync(artifactsDirectory, { recursive: true });
 mkdirSync(temporaryDirectory, { recursive: true });
 
-execFileSync("pnpm", ["--filter", "jaci-ui", "pack", "--pack-destination", artifactsDirectory], {
-  cwd: root,
-  stdio: "inherit",
-});
-
-const packedLibrary = readdirSync(artifactsDirectory).find((file) => file.endsWith(".tgz"));
-if (!packedLibrary) {
-  throw new Error("pnpm pack did not create a Jaci UI tarball");
+if (!suppliedTarball) {
+  mkdirSync(artifactsDirectory, { recursive: true });
+  execFileSync("pnpm", ["--filter", "jaci-ui", "pack", "--pack-destination", artifactsDirectory], {
+    cwd: root,
+    stdio: "inherit",
+  });
 }
 
-const tarball = join(artifactsDirectory, packedLibrary);
+const packedLibrary = suppliedTarball
+  ? undefined
+  : readdirSync(artifactsDirectory).find((file) => file.endsWith(".tgz"));
+if (!packedLibrary) {
+  if (!suppliedTarball) throw new Error("pnpm pack did not create a Jaci UI tarball");
+}
+
+const tarball = suppliedTarball ?? join(artifactsDirectory, packedLibrary);
+if (!existsSync(tarball)) {
+  throw new Error(`Jaci UI tarball does not exist: ${tarball}`);
+}
 
 for (const fixtureName of fixtureNames) {
   const source = join(root, "fixtures", fixtureName);
@@ -41,7 +55,7 @@ for (const fixtureName of fixtureNames) {
     recursive: true,
     filter: (path) => {
       const name = basename(path);
-      return !["node_modules", "dist", ".next", "coverage"].includes(name);
+      return !["node_modules", "dist", ".next", "build", ".turbo", "coverage"].includes(name);
     },
   });
 
@@ -57,6 +71,10 @@ for (const fixtureName of fixtureNames) {
   execFileSync("pnpm", ["run", "check"], { cwd: destination, stdio: "inherit" });
   if (fixtureName === "react18") {
     execFileSync("pnpm", ["run", "typecheck:react18"], { cwd: destination, stdio: "inherit" });
+    execFileSync("pnpm", ["run", "test:hydration"], { cwd: destination, stdio: "inherit" });
+  }
+  if (fixtureName === "remix") {
+    execFileSync("pnpm", ["run", "typecheck"], { cwd: destination, stdio: "inherit" });
   }
 }
 

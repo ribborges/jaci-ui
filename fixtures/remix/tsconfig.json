@@ -1,0 +1,15 @@
+{
+  "include": ["**/*.ts", "**/*.tsx", "remix.env.d.ts"],
+  "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "target": "ES2022",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "types": ["@remix-run/node", "vite/client"]
+  }
+}

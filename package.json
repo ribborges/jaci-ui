@@ -19,7 +19,7 @@
   },
   "scripts": {
     "build": "turbo run build",
-    "clean": "rimraf .turbo .artifacts .fixture-pack-check packages/ui/dist packages/ui/src/styled-system packages/ui/tsconfig.tsbuildinfo apps/storybook/storybook-static apps/storybook/tsconfig.tsbuildinfo fixtures/vite/dist fixtures/vite/tsconfig.tsbuildinfo fixtures/react18/dist fixtures/react18/tsconfig.tsbuildinfo fixtures/react-router/tsconfig.tsbuildinfo fixtures/next/.next fixtures/next/tsconfig.tsbuildinfo",
+    "clean": "rimraf .turbo .artifacts .fixture-pack-check packages/ui/dist packages/ui/src/styled-system packages/ui/tsconfig.tsbuildinfo apps/storybook/storybook-static apps/storybook/tsconfig.tsbuildinfo fixtures/vite/dist fixtures/vite/tsconfig.tsbuildinfo fixtures/react18/dist fixtures/react18/tsconfig.tsbuildinfo fixtures/react-router/tsconfig.tsbuildinfo fixtures/next/.next fixtures/next/tsconfig.tsbuildinfo fixtures/remix/build fixtures/remix/node_modules/.cache fixtures/tree-shaking/dist",
     "dev": "turbo run dev --parallel --filter=jaci-ui --filter=@jaci-ui/storybook --filter=@jaci-ui/fixture-vite --filter=@jaci-ui/fixture-next",
     "format": "biome format --write .",
     "format:check": "biome format .",
@@ -29,7 +29,10 @@
     "storybook": "pnpm --filter jaci-ui build && pnpm --filter @jaci-ui/storybook dev",
     "storybook:build": "pnpm --filter jaci-ui build && pnpm --filter @jaci-ui/storybook build",
     "package:check": "pnpm --filter jaci-ui package:check",
-    "fixtures:check": "turbo run check --filter=@jaci-ui/fixture-next --filter=@jaci-ui/fixture-react-router --filter=@jaci-ui/fixture-vite --filter=@jaci-ui/fixture-react18",
+    "package:contract": "pnpm --filter jaci-ui package:contract",
+    "performance:check": "pnpm --filter jaci-ui performance:check",
+    "compatibility:check": "node scripts/check-packed-fixtures.mjs",
+    "fixtures:check": "turbo run check --filter=@jaci-ui/fixture-next --filter=@jaci-ui/fixture-react-router --filter=@jaci-ui/fixture-vite --filter=@jaci-ui/fixture-react18 --filter=@jaci-ui/fixture-remix --filter=@jaci-ui/fixture-tree-shaking",
     "fixtures:pack-check": "node scripts/check-packed-fixtures.mjs",
     "changeset": "changeset",
     "release:version": "changeset version"
