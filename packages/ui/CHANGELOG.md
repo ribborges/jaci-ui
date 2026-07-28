@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.0
+
+### Minor Changes
+
+- fb498f5: Add Code, Kbd, AspectRatio, Image, Figure and Stat/StatGroup, with configurable image lightboxes and expanded content, feedback, card and typography APIs.
+
 ## 0.6.3
 
 ### Patch Changes
