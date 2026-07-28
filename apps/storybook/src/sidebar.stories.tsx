@@ -102,3 +102,33 @@ export const MobileOverlay: Story = {
     },
   },
 };
+
+export const ResponsiveClassName: Story = {
+  render: () => (
+    <div style={{ height: "24rem", width: "20rem" }}>
+      <style>{`
+        .jaci-story-sidebar-desktop { display: none; }
+        @media (min-width: 768px) { .jaci-story-sidebar-desktop { display: flex; } }
+      `}</style>
+      <Sidebar.Root className="jaci-story-sidebar-desktop" aria-label="Desktop navigation">
+        <Sidebar.Header>
+          <Sidebar.Label>Desktop navigation</Sidebar.Label>
+        </Sidebar.Header>
+        <Sidebar.Content>
+          <Sidebar.Item active href="#overview">
+            <Sidebar.Label>Overview</Sidebar.Label>
+          </Sidebar.Item>
+        </Sidebar.Content>
+      </Sidebar.Root>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<Sidebar.Root className="desktop-only" aria-label="Desktop navigation">
+  <Sidebar.Content>...</Sidebar.Content>
+</Sidebar.Root>`,
+      },
+    },
+  },
+};

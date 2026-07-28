@@ -195,6 +195,8 @@ export default defineConfig({
     recipes: "*",
   },
   globalCss: {
+    ':where([data-slot="bottom-navigation"])': { display: "flex" },
+    ':where([data-slot="sidebar"])': { display: "flex" },
     "@media (prefers-reduced-motion: reduce)": {
       "[data-jaci-component], [data-jaci-component] *": {
         animationDuration: "0ms",

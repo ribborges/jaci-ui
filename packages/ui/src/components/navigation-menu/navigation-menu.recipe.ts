@@ -58,7 +58,7 @@ export const navigationMenuRecipe = defineSlotRecipe({
       minWidth: "0",
       overflowWrap: "anywhere",
       padding: "3",
-      width: "min(32rem, calc(100vw - 2rem))",
+      width: "max-content",
     },
     link: {
       borderRadius: "md",
@@ -108,6 +108,7 @@ export const navigationMenuRecipe = defineSlotRecipe({
       minWidth: "0",
       overflow: "auto",
       overflowWrap: "anywhere",
+      width: "max-content",
     },
     backdrop: { backgroundColor: "surface.overlay", inset: "0", position: "fixed" },
     arrow: { fill: "surface.raised" },
