@@ -5,12 +5,14 @@ import {
   Accordion,
   AlertDialog,
   Alert,
+  AspectRatio,
   Avatar,
   Badge,
   BottomNavigation,
   Breadcrumbs,
   Button,
   Card,
+  Code,
   Checkbox,
   CheckboxGroup,
   Combobox,
@@ -28,9 +30,12 @@ import {
   FieldError,
   FieldLabel,
   Fieldset,
+  Figure,
   Form,
   Heading,
   Input,
+  Image,
+  Kbd,
   Menu,
   Menubar,
   Meter,
@@ -47,6 +52,8 @@ import {
   Select,
   Sidebar,
   Skeleton,
+  Stat,
+  StatGroup,
   Slider,
   Stepper,
   Stack,
@@ -83,6 +90,39 @@ describe("SSR rendering", () => {
     expect(html).toContain("Jaci UI");
     expect(html).toContain('data-jaci-component="button"');
     expect(html).toContain('data-jaci-component="input"');
+  });
+
+  it("renders content and visual utility components without browser globals", () => {
+    const html = renderToString(
+      <>
+        <Code variant="block" language="tsx">
+          const value = 1;
+        </Code>
+        <Kbd>Ctrl</Kbd>
+        <AspectRatio ratio={16 / 9}>
+          <div>Media</div>
+        </AspectRatio>
+        <Image alt="Server image" src="/image.svg" />
+        <Figure.Root lightbox>
+          <Figure.Image alt="Server figure" src="/figure.svg" />
+          <Figure.Caption>Server-safe caption</Figure.Caption>
+        </Figure.Root>
+        <StatGroup.Root columns={2}>
+          <Stat.Root>
+            <Stat.Label>Users</Stat.Label>
+            <Stat.Value>42</Stat.Value>
+          </Stat.Root>
+        </StatGroup.Root>
+      </>,
+    );
+
+    expect(html).toContain('data-jaci-component="code"');
+    expect(html).toContain('data-jaci-component="kbd"');
+    expect(html).toContain('data-jaci-component="aspect-ratio"');
+    expect(html).toContain('data-jaci-component="image"');
+    expect(html).toContain('data-jaci-component="figure"');
+    expect(html).toContain("Server-safe caption");
+    expect(html).toContain('data-jaci-component="stat-group"');
   });
 
   it("renders interaction primitives without browser globals on the server", () => {

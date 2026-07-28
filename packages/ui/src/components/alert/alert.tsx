@@ -101,9 +101,26 @@ export const AlertDescription = forwardRef<HTMLDivElement, AlertDescriptionProps
   },
 );
 
+export type AlertActionsProps = ComponentPropsWithoutRef<"div">;
+
+export const AlertActions = forwardRef<HTMLDivElement, AlertActionsProps>(function AlertActions(
+  { className, ...props },
+  ref,
+) {
+  return (
+    <div
+      {...props}
+      ref={ref}
+      className={cx(useAlertStyles().actions, className)}
+      data-slot="alert-actions"
+    />
+  );
+});
+
 export const Alert = {
   Root: AlertRoot,
   Icon: AlertIcon,
   Title: AlertTitle,
   Description: AlertDescription,
+  Actions: AlertActions,
 };

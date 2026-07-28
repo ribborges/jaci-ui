@@ -54,6 +54,37 @@ export function Example() {
 }
 ```
 
+Content and visual utilities are framework-agnostic and server-safe where possible:
+
+```tsx
+import { AspectRatio, Code, Figure, Image, Kbd, Quote, Stat, StatGroup } from "jaci-ui";
+
+<Code variant="block" language="tsx">const value = 42;</Code>;
+<Kbd>⌘K</Kbd>;
+<Quote author="Alan Kay" source="Alan Kay">The best way to predict the future is to invent it.</Quote>;
+<AspectRatio ratio={16 / 9}><Image src="/cover.jpg" alt="Cover" fit="cover" /></AspectRatio>;
+<Figure.Root lightbox>
+  <Figure.Image src="/cover.jpg" alt="Cover" />
+  <Figure.Caption>Project cover</Figure.Caption>
+</Figure.Root>;
+<StatGroup.Root columns={3}>
+  <Stat.Root tone="success">
+    <Stat.Label>Revenue</Stat.Label>
+    <Stat.Value>$12.4k</Stat.Value>
+    <Stat.Trend direction="up">+18%</Stat.Trend>
+  </Stat.Root>
+</StatGroup.Root>;
+```
+
+`AspectRatio` fills the available inline size of its parent. In shrink-to-fit or flex
+layouts, give the parent an explicit `width`/`max-width` so the ratio has a measurable
+size.
+
+`Code` is intentionally presentation-only; compose it with `Copyable` when users should be able
+to copy a command. `Image` uses the native `<img>` element, accepts a React fallback and can opt
+into a focusable blurred lightbox with `lightbox`. `Figure` adds a semantic caption that remains
+visible in the expanded image preview, without requiring a framework-specific image optimizer.
+
 Interactive components support controlled and uncontrolled state where appropriate. For example,
 `value`/`onValueChange` can be paired with `defaultValue` when the application does not need to
 own the state. `ColorPicker.Palette` supports pointer dragging, keyboard arrows and a visible

@@ -15,6 +15,8 @@ const expectedClientModules = [
   "components/controls/switch.js",
   "components/controls/textarea.js",
   "components/icon-button/icon-button.js",
+  "components/image/image.js",
+  "components/figure/figure.js",
   "components/calendar/calendar.js",
   "components/date-picker/date-picker.js",
   "components/date-range-picker/date-range-picker.js",

@@ -1,5 +1,12 @@
 export { Heading } from "./heading";
-export type { HeadingElement, HeadingProps, HeadingSize } from "./heading";
+export type {
+  HeadingElement,
+  HeadingProps,
+  HeadingSize,
+  TypographyLineClamp,
+  TypographyWeight,
+  TypographyWidth,
+} from "./heading";
 export { Link } from "./link";
 export type { LinkProps } from "./link";
 export { Paragraph } from "./paragraph";

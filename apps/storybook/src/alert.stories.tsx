@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Alert, Stack } from "jaci-ui";
+import { Alert, Button, Stack } from "jaci-ui";
 
 const meta = {
   title: "Feedback/Alert",
   tags: ["autodocs"],
+  component: Alert.Root,
 } satisfies Meta;
 
 export default meta;
@@ -48,4 +49,32 @@ export const CustomIcon: Story = {
       </Alert.Description>
     </Alert.Root>
   ),
+};
+
+export const WithActions: Story = {
+  render: () => (
+    <Alert.Root tone="warning" style={{ maxWidth: "36rem" }}>
+      <Alert.Icon />
+      <Alert.Title>Billing details need attention</Alert.Title>
+      <Alert.Description>Update the payment method before the next renewal.</Alert.Description>
+      <Alert.Actions>
+        <Button size="sm">Review billing</Button>
+        <Button size="sm" variant="ghost">
+          Dismiss
+        </Button>
+      </Alert.Actions>
+    </Alert.Root>
+  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<Alert.Root tone="warning">
+  <Alert.Icon />
+  <Alert.Title>Billing details need attention</Alert.Title>
+  <Alert.Description>Update the payment method.</Alert.Description>
+  <Alert.Actions><Button size="sm">Review billing</Button></Alert.Actions>
+</Alert.Root>`,
+      },
+    },
+  },
 };

@@ -4,6 +4,8 @@ import { Skeleton, Stack } from "jaci-ui";
 const meta = {
   title: "Feedback/Skeleton",
   tags: ["autodocs"],
+  component: Skeleton,
+  args: { animated: true, variant: "rect" },
 } satisfies Meta;
 
 export default meta;

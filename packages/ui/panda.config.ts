@@ -74,6 +74,14 @@ import { inputGroupRecipe } from "./src/components/input-group/input-group.recip
 import { emptyStateRecipe } from "./src/components/empty-state/empty-state.recipe";
 import { dataToolbarRecipe } from "./src/components/data-toolbar/data-toolbar.recipe";
 import { stepperRecipe } from "./src/components/stepper/stepper.recipe";
+import { codeRecipe } from "./src/components/code/code.recipe";
+import { kbdRecipe } from "./src/components/kbd/kbd.recipe";
+import { aspectRatioRecipe } from "./src/components/aspect-ratio/aspect-ratio.recipe";
+import { imageRecipe } from "./src/components/image/image.recipe";
+import { statRecipe } from "./src/components/stat/stat.recipe";
+import { statGroupRecipe } from "./src/components/stat/stat-group.recipe";
+import { figureRecipe } from "./src/components/figure/figure.recipe";
+import { quoteRecipe } from "./src/components/quote/quote.recipe";
 import { jaciConditions, jaciTheme } from "./src/styles/theme";
 
 export default defineConfig({
@@ -116,6 +124,11 @@ export default defineConfig({
         screenReaderOnly: visuallyHiddenRecipe,
         toggle: toggleRecipe,
         iconButton: iconButtonRecipe,
+        code: codeRecipe,
+        kbd: kbdRecipe,
+        aspectRatioBox: aspectRatioRecipe,
+        quote: quoteRecipe,
+        statGroup: statGroupRecipe,
       },
       slotRecipes: {
         accordion: accordionRecipe,
@@ -172,6 +185,9 @@ export default defineConfig({
         emptyState: emptyStateRecipe,
         dataToolbar: dataToolbarRecipe,
         stepper: stepperRecipe,
+        image: imageRecipe,
+        stat: statRecipe,
+        figure: figureRecipe,
       },
     },
   },

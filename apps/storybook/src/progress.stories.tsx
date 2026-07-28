@@ -4,6 +4,8 @@ import { Progress, Stack, Text } from "jaci-ui";
 const meta = {
   title: "Feedback/Progress",
   tags: ["autodocs"],
+  component: Progress,
+  args: { value: 36, max: 100 },
 } satisfies Meta;
 
 export default meta;
@@ -25,5 +27,19 @@ export const Values: Story = {
 export const WithValueText: Story = {
   render: () => (
     <Progress aria-valuetext="3 of 5 files uploaded" label="Uploading files" max={5} value={3} />
+  ),
+};
+
+export const Localized: Story = {
+  render: () => (
+    <Progress
+      format={{ maximumFractionDigits: 1, style: "percent" }}
+      getAriaValueText={(formatted) => `${formatted} concluído`}
+      label="Upload"
+      locale="pt-BR"
+      max={1}
+      value={0.72}
+      valueLabel="72%"
+    />
   ),
 };
