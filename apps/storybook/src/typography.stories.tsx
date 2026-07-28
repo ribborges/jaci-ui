@@ -48,6 +48,38 @@ export const TextAndLinks: Story = {
         <Badge tone="warning">Warning</Badge>
         <Badge tone="danger">Danger</Badge>
       </Stack>
+      <Text lineClamp={2} width="full" weight="semibold">
+        Typography supports explicit weights, predictable widths and multiline truncation for dense
+        interfaces.
+      </Text>
     </Stack>
   ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<Text lineClamp={2} width="full" weight="semibold">Responsive text</Text>`,
+      },
+    },
+  },
+};
+
+export const BadgeVariants: Story = {
+  render: () => (
+    <Stack direction="horizontal" gap="sm" wrap="wrap">
+      <Badge tone="accent" variant="solid">
+        Solid
+      </Badge>
+      <Badge tone="accent" variant="soft">
+        Soft
+      </Badge>
+      <Badge tone="accent" variant="outline">
+        Outline
+      </Badge>
+    </Stack>
+  ),
+  parameters: {
+    docs: {
+      source: { code: `<Badge tone="accent" variant="soft">Soft</Badge>` },
+    },
+  },
 };

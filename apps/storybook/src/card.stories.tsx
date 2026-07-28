@@ -5,6 +5,7 @@ const meta = {
   title: "Content/Card",
   tags: ["autodocs"],
   component: Card,
+  args: { variant: "outline" },
 } satisfies Meta<typeof Card>;
 
 export default meta;
@@ -30,4 +31,31 @@ export const Variants: Story = {
       ))}
     </div>
   ),
+};
+
+export const Namespaced: Story = {
+  render: () => (
+    <Card.Root style={{ maxWidth: "28rem" }}>
+      <Card.Header>
+        <Card.Title>Project</Card.Title>
+      </Card.Header>
+      <Card.Content>
+        <Text tone="muted">A composable card surface.</Text>
+      </Card.Content>
+      <Card.Footer>
+        <Button size="sm">Open</Button>
+      </Card.Footer>
+    </Card.Root>
+  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<Card.Root>
+  <Card.Header><Card.Title>Project</Card.Title></Card.Header>
+  <Card.Content>...</Card.Content>
+  <Card.Footer><Button>Open</Button></Card.Footer>
+</Card.Root>`,
+      },
+    },
+  },
 };

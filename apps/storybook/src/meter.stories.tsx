@@ -1,7 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Meter, Stack } from "jaci-ui";
 
-const meta = { title: "Feedback/Meter", tags: ["autodocs"] } satisfies Meta;
+const meta = {
+  title: "Feedback/Meter",
+  tags: ["autodocs"],
+  component: Meter.Root,
+  args: { value: 50 },
+} satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
@@ -40,5 +45,24 @@ export const Sizes: Story = {
         </Meter.Track>
       </Meter.Root>
     </Stack>
+  ),
+};
+
+export const Localized: Story = {
+  render: () => (
+    <Meter.Root
+      value={72}
+      max={100}
+      locale="pt-BR"
+      format={{ style: "unit", unit: "megabyte", unitDisplay: "short" }}
+      getAriaValueText={(formattedValue) => `${formattedValue} utilizados`}
+      style={{ minWidth: "20rem" }}
+    >
+      <Meter.Label>Armazenamento</Meter.Label>
+      <Meter.Track>
+        <Meter.Indicator />
+      </Meter.Track>
+      <Meter.Value />
+    </Meter.Root>
   ),
 };
