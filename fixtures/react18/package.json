@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "vite build",
     "check": "pnpm build",
-    "lint": "biome lint .",
+    "lint": "biome check --assist-enabled=false .",
     "typecheck:react18": "tsc --noEmit",
     "test": "vitest run --passWithNoTests --exclude src/hydration.test.tsx",
     "test:hydration": "vitest run src/hydration.test.tsx"

@@ -8,6 +8,11 @@ Use Node 22.18 or newer and Corepack. Install dependencies with pnpm install, th
 pnpm storybook for component work. Run pnpm format, pnpm lint, pnpm typecheck, pnpm test
 and pnpm build before opening a pull request.
 
+Formatting is handled by Biome and follows the root `.editorconfig`: two spaces for
+indentation and LF line endings. Run `pnpm format` to apply formatting and `pnpm lint` to
+run formatting and lint checks together. YAML files intentionally keep space indentation
+because tabs are not valid YAML indentation.
+
 The published package supports consumer applications on Node 18.18 or newer. The higher
 Node 22.18 requirement applies only to repository development and CI tooling (including the
 current tsdown release). The publish workflow uses Node 24.
