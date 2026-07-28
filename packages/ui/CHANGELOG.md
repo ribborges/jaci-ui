@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.0
+
+### Minor Changes
+
+- cd7966c: Harden package compatibility, tarball validation, tree-shaking and CI coverage for React and framework consumers.
+
 ## 0.7.0
 
 ### Minor Changes
