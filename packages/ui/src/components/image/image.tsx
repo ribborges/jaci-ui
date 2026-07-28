@@ -6,6 +6,7 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
 import { cx } from "../../styled-system/css";
 import { image } from "../../styled-system/recipes";
+import { useThemePortalProps } from "../../theme/theme-scope";
 
 export type ImageFit = "contain" | "cover" | "fill" | "none";
 export type ImageStatus = "loading" | "loaded" | "error";
@@ -59,6 +60,7 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
   }, [onStatusChange, status]);
 
   const styles = image({ fit, status });
+  const scopedPortalProps = useThemePortalProps({});
   const rootStyle = {
     ...(aspectRatio && Number.isFinite(aspectRatio) && aspectRatio > 0
       ? { aspectRatio }
@@ -119,7 +121,7 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
       >
         {content}
       </BaseDialog.Trigger>
-      <BaseDialog.Portal>
+      <BaseDialog.Portal {...scopedPortalProps}>
         <BaseDialog.Backdrop className={styles.backdrop} data-slot="image-lightbox-backdrop" />
         <BaseDialog.Viewport className={styles.viewport} data-slot="image-lightbox-viewport">
           <BaseDialog.Popup
@@ -129,13 +131,15 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(
             data-slot="image-lightbox-popup"
           >
             <BaseDialog.Title className={styles.title}>{alt || lightboxLabel}</BaseDialog.Title>
-            <BaseDialog.Close
-              aria-label="Close image"
-              className={styles.close}
-              data-slot="image-lightbox-close"
-            >
-              ×
-            </BaseDialog.Close>
+            <div className={styles.closeRow} data-slot="image-lightbox-close-row">
+              <BaseDialog.Close
+                aria-label="Close image"
+                className={styles.close}
+                data-slot="image-lightbox-close"
+              >
+                ×
+              </BaseDialog.Close>
+            </div>
             <img
               alt={alt}
               className={styles.lightboxImage}
