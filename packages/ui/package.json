@@ -85,17 +85,20 @@
     "clean": "rimraf dist src/styled-system",
     "panda:codegen": "panda codegen --clean --config panda.config.ts",
     "panda:css": "panda cssgen --config panda.config.ts --outfile dist/styles.css",
-    "build": "pnpm panda:codegen && tsdown && pnpm panda:css && pnpm verify:client-boundaries",
+    "ensure:sourcemaps": "node scripts/ensure-entry-sourcemaps.mjs",
+    "build": "pnpm panda:codegen && tsdown && pnpm ensure:sourcemaps && pnpm panda:css && pnpm verify:client-boundaries",
     "prepublishOnly": "pnpm build",
     "dev": "pnpm panda:codegen && tsdown --watch",
-    "lint": "biome lint src panda.config.ts tsdown.config.ts",
+    "lint": "biome lint src scripts panda.config.ts tsdown.config.ts",
     "format": "biome format --write src panda.config.ts tsdown.config.ts",
     "format:check": "biome format src panda.config.ts tsdown.config.ts",
     "typecheck": "pnpm panda:codegen && tsc --noEmit",
     "test": "pnpm panda:codegen && vitest run",
     "test:watch": "pnpm panda:codegen && vitest",
     "verify:client-boundaries": "node scripts/verify-client-boundaries.mjs",
-    "package:check": "pnpm build && node scripts/package-check.mjs"
+    "package:check": "pnpm build && pnpm performance:check && pnpm package:contract",
+    "package:contract": "node scripts/package-check.mjs",
+    "performance:check": "node scripts/performance-check.mjs"
   },
   "publishConfig": {
     "access": "public"
