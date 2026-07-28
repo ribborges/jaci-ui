@@ -13,6 +13,7 @@ export {
 export type {
   CommandEmptyProps,
   CommandFilter,
+  CommandMode,
   CommandGroupProps,
   CommandInputProps,
   CommandItemProps,
