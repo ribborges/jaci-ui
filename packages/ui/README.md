@@ -2,6 +2,9 @@
 
 Accessible, themeable React components for React 18.2 and React 19 applications.
 
+The published package supports Node 18.18 or newer. Node 22.18 or newer is required only for
+working on the repository because it is used by the build toolchain.
+
 ## Installation
 
 ```sh
@@ -17,6 +20,11 @@ import "jaci-ui/styles.css";
 
 The package declares `react` and `react-dom` as peer dependencies. `@base-ui/react` is installed
 as a runtime dependency for accessible interactive primitives.
+
+The package publishes ESM and CommonJS entry points, TypeScript declarations and sourcemaps.
+`jaci-ui/styles.css` is the only declared side effect, so bundlers can tree-shake unused
+component modules. Import `jaci-ui/panda-preset` only when an application also uses Panda CSS;
+the regular package does not require Panda at runtime.
 
 ## Usage
 
