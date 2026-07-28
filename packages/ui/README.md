@@ -57,10 +57,11 @@ export function Example() {
 Content and visual utilities are framework-agnostic and server-safe where possible:
 
 ```tsx
-import { AspectRatio, Code, Figure, Image, Kbd, Stat, StatGroup } from "jaci-ui";
+import { AspectRatio, Code, Figure, Image, Kbd, Quote, Stat, StatGroup } from "jaci-ui";
 
 <Code variant="block" language="tsx">const value = 42;</Code>;
 <Kbd>⌘K</Kbd>;
+<Quote author="Alan Kay" source="Alan Kay">The best way to predict the future is to invent it.</Quote>;
 <AspectRatio ratio={16 / 9}><Image src="/cover.jpg" alt="Cover" fit="cover" /></AspectRatio>;
 <Figure.Root lightbox>
   <Figure.Image src="/cover.jpg" alt="Cover" />

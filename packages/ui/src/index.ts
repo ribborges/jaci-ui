@@ -45,6 +45,7 @@ export * from "./components/option-selector";
 export * from "./components/pagination";
 export * from "./components/pin-input";
 export * from "./components/popover";
+export * from "./components/quote";
 export * from "./components/progress";
 export * from "./components/radio-group";
 export * from "./components/range-slider";

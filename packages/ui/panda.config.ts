@@ -81,6 +81,7 @@ import { imageRecipe } from "./src/components/image/image.recipe";
 import { statRecipe } from "./src/components/stat/stat.recipe";
 import { statGroupRecipe } from "./src/components/stat/stat-group.recipe";
 import { figureRecipe } from "./src/components/figure/figure.recipe";
+import { quoteRecipe } from "./src/components/quote/quote.recipe";
 import { jaciConditions, jaciTheme } from "./src/styles/theme";
 
 export default defineConfig({
@@ -126,6 +127,7 @@ export default defineConfig({
         code: codeRecipe,
         kbd: kbdRecipe,
         aspectRatioBox: aspectRatioRecipe,
+        quote: quoteRecipe,
         statGroup: statGroupRecipe,
       },
       slotRecipes: {
