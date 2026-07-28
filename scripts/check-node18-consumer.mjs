@@ -71,9 +71,8 @@ export function Consumer() {
 
   run(pnpm, ["install", "--ignore-workspace", "--lockfile=false", "--prefer-offline"]);
   run(pnpm, ["exec", "tsc", "--noEmit"]);
-  run(process.execPath, [
-    "--input-type=module",
-    "--eval",
+  writeFileSync(
+    join(directory, "runtime-check.mjs"),
     `import { createRequire } from "node:module";
 import * as React from "react";
 import { renderToString } from "react-dom/server";
@@ -82,8 +81,10 @@ const cjs = createRequire(import.meta.url)("jaci-ui");
 if (!esm.Button || !cjs.Button) throw new Error("ESM/CJS Button exports are unavailable");
 const html = renderToString(React.createElement(esm.Button, null, "SSR"));
 if (!html.includes("SSR")) throw new Error("React 18 SSR did not render Jaci UI");
-console.log("Node 18 ESM, CJS, types and SSR checks passed.");`,
-  ]);
+console.log("Node 18 ESM, CJS, types and SSR checks passed.");
+`,
+  );
+  run(process.execPath, [join(directory, "runtime-check.mjs")]);
 } finally {
   rmSync(directory, { force: true, recursive: true });
 }
