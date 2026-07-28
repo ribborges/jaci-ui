@@ -9,7 +9,7 @@ export const progressKeyframes = defineKeyframes({
 
 export const progressRecipe = defineSlotRecipe({
   className: "progress",
-  slots: ["root", "label", "track", "indicator"],
+  slots: ["root", "label", "value", "track", "indicator"],
   base: {
     root: {
       display: "flex",
@@ -23,6 +23,12 @@ export const progressRecipe = defineSlotRecipe({
       fontSize: "sm",
       fontWeight: "600",
       lineHeight: "1.5",
+    },
+    value: {
+      color: "fg.muted",
+      fontSize: "sm",
+      fontVariantNumeric: "tabular-nums",
+      marginInlineStart: "auto",
     },
     track: {
       backgroundColor: "surface.subtle",

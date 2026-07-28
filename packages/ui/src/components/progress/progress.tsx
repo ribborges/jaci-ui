@@ -21,6 +21,10 @@ export interface ProgressProps extends Omit<ComponentPropsWithoutRef<"div">, "ch
   indeterminate?: boolean;
   /** A visible, automatically associated accessible label. */
   label?: ReactNode;
+  valueLabel?: ReactNode;
+  locale?: Intl.LocalesArgument;
+  format?: Intl.NumberFormatOptions;
+  getAriaValueText?: (formattedValue: string, value: number) => string;
 }
 
 /**
@@ -33,10 +37,14 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>(function Progr
     "aria-labelledby": ariaLabelledBy,
     "aria-valuetext": ariaValueText,
     className,
+    format,
+    getAriaValueText,
     indeterminate = false,
     label,
+    locale,
     max = 100,
     value = 0,
+    valueLabel,
     ...props
   },
   ref,
@@ -45,6 +53,8 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>(function Progr
   const maximum = Number.isFinite(max) && max > 0 ? max : 100;
   const currentValue = clamp(value ?? 0, maximum);
   const percentage = (currentValue / maximum) * 100;
+  const formattedValue = new Intl.NumberFormat(locale, format).format(currentValue);
+  const computedValueText = getAriaValueText?.(formattedValue, currentValue);
   const hasVisibleLabel = label !== null && label !== undefined;
   const labelledBy = ariaLabelledBy ?? (ariaLabel || !hasVisibleLabel ? undefined : labelId);
   const accessibleLabel = ariaLabel ?? (labelledBy ? undefined : "Progress");
@@ -60,17 +70,26 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>(function Progr
       aria-valuemax={maximum}
       aria-valuemin={0}
       aria-valuenow={indeterminate ? undefined : currentValue}
-      aria-valuetext={ariaValueText}
+      aria-valuetext={ariaValueText ?? computedValueText}
       className={cx(styles.root, className)}
       data-indeterminate={indeterminate || undefined}
       data-jaci-component="progress"
       data-slot="progress"
       role="progressbar"
     >
-      {hasVisibleLabel ? (
-        <span className={styles.label} data-slot="progress-label" id={labelId}>
-          {label}
-        </span>
+      {hasVisibleLabel || valueLabel !== undefined ? (
+        <div style={{ display: "flex", minWidth: 0 }}>
+          {hasVisibleLabel ? (
+            <span className={styles.label} data-slot="progress-label" id={labelId}>
+              {label}
+            </span>
+          ) : null}
+          {valueLabel !== undefined ? (
+            <span className={styles.value} data-slot="progress-value">
+              {valueLabel}
+            </span>
+          ) : null}
+        </div>
       ) : null}
       <div aria-hidden="true" className={styles.track} data-slot="progress-track">
         <div

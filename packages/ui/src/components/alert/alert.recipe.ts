@@ -2,7 +2,7 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const alertRecipe = defineSlotRecipe({
   className: "alert",
-  slots: ["root", "icon", "title", "description"],
+  slots: ["root", "icon", "title", "description", "actions"],
   base: {
     root: {
       alignItems: "start",
@@ -46,6 +46,14 @@ export const alertRecipe = defineSlotRecipe({
       lineHeight: "1.5",
       minWidth: "0",
       mt: "1",
+    },
+    actions: {
+      display: "flex",
+      flexWrap: "wrap",
+      gap: "2",
+      gridColumn: "2",
+      minWidth: "0",
+      mt: "2",
     },
   },
   variants: {

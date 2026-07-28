@@ -11,6 +11,27 @@ export const headingRecipe = defineRecipe({
     lineHeight: "1.5",
   },
   variants: {
+    weight: {
+      normal: { fontWeight: "400" },
+      medium: { fontWeight: "500" },
+      semibold: { fontWeight: "600" },
+      bold: { fontWeight: "700" },
+    },
+    truncate: {
+      true: { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
+      false: {},
+    },
+    lineClamp: {
+      1: { lineClamp: 1, overflow: "hidden" },
+      2: { lineClamp: 2, overflow: "hidden" },
+      3: { lineClamp: 3, overflow: "hidden" },
+      4: { lineClamp: 4, overflow: "hidden" },
+    },
+    width: {
+      auto: { width: "auto" },
+      fit: { width: "fit-content" },
+      full: { minWidth: "0", width: "100%" },
+    },
     size: {
       xs: { fontSize: { base: "md", md: "md", lg: "lg" } },
       sm: { fontSize: { base: "md", md: "lg", lg: "xl" } },
@@ -21,7 +42,10 @@ export const headingRecipe = defineRecipe({
     },
   },
   defaultVariants: {
+    weight: "bold",
     size: "md",
+    truncate: false,
+    width: "auto",
   },
   staticCss: ["*"],
 });
@@ -34,6 +58,12 @@ export const textRecipe = defineRecipe({
     lineHeight: "1.5",
   },
   variants: {
+    weight: {
+      normal: { fontWeight: "400" },
+      medium: { fontWeight: "500" },
+      semibold: { fontWeight: "600" },
+      bold: { fontWeight: "700" },
+    },
     size: {
       sm: { fontSize: "sm" },
       md: { fontSize: "md" },
@@ -43,10 +73,28 @@ export const textRecipe = defineRecipe({
       default: { color: "fg.default" },
       muted: { color: "fg.muted" },
     },
+    truncate: {
+      true: { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
+      false: {},
+    },
+    lineClamp: {
+      1: { lineClamp: 1, overflow: "hidden" },
+      2: { lineClamp: 2, overflow: "hidden" },
+      3: { lineClamp: 3, overflow: "hidden" },
+      4: { lineClamp: 4, overflow: "hidden" },
+    },
+    width: {
+      auto: { width: "auto" },
+      fit: { width: "fit-content" },
+      full: { minWidth: "0", width: "100%" },
+    },
   },
   defaultVariants: {
+    weight: "normal",
     size: "md",
     tone: "default",
+    truncate: false,
+    width: "auto",
   },
   staticCss: ["*"],
 });
@@ -63,6 +111,30 @@ export const paragraphRecipe = defineRecipe({
     textAlign: "justify",
     textIndent: { base: "5", md: "10" },
   },
+  variants: {
+    weight: {
+      normal: { fontWeight: "400" },
+      medium: { fontWeight: "500" },
+      semibold: { fontWeight: "600" },
+      bold: { fontWeight: "700" },
+    },
+    truncate: {
+      true: { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
+      false: {},
+    },
+    lineClamp: {
+      1: { lineClamp: 1, overflow: "hidden" },
+      2: { lineClamp: 2, overflow: "hidden" },
+      3: { lineClamp: 3, overflow: "hidden" },
+      4: { lineClamp: 4, overflow: "hidden" },
+    },
+    width: {
+      auto: { width: "auto" },
+      fit: { width: "fit-content" },
+      full: { minWidth: "0", width: "100%" },
+    },
+  },
+  defaultVariants: { weight: "normal", truncate: false, width: "auto" },
   staticCss: ["*"],
 });
 
@@ -113,15 +185,55 @@ export const badgeRecipe = defineRecipe({
   },
   variants: {
     tone: {
-      neutral: { bg: "neutral.600", color: "fg.onAccent" },
-      accent: { bg: "accent.default", color: "fg.onAccent" },
-      success: { bg: "success", color: "fg.onAccent" },
-      warning: { bg: "warning", color: "fg.onAccent" },
-      danger: { bg: "danger", color: "fg.onAccent" },
+      "neutral-solid": { bg: "neutral.600", color: "fg.onAccent" },
+      "accent-solid": { bg: "accent.default", color: "fg.onAccent" },
+      "success-solid": { bg: "success", color: "fg.onAccent" },
+      "warning-solid": { bg: "warning", color: "fg.onAccent" },
+      "danger-solid": { bg: "danger", color: "fg.onAccent" },
+      "neutral-soft": { backgroundColor: "surface.subtle", color: "fg.default" },
+      "accent-soft": { backgroundColor: "selected", color: "accent.default" },
+      "success-soft": { backgroundColor: "surface.subtle", color: "success" },
+      "warning-soft": { backgroundColor: "surface.subtle", color: "warning" },
+      "danger-soft": { backgroundColor: "surface.subtle", color: "danger" },
+      "neutral-outline": {
+        backgroundColor: "transparent",
+        borderColor: "border.strong",
+        borderStyle: "solid",
+        borderWidth: "1px",
+        color: "fg.default",
+      },
+      "accent-outline": {
+        backgroundColor: "transparent",
+        borderColor: "accent.default",
+        borderStyle: "solid",
+        borderWidth: "1px",
+        color: "accent.default",
+      },
+      "success-outline": {
+        backgroundColor: "transparent",
+        borderColor: "success",
+        borderStyle: "solid",
+        borderWidth: "1px",
+        color: "success",
+      },
+      "warning-outline": {
+        backgroundColor: "transparent",
+        borderColor: "warning",
+        borderStyle: "solid",
+        borderWidth: "1px",
+        color: "warning",
+      },
+      "danger-outline": {
+        backgroundColor: "transparent",
+        borderColor: "danger",
+        borderStyle: "solid",
+        borderWidth: "1px",
+        color: "danger",
+      },
     },
   },
   defaultVariants: {
-    tone: "neutral",
+    tone: "neutral-solid",
   },
   staticCss: ["*"],
 });
@@ -367,6 +479,7 @@ export const cardRecipe = defineSlotRecipe({
       color: "fg.default",
       display: "flex",
       flexDirection: "column",
+      minWidth: "0",
       overflow: "hidden",
       transitionDuration: "slow",
       transitionProperty: "background-color, border-color, box-shadow, transform",
@@ -380,6 +493,8 @@ export const cardRecipe = defineSlotRecipe({
       display: "flex",
       flexDirection: "column",
       gap: "1",
+      minWidth: "0",
+      overflowWrap: "anywhere",
       px: "6",
       pt: "6",
     },
@@ -393,17 +508,21 @@ export const cardRecipe = defineSlotRecipe({
     },
     content: {
       flex: "1",
+      minWidth: "0",
+      overflowWrap: "anywhere",
       px: "6",
       py: "6",
     },
     footer: {
       display: "flex",
-      flexDirection: "column",
+      flexDirection: { base: "column", sm: "row" },
+      flexWrap: "wrap",
       gap: "2",
       marginTop: "auto",
       px: "6",
       pb: "6",
       pt: "2",
+      minWidth: "0",
     },
   },
   variants: {

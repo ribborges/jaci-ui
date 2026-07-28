@@ -8,7 +8,7 @@ export interface CardProps extends ComponentPropsWithoutRef<"article"> {
   variant?: "outline" | "elevated" | "subtle";
 }
 
-export const Card = forwardRef<HTMLElement, CardProps>(function Card(
+const CardBase = forwardRef<HTMLElement, CardProps>(function Card(
   { className, variant = "outline", ...props },
   ref,
 ) {
@@ -61,3 +61,13 @@ export const CardFooter = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<"d
     );
   },
 );
+
+export const Card = Object.assign(CardBase, {
+  Root: CardBase,
+  Header: CardHeader,
+  Title: CardTitle,
+  Content: CardContent,
+  Footer: CardFooter,
+});
+
+export const CardNamespace = Card;
