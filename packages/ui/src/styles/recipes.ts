@@ -1819,19 +1819,31 @@ export const toastRecipe = defineSlotRecipe({
       neutral: {},
       info: {
         root: {
-          backgroundColor: "accent.default",
-          borderColor: "accent.hover",
-          color: "fg.onAccent",
+          backgroundColor:
+            "color-mix(in srgb, var(--jaci-colors-info) 14%, var(--jaci-colors-surface-raised))",
+          borderColor: "info",
         },
       },
       success: {
-        root: { backgroundColor: "success", borderColor: "green.700", color: "fg.onAccent" },
+        root: {
+          backgroundColor:
+            "color-mix(in srgb, var(--jaci-colors-success) 14%, var(--jaci-colors-surface-raised))",
+          borderColor: "success",
+        },
       },
       warning: {
-        root: { backgroundColor: "warning", borderColor: "amber.700", color: "fg.onAccent" },
+        root: {
+          backgroundColor:
+            "color-mix(in srgb, var(--jaci-colors-warning) 14%, var(--jaci-colors-surface-raised))",
+          borderColor: "warning",
+        },
       },
       danger: {
-        root: { backgroundColor: "danger", borderColor: "red.600", color: "fg.onAccent" },
+        root: {
+          backgroundColor:
+            "color-mix(in srgb, var(--jaci-colors-danger) 14%, var(--jaci-colors-surface-raised))",
+          borderColor: "danger",
+        },
       },
     },
   },
@@ -1869,7 +1881,6 @@ export const sidebarRecipe = defineSlotRecipe({
       borderRightWidth: "1px",
       boxSizing: "border-box",
       color: "fg.default",
-      display: "flex",
       flexDirection: "column",
       flexShrink: "0",
       height: "100%",
@@ -2312,7 +2323,6 @@ export const bottomNavigationRecipe = defineSlotRecipe({
       boxShadow: "xl",
       boxSizing: "border-box",
       color: "fg.default",
-      display: "flex",
       gap: { base: "2", md: "5" },
       left: "50%",
       maxWidth: "calc(100vw - 2rem)",

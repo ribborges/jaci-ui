@@ -9,6 +9,7 @@ import { cx } from "../../styled-system/css";
 import { dialog } from "../../styled-system/recipes";
 import { withRecipeClassName } from "../base-ui";
 import type { DialogSize } from "../dialog";
+import { useThemePortalProps } from "../../theme/theme-scope";
 
 /**
  * A modal confirmation primitive with Base UI's focus trap, Escape handling,
@@ -36,7 +37,9 @@ export const AlertDialogTrigger = forwardRef<HTMLButtonElement, AlertDialogTrigg
 );
 
 export type AlertDialogPortalProps = ComponentPropsWithoutRef<typeof BaseAlertDialog.Portal>;
-export const AlertDialogPortal: typeof BaseAlertDialog.Portal = BaseAlertDialog.Portal;
+export function AlertDialogPortal(props: AlertDialogPortalProps) {
+  return <BaseAlertDialog.Portal {...useThemePortalProps(props)} />;
+}
 
 export type AlertDialogBackdropProps = ComponentPropsWithoutRef<typeof BaseAlertDialog.Backdrop>;
 

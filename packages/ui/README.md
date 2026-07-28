@@ -346,6 +346,15 @@ export function App() {
 mounting. The provider is a client module, so Next.js App Router applications should place it
 inside a client boundary. Direct `data-jaci-theme` and `--jaci-*` variables remain supported.
 
+Popups rendered through Jaci portal slots inherit the nearest `ThemeProvider` scope, including
+local accent tokens. An explicit `container` prop on a portal still takes precedence. Without a
+provider, portals keep Base UI's default document-level behavior.
+
+When combining responsive utility classes with `Sidebar` or `BottomNavigation`, import
+`jaci-ui/styles.css` before the application's utility stylesheet. Their structural display rule
+uses a low-specificity selector, so classes such as `hidden md:flex` and `md:hidden` can control
+visibility without inline styles.
+
 The package exposes semantic surface, foreground, border, status, spacing, radius, shadow and
 transition tokens. See the Theming guide in Storybook for the complete token vocabulary.
 

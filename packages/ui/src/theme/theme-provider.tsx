@@ -12,6 +12,8 @@ import {
 } from "react";
 import type { ComponentPropsWithoutRef, CSSProperties, ElementType, ReactNode, Ref } from "react";
 
+import { ThemeScopeContext } from "./theme-scope";
+
 export type ThemeMode = "light" | "dark" | "system";
 
 /** A leaf value accepted by the theme variable mapper. */
@@ -145,6 +147,7 @@ export const ThemeProvider = forwardRef<HTMLElement, ThemeProviderProps>(functio
   const [systemTheme, setSystemTheme] = useState<"light" | "dark">(() =>
     initialSystemTheme(ssrTheme),
   );
+  const [scopeElement, setScopeElement] = useState<HTMLElement | null>(null);
   const currentTheme = theme ?? uncontrolledTheme;
 
   useEffect(() => {
@@ -179,21 +182,31 @@ export const ThemeProvider = forwardRef<HTMLElement, ThemeProviderProps>(functio
   );
   const mergedStyle = useMemo(() => ({ ...style, ...tokenStyles(tokens) }), [style, tokens]);
   const Root = as;
+  const setRootRef = useCallback(
+    (element: HTMLElement | null) => {
+      setScopeElement((current) => (current === element ? current : element));
+      if (typeof ref === "function") ref(element);
+      else if (ref) (ref as { current: HTMLElement | null }).current = element;
+    },
+    [ref],
+  );
 
   return (
     <ThemeContext.Provider value={contextValue}>
-      {createElement(
-        Root,
-        {
-          ...props,
-          "data-jaci-theme": resolvedTheme,
-          "data-jaci-component": "theme-provider",
-          "data-slot": "theme-provider",
-          ref: ref as Ref<HTMLElement>,
-          style: mergedStyle,
-        },
-        children,
-      )}
+      <ThemeScopeContext.Provider value={{ container: scopeElement }}>
+        {createElement(
+          Root,
+          {
+            ...props,
+            "data-jaci-theme": resolvedTheme,
+            "data-jaci-component": "theme-provider",
+            "data-slot": "theme-provider",
+            ref: setRootRef as Ref<HTMLElement>,
+            style: mergedStyle,
+          },
+          children,
+        )}
+      </ThemeScopeContext.Provider>
     </ThemeContext.Provider>
   );
 });

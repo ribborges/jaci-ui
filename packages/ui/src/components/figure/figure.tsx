@@ -8,6 +8,7 @@ import { cx } from "../../styled-system/css";
 import { figure as figureStyles } from "../../styled-system/recipes";
 import { Image } from "../image";
 import type { ImageProps } from "../image";
+import { useThemePortalProps } from "../../theme/theme-scope";
 
 interface FigureContextValue {
   lightbox: boolean;
@@ -120,6 +121,7 @@ export const FigureRoot = forwardRef<HTMLElement, FigureRootProps>(function Figu
   );
 
   const value = { lightbox: canOpen, styles };
+  const scopedPortalProps = useThemePortalProps({});
 
   if (!canOpen || !media) {
     return <FigureContext.Provider value={value}>{content}</FigureContext.Provider>;
@@ -136,7 +138,7 @@ export const FigureRoot = forwardRef<HTMLElement, FigureRootProps>(function Figu
         open={open}
       >
         {content}
-        <BaseDialog.Portal>
+        <BaseDialog.Portal {...scopedPortalProps}>
           <BaseDialog.Backdrop className={styles.backdrop} data-slot="figure-lightbox-backdrop" />
           <BaseDialog.Viewport className={styles.viewport} data-slot="figure-lightbox-viewport">
             <BaseDialog.Popup
@@ -146,13 +148,15 @@ export const FigureRoot = forwardRef<HTMLElement, FigureRootProps>(function Figu
               data-slot="figure-lightbox-popup"
             >
               <BaseDialog.Title className={styles.title}>{alt || "Image preview"}</BaseDialog.Title>
-              <BaseDialog.Close
-                aria-label={closeLabel}
-                className={styles.close}
-                data-slot="figure-lightbox-close"
-              >
-                ×
-              </BaseDialog.Close>
+              <div className={styles.closeRow} data-slot="figure-lightbox-close-row">
+                <BaseDialog.Close
+                  aria-label={closeLabel}
+                  className={styles.close}
+                  data-slot="figure-lightbox-close"
+                >
+                  ×
+                </BaseDialog.Close>
+              </div>
               <img
                 alt={alt}
                 className={styles.lightboxImage}

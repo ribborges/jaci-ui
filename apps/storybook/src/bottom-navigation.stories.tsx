@@ -35,3 +35,32 @@ export const Floating: Story = {
     </div>
   ),
 };
+
+export const ResponsiveClassName: Story = {
+  render: () => (
+    <div style={{ minHeight: "24rem", paddingBottom: "6rem", position: "relative" }}>
+      <style>{`
+        .jaci-story-bottom-mobile { display: none; }
+        @media (max-width: 767px) { .jaci-story-bottom-mobile { display: flex; } }
+      `}</style>
+      <Text size="sm" tone="muted">
+        The external class controls visibility while Jaci keeps the navigation layout.
+      </Text>
+      <BottomNavigation className="jaci-story-bottom-mobile" aria-label="Mobile navigation">
+        <BottomNavigation.Item active href="#home">
+          Home
+        </BottomNavigation.Item>
+        <BottomNavigation.Item href="#projects">Projects</BottomNavigation.Item>
+      </BottomNavigation>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<BottomNavigation className="mobile-only" aria-label="Mobile navigation">
+  <BottomNavigation.Item href="/">Home</BottomNavigation.Item>
+</BottomNavigation>`,
+      },
+    },
+  },
+};
