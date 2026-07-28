@@ -97,7 +97,7 @@ export const Portrait: Story = {
           background: "var(--jaci-colors-surface-subtle)",
           border: "4px solid var(--jaci-colors-accent-default)",
           borderRadius: "var(--jaci-radii-xl)",
-          color: "var(--jaci-colors-accent-default)",
+          color: "var(--jaci-colors-fg-default)",
           width: "100%",
         }}
       >
