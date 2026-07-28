@@ -7,6 +7,7 @@ import type { ComponentPropsWithoutRef, MouseEvent, ReactNode } from "react";
 import { cx } from "../../styled-system/css";
 import { sidebar } from "../../styled-system/recipes";
 import { withRecipeClassName } from "../base-ui";
+import { useThemePortalProps } from "../../theme/theme-scope";
 
 export interface SidebarContextValue {
   /** Whether the sidebar is visually expanded. */
@@ -102,6 +103,7 @@ export const SidebarRoot = forwardRef<HTMLElement, SidebarRootProps>(function Si
     [open, setOpen, toggle],
   );
   const styles = sidebar({ open });
+  const scopedPortalProps = useThemePortalProps({});
 
   const surface = (
     <aside
@@ -135,7 +137,7 @@ export const SidebarRoot = forwardRef<HTMLElement, SidebarRootProps>(function Si
             setOpen(nextOpen);
           }}
         >
-          <BaseDialog.Portal>
+          <BaseDialog.Portal {...scopedPortalProps}>
             <BaseDialog.Backdrop
               className={cx(styles.backdrop)}
               data-jaci-component="sidebar"
@@ -163,7 +165,9 @@ export const SidebarRoot = forwardRef<HTMLElement, SidebarRootProps>(function Si
 });
 
 export type SidebarPortalProps = ComponentPropsWithoutRef<typeof BaseDialog.Portal>;
-export const SidebarPortal: typeof BaseDialog.Portal = BaseDialog.Portal;
+export function SidebarPortal(props: SidebarPortalProps) {
+  return <BaseDialog.Portal {...useThemePortalProps(props)} />;
+}
 
 export type SidebarBackdropProps = ComponentPropsWithoutRef<typeof BaseDialog.Backdrop>;
 export const SidebarBackdrop = forwardRef<HTMLDivElement, SidebarBackdropProps>(

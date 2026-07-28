@@ -2,6 +2,9 @@
 
 Accessible, themeable React components for React 18.2 and React 19 applications.
 
+The published package supports Node 18.18 or newer. Node 22.18 or newer is required only for
+working on the repository because it is used by the build toolchain.
+
 ## Installation
 
 ```sh
@@ -17,6 +20,11 @@ import "jaci-ui/styles.css";
 
 The package declares `react` and `react-dom` as peer dependencies. `@base-ui/react` is installed
 as a runtime dependency for accessible interactive primitives.
+
+The package publishes ESM and CommonJS entry points, TypeScript declarations and sourcemaps.
+`jaci-ui/styles.css` is the only declared side effect, so bundlers can tree-shake unused
+component modules. Import `jaci-ui/panda-preset` only when an application also uses Panda CSS;
+the regular package does not require Panda at runtime.
 
 ## Usage
 
@@ -337,6 +345,15 @@ export function App() {
 `system` uses `ssrTheme` during server rendering and reads `prefers-color-scheme` only after
 mounting. The provider is a client module, so Next.js App Router applications should place it
 inside a client boundary. Direct `data-jaci-theme` and `--jaci-*` variables remain supported.
+
+Popups rendered through Jaci portal slots inherit the nearest `ThemeProvider` scope, including
+local accent tokens. An explicit `container` prop on a portal still takes precedence. Without a
+provider, portals keep Base UI's default document-level behavior.
+
+When combining responsive utility classes with `Sidebar` or `BottomNavigation`, import
+`jaci-ui/styles.css` before the application's utility stylesheet. Their structural display rule
+uses a low-specificity selector, so classes such as `hidden md:flex` and `md:hidden` can control
+visibility without inline styles.
 
 The package exposes semantic surface, foreground, border, status, spacing, radius, shadow and
 transition tokens. See the Theming guide in Storybook for the complete token vocabulary.

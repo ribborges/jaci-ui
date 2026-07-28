@@ -8,6 +8,7 @@ import type { DialogRoot as BaseDialogRoot } from "@base-ui/react/dialog";
 import { cx } from "../../styled-system/css";
 import { dialog } from "../../styled-system/recipes";
 import { withRecipeClassName } from "../base-ui";
+import { useThemePortalProps } from "../../theme/theme-scope";
 
 export type DialogSize = "sm" | "md" | "lg";
 
@@ -41,7 +42,9 @@ export type DialogPortalProps = ComponentPropsWithoutRef<typeof BaseDialog.Porta
 /**
  * Preserves Base UI's portal behavior and optional container/ref APIs.
  */
-export const DialogPortal = BaseDialog.Portal;
+export function DialogPortal(props: DialogPortalProps) {
+  return <BaseDialog.Portal {...useThemePortalProps(props)} />;
+}
 
 export type DialogBackdropProps = ComponentPropsWithoutRef<typeof BaseDialog.Backdrop>;
 

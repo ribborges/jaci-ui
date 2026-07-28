@@ -4,9 +4,18 @@ Thank you for improving Jaci UI.
 
 ## Development
 
-Use Node 22.14 or newer and Corepack. Install dependencies with pnpm install, then use
+Use Node 22.18 or newer and Corepack. Install dependencies with pnpm install, then use
 pnpm storybook for component work. Run pnpm format, pnpm lint, pnpm typecheck, pnpm test
 and pnpm build before opening a pull request.
+
+Formatting is handled by Biome and follows the root `.editorconfig`: two spaces for
+indentation and LF line endings. Run `pnpm format` to apply formatting and `pnpm lint` to
+run formatting and lint checks together. YAML files intentionally keep space indentation
+because tabs are not valid YAML indentation.
+
+The published package supports consumer applications on Node 18.18 or newer. The higher
+Node 22.18 requirement applies only to repository development and CI tooling (including the
+current tsdown release). The publish workflow uses Node 24.
 
 The default Storybook test command is safe in restricted local environments. To run the full
 Chromium story suite locally, use `pnpm --filter @jaci-ui/storybook test:browser`; CI enables the
@@ -36,6 +45,12 @@ tests should describe the public behavior they protect. Run the package tests wi
 Add a Changeset for any public API, behavior, accessibility or styling change that warrants a
 package release. Use patch for fixes, minor for backwards-compatible features, and major for
 breaking changes.
+
+Before opening a release pull request, run `pnpm package:contract`,
+`pnpm performance:check` and `pnpm compatibility:check`. These checks exercise the packed
+tarball rather than the workspace link, including its ESM/CJS exports, types, sourcemaps,
+static CSS and framework fixtures. Keep the performance baseline file versioned and explain
+any intentional baseline update in the pull request.
 
 Jaci UI remains in the `0.x` phase until the public API and styling contracts have stabilized.
 During this phase, a minor release may include a backwards-compatible feature or a documented

@@ -56,7 +56,20 @@ pnpm fixtures:check
 ```
 
 `pnpm storybook:build` verifies the documentation build, while `pnpm package:check` validates
-the package exports and types. `pnpm fixtures:pack-check` installs the real packed tarball in
-the Vite, Next, and React Router consumer fixtures.
+the distribution, contract and performance budget. The more focused commands are
+`pnpm package:contract`, `pnpm performance:check` and `pnpm compatibility:check`.
+`pnpm fixtures:pack-check` installs the real packed tarball in the Vite, React 18, Next,
+React Router, Remix and tree-shaking consumer fixtures.
+
+The published package supports Node 18.18 or newer and React 18.2/19. Development and CI use
+Node 22.18 or newer; the publish workflow uses Node 24. The package exports both ESM and CJS,
+ships declaration files and sourcemaps, and marks only `jaci-ui/styles.css` as a side effect.
+Import the stylesheet once at the application root. Component modules are independently
+exported so bundlers can tree-shake unused families; the packed fixture validates this with a
+Button-only application.
+
+Import `jaci-ui/styles.css` before application utility CSS when using responsive `className`
+rules. Popups rendered inside a `ThemeProvider` inherit its local theme and accent tokens
+automatically; portal `container` props remain available for advanced layouts.
 
 Run `pnpm dev` to watch all available development targets together.

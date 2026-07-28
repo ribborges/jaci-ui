@@ -7,6 +7,7 @@ import type { PopoverRoot as BasePopoverRoot } from "@base-ui/react/popover";
 
 import { popover } from "../../styled-system/recipes";
 import { withRecipeClassName } from "../base-ui";
+import { useThemePortalProps } from "../../theme/theme-scope";
 
 /** Preserves Base UI's controlled `open` API and uncontrolled `defaultOpen` API. */
 export type PopoverRootProps<Payload = unknown> = BasePopoverRoot.Props<Payload>;
@@ -32,7 +33,9 @@ export const PopoverTrigger = forwardRef<HTMLButtonElement, PopoverTriggerProps>
 );
 
 /** Preserves Base UI's optional portal container and mount controls. */
-export const PopoverPortal: typeof BasePopover.Portal = BasePopover.Portal;
+export function PopoverPortal(props: ComponentPropsWithoutRef<typeof BasePopover.Portal>) {
+  return <BasePopover.Portal {...useThemePortalProps(props)} />;
+}
 
 export type PopoverPositionerProps = ComponentPropsWithoutRef<typeof BasePopover.Positioner>;
 

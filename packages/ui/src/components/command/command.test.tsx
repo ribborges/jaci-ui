@@ -87,4 +87,61 @@ describe("Command", () => {
       "No matching commands",
     );
   });
+
+  it("opens the compact dropdown on focus and closes it on Escape or outside press", () => {
+    const container = renderInDocument(
+      <Command.Root mode="dropdown">
+        <Command.Input aria-label="Commands" />
+        <Command.List>
+          <Command.Item value="build">Build</Command.Item>
+        </Command.List>
+      </Command.Root>,
+    );
+
+    const root = container.querySelector<HTMLElement>('[data-slot="command"]');
+    const input = container.querySelector<HTMLInputElement>("input");
+    const list = container.querySelector<HTMLElement>('[data-slot="command-list"]');
+    if (!root || !input || !list) throw new Error("Compact command was not rendered.");
+
+    expect(root.getAttribute("data-open")).toBeNull();
+    expect(list.hidden).toBe(true);
+
+    act(() => input.focus());
+    expect(root.getAttribute("data-open")).toBe("true");
+    expect(input.getAttribute("aria-expanded")).toBe("true");
+    expect(list.hidden).toBe(false);
+
+    act(() => {
+      input.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
+    });
+    expect(root.getAttribute("data-open")).toBeNull();
+
+    act(() => input.focus());
+    act(() => {
+      document.body.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+    });
+    expect(root.getAttribute("data-open")).toBeNull();
+  });
+
+  it("supports controlled compact opening and closes after selecting an item", () => {
+    const onOpenChange = vi.fn();
+    const onSelect = vi.fn();
+    const container = renderInDocument(
+      <Command.Root mode="dropdown" open onOpenChange={onOpenChange}>
+        <Command.Input aria-label="Commands" />
+        <Command.List>
+          <Command.Item value="build" onSelect={onSelect}>
+            Build
+          </Command.Item>
+        </Command.List>
+      </Command.Root>,
+    );
+
+    const item = container.querySelector<HTMLElement>('[data-slot="command-item"]');
+    if (!item) throw new Error("Command item was not rendered.");
+
+    act(() => item.click());
+    expect(onSelect).toHaveBeenCalledWith("build");
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
 });

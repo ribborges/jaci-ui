@@ -5,6 +5,8 @@ import { renderToString } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
 import { ThemeProvider, useTheme } from "./theme-provider";
+import { useThemePortalContainer } from "./theme-scope";
+import { Dialog } from "../components/dialog";
 import { renderInDocument } from "../test-utils/react";
 
 function ThemeButton() {
@@ -14,6 +16,11 @@ function ThemeButton() {
       {resolvedTheme}
     </button>
   );
+}
+
+function PortalScopeProbe() {
+  const container = useThemePortalContainer();
+  return <span data-portal-scope={container ? "local" : "default"} />;
 }
 
 describe("ThemeProvider", () => {
@@ -62,5 +69,36 @@ describe("ThemeProvider", () => {
     expect(container.querySelector("section")?.id).toBe("theme-scope");
     expect(changes).toEqual(["light"]);
     expect(container.querySelector("section")?.dataset.jaciTheme).toBe("dark");
+  });
+
+  it("provides the nearest mounted theme element as the popup portal scope", () => {
+    const container = renderInDocument(
+      <ThemeProvider>
+        <PortalScopeProbe />
+      </ThemeProvider>,
+    );
+
+    expect(container.querySelector("[data-portal-scope=local]")).not.toBeNull();
+  });
+
+  it("mounts Jaci portals inside the nearest provider", () => {
+    const container = renderInDocument(
+      <ThemeProvider tokens={{ colors: { accent: { default: "#7c3aed" } } }}>
+        <Dialog.Root defaultOpen>
+          <Dialog.Portal>
+            <Dialog.Backdrop />
+            <Dialog.Viewport>
+              <Dialog.Popup aria-label="Themed dialog">Dialog content</Dialog.Popup>
+            </Dialog.Viewport>
+          </Dialog.Portal>
+        </Dialog.Root>
+      </ThemeProvider>,
+    );
+
+    const provider = container.querySelector('[data-slot="theme-provider"]');
+    const popup = container.querySelector('[data-slot="dialog-popup"]');
+    expect(provider).not.toBeNull();
+    expect(popup).not.toBeNull();
+    expect(provider?.contains(popup)).toBe(true);
   });
 });

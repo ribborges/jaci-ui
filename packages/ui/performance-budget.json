@@ -1,0 +1,20 @@
+{
+  "headroom": 0.25,
+  "artifacts": {
+    "dist/index.js": {
+      "raw": 21410,
+      "gzip": 3307,
+      "brotli": 2902
+    },
+    "dist/index.cjs": {
+      "raw": 37750,
+      "gzip": 5627,
+      "brotli": 4689
+    },
+    "dist/styles.css": {
+      "raw": 303353,
+      "gzip": 27929,
+      "brotli": 20294
+    }
+  }
+}

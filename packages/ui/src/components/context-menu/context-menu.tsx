@@ -7,6 +7,7 @@ import type { ContextMenuRoot as BaseContextMenuRoot } from "@base-ui/react/cont
 
 import { menu } from "../../styled-system/recipes";
 import { withRecipeClassName } from "../base-ui";
+import { useThemePortalProps } from "../../theme/theme-scope";
 
 /**
  * A right-click and long-press menu with Base UI's keyboard navigation,
@@ -35,7 +36,9 @@ export const ContextMenuTrigger = forwardRef<HTMLDivElement, ContextMenuTriggerP
 );
 
 export type ContextMenuPortalProps = ComponentPropsWithoutRef<typeof BaseContextMenu.Portal>;
-export const ContextMenuPortal: typeof BaseContextMenu.Portal = BaseContextMenu.Portal;
+export function ContextMenuPortal(props: ContextMenuPortalProps) {
+  return <BaseContextMenu.Portal {...useThemePortalProps(props)} />;
+}
 
 export type ContextMenuBackdropProps = ComponentPropsWithoutRef<typeof BaseContextMenu.Backdrop>;
 export const ContextMenuBackdrop: typeof BaseContextMenu.Backdrop = BaseContextMenu.Backdrop;

@@ -206,6 +206,7 @@ sketch
 .artifacts/
 .fixture-pack-check/
 **/dist/
+**/build/
 **/styled-system/
 **/storybook-static/
 **/.next/

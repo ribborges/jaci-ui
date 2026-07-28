@@ -25,11 +25,19 @@ export const Landscape: Story = {
           width: "100%",
         }}
       >
-        <img
-          alt="Landscape from Lorem Picsum"
-          src="https://picsum.photos/seed/jaci-aspect-ratio/1280/720"
-          style={{ objectFit: "cover" }}
-        />
+        <div
+          style={{
+            alignItems: "center",
+            background: "var(--jaci-colors-accent-default)",
+            color: "var(--jaci-colors-fg-on-accent)",
+            display: "flex",
+            fontSize: "1.25rem",
+            fontWeight: 700,
+            justifyContent: "center",
+          }}
+        >
+          16:9
+        </div>
       </AspectRatio>
     </div>
   ),
@@ -38,7 +46,7 @@ export const Landscape: Story = {
       source: {
         code: `<div style={{ maxWidth: "32rem", width: "100%" }}>
   <AspectRatio ratio={16 / 9}>
-    <img src="https://picsum.photos/seed/jaci-aspect-ratio/1280/720" alt="Landscape" />
+    <div style={{ background: "var(--jaci-colors-accent-default)" }}>16:9</div>
   </AspectRatio>
 </div>`,
       },
@@ -74,6 +82,35 @@ export const Square: Story = {
     <div>1:1</div>
   </AspectRatio>
 </div>`,
+      },
+    },
+  },
+};
+
+export const Portrait: Story = {
+  args: { ratio: 3 / 4 },
+  render: (args) => (
+    <div style={{ maxWidth: "14rem", width: "100%" }}>
+      <AspectRatio
+        {...args}
+        style={{
+          background: "var(--jaci-colors-surface-subtle)",
+          border: "4px solid var(--jaci-colors-accent-default)",
+          borderRadius: "var(--jaci-radii-xl)",
+          color: "var(--jaci-colors-fg-default)",
+          width: "100%",
+        }}
+      >
+        <div style={{ alignItems: "center", display: "flex", justifyContent: "center" }}>3:4</div>
+      </AspectRatio>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<AspectRatio ratio={3 / 4}>
+  <div>3:4</div>
+</AspectRatio>`,
       },
     },
   },

@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc --noEmit",
     "check": "node --import tsx src/ssr.tsx",
-    "lint": "biome lint .",
+    "lint": "biome check --assist-enabled=false .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
   },

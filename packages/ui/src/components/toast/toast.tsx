@@ -7,6 +7,7 @@ import type { ComponentPropsWithoutRef } from "react";
 import { cx } from "../../styled-system/css";
 import { toast as toastRecipe } from "../../styled-system/recipes";
 import { withRecipeClassName } from "../base-ui";
+import { useThemePortalProps } from "../../theme/theme-scope";
 
 export type ToastTone = "neutral" | "info" | "success" | "warning" | "danger";
 
@@ -189,7 +190,9 @@ export const ToastAction = forwardRef<HTMLButtonElement, ToastActionProps>(funct
 });
 
 /** Base UI's portal is preserved for rendering the viewport at document level. */
-export const ToastPortal: typeof BaseToast.Portal = BaseToast.Portal;
+export function ToastPortal(props: ComponentPropsWithoutRef<typeof BaseToast.Portal>) {
+  return <BaseToast.Portal {...useThemePortalProps(props)} />;
+}
 
 export interface ToastComponent {
   Provider: typeof ToastProvider;

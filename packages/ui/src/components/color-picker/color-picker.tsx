@@ -8,6 +8,7 @@ import type { PopoverRoot as BasePopoverRoot } from "@base-ui/react/popover";
 import { cx } from "../../styled-system/css";
 import { colorPicker } from "../../styled-system/recipes";
 import { withRecipeClassName } from "../base-ui";
+import { useThemePortalProps } from "../../theme/theme-scope";
 import { defaultColor, formatColor, parseColor } from "./color-utils";
 import type { ColorFormat, ColorModel } from "./color-utils";
 
@@ -186,7 +187,9 @@ export const ColorPickerValue = forwardRef<HTMLSpanElement, ColorPickerValueProp
   },
 );
 
-export const ColorPickerPortal: typeof BasePopover.Portal = BasePopover.Portal;
+export function ColorPickerPortal(props: ComponentPropsWithoutRef<typeof BasePopover.Portal>) {
+  return <BasePopover.Portal {...useThemePortalProps(props)} />;
+}
 export type ColorPickerPositionerProps = ComponentPropsWithoutRef<typeof BasePopover.Positioner>;
 export const ColorPickerPositioner = forwardRef<HTMLDivElement, ColorPickerPositionerProps>(
   function ColorPickerPositioner({ className, ...props }, ref) {

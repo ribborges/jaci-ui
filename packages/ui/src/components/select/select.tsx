@@ -8,6 +8,7 @@ import type { SelectRoot as BaseSelectRoot } from "@base-ui/react/select";
 import { cx } from "../../styled-system/css";
 import { select } from "../../styled-system/recipes";
 import { withRecipeClassName } from "../base-ui";
+import { useThemePortalProps } from "../../theme/theme-scope";
 
 export type SelectSize = "sm" | "md" | "lg";
 
@@ -141,7 +142,9 @@ export const SelectIcon = forwardRef<HTMLSpanElement, SelectIconProps>(function 
 });
 
 /** Preserves Base UI's optional portal container and mount controls. */
-export const SelectPortal = BaseSelect.Portal;
+export function SelectPortal(props: ComponentPropsWithoutRef<typeof BaseSelect.Portal>) {
+  return <BaseSelect.Portal {...useThemePortalProps(props)} />;
+}
 
 export type SelectPositionerProps = ComponentPropsWithoutRef<typeof BaseSelect.Positioner>;
 

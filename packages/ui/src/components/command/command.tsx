@@ -17,6 +17,7 @@ import { command } from "../../styled-system/recipes";
 import { cx } from "../../styled-system/css";
 
 export type CommandFilter = (value: string, search: string, keywords: readonly string[]) => boolean;
+export type CommandMode = "default" | "dropdown";
 
 interface CommandItemRecord {
   id: string;
@@ -43,6 +44,10 @@ interface CommandContextValue {
   setHighlighted: (value: string | null) => void;
   selectItem: (id: string) => void;
   disabled: boolean;
+  mode: CommandMode;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  closeOnSelect: boolean;
 }
 
 const CommandContext = createContext<CommandContextValue | null>(null);
@@ -70,6 +75,11 @@ export interface CommandRootProps extends Omit<ComponentPropsWithoutRef<"div">, 
   loopFocus?: boolean;
   disabled?: boolean;
   loading?: boolean;
+  mode?: CommandMode;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  closeOnSelect?: boolean;
   children?: ReactNode;
 }
 
@@ -81,6 +91,11 @@ export const CommandRoot = forwardRef<HTMLDivElement, CommandRootProps>(function
     disabled = false,
     filter = defaultFilter,
     loading = false,
+    mode = "default",
+    open: controlledOpen,
+    defaultOpen = false,
+    onOpenChange,
+    closeOnSelect = true,
     onKeyDown,
     onSearchChange,
     search: controlledSearch,
@@ -91,12 +106,25 @@ export const CommandRoot = forwardRef<HTMLDivElement, CommandRootProps>(function
   ref,
 ) {
   const [uncontrolledSearch, setUncontrolledSearch] = useState(defaultSearch);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
   const [highlighted, setHighlighted] = useState<string | null>(null);
   const [, setVersion] = useState(0);
   const itemsRef = useRef(new Map<string, CommandItemRecord>());
+  const rootElementRef = useRef<HTMLDivElement | null>(null);
   const listId = useId();
   const search = controlledSearch ?? uncontrolledSearch;
-  const styles = command();
+  const open = mode === "default" ? true : (controlledOpen ?? uncontrolledOpen);
+  const styles = command({ mode });
+
+  const setOpen = useCallback(
+    (nextOpen: boolean) => {
+      if (mode !== "dropdown" || disabled) return;
+      if (controlledOpen === undefined) setUncontrolledOpen(nextOpen);
+      onOpenChange?.(nextOpen);
+    },
+    [controlledOpen, disabled, mode, onOpenChange],
+  );
+  const close = useCallback(() => setOpen(false), [setOpen]);
 
   const items = Array.from(itemsRef.current.values());
   const setSearch = useCallback(
@@ -133,10 +161,25 @@ export const CommandRoot = forwardRef<HTMLDivElement, CommandRootProps>(function
   const selectItem = useCallback(
     (id: string) => {
       const item = itemsRef.current.get(id);
-      if (item && !item.disabled && matches(item)) item.onSelect?.(item.value);
+      if (item && !item.disabled && matches(item)) {
+        item.onSelect?.(item.value);
+        if (closeOnSelect) close();
+      }
     },
-    [matches],
+    [close, closeOnSelect, matches],
   );
+
+  useEffect(() => {
+    if (mode !== "dropdown" || !open) return;
+
+    const handleOutsidePress = (event: PointerEvent) => {
+      const target = event.target;
+      if (target instanceof Node && !rootElementRef.current?.contains(target)) close();
+    };
+
+    document.addEventListener("pointerdown", handleOutsidePress);
+    return () => document.removeEventListener("pointerdown", handleOutsidePress);
+  }, [close, mode, open]);
 
   useEffect(() => {
     if (!visibleItems.some((item) => item.id === highlighted)) {
@@ -166,9 +209,10 @@ export const CommandRoot = forwardRef<HTMLDivElement, CommandRootProps>(function
         selectItem(highlighted);
       } else if (event.key === "Escape") {
         event.preventDefault();
+        close();
       }
     },
-    [disabled, highlighted, loopFocus, onKeyDown, selectItem, visibleItems],
+    [close, disabled, highlighted, loopFocus, onKeyDown, selectItem, visibleItems],
   );
 
   const context = useMemo<CommandContextValue>(
@@ -187,6 +231,10 @@ export const CommandRoot = forwardRef<HTMLDivElement, CommandRootProps>(function
       setItemElement,
       setHighlighted,
       selectItem,
+      mode,
+      open,
+      setOpen,
+      closeOnSelect,
     }),
     [
       highlighted,
@@ -202,6 +250,10 @@ export const CommandRoot = forwardRef<HTMLDivElement, CommandRootProps>(function
       setItemElement,
       setSearch,
       shouldFilter,
+      mode,
+      open,
+      setOpen,
+      closeOnSelect,
     ],
   );
 
@@ -210,12 +262,15 @@ export const CommandRoot = forwardRef<HTMLDivElement, CommandRootProps>(function
       <div
         {...props}
         ref={(node) => {
+          rootElementRef.current = node;
           if (typeof ref === "function") ref(node);
           else if (ref) ref.current = node;
         }}
         className={cx(styles.root, className)}
         data-disabled={disabled || undefined}
         data-jaci-component="command"
+        data-mode={mode}
+        data-open={open || undefined}
         data-slot="command"
         aria-disabled={disabled || undefined}
       >
@@ -227,11 +282,21 @@ export const CommandRoot = forwardRef<HTMLDivElement, CommandRootProps>(function
 
 export type CommandInputProps = ComponentPropsWithoutRef<"input">;
 export const CommandInput = forwardRef<HTMLInputElement, CommandInputProps>(function CommandInput(
-  { className, onChange, onKeyDown, ...props },
+  { className, onChange, onClick, onFocus, onKeyDown, ...props },
   ref,
 ) {
-  const { disabled, handleKeyDown, highlighted, listId, search, setHighlighted, setSearch } =
-    useCommandContext();
+  const {
+    disabled,
+    handleKeyDown,
+    highlighted,
+    listId,
+    mode,
+    open,
+    search,
+    setHighlighted,
+    setOpen,
+    setSearch,
+  } = useCommandContext();
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChange?.(event);
     const next = event.target.value;
@@ -247,12 +312,22 @@ export const CommandInput = forwardRef<HTMLInputElement, CommandInputProps>(func
       aria-controls={listId}
       role="combobox"
       aria-haspopup="listbox"
-      aria-expanded="true"
+      aria-expanded={open}
       className={cx(command().input, className)}
       data-slot="command-input"
       disabled={disabled || props.disabled}
       onChange={(event) => {
         handleChange(event);
+      }}
+      onClick={(event) => {
+        onClick?.(event);
+        if (!event.defaultPrevented && mode === "dropdown" && !disabled && !props.disabled)
+          setOpen(true);
+      }}
+      onFocus={(event) => {
+        onFocus?.(event);
+        if (!event.defaultPrevented && mode === "dropdown" && !disabled && !props.disabled)
+          setOpen(true);
       }}
       onKeyDown={(event) => {
         onKeyDown?.(event);
@@ -268,14 +343,18 @@ export const CommandList = forwardRef<HTMLDivElement, CommandListProps>(function
   { className, id, ...props },
   ref,
 ) {
-  const { listId } = useCommandContext();
+  const { listId, mode, open } = useCommandContext();
+  const styles = command({ mode });
   return (
     <div
       {...props}
       ref={ref}
       id={id ?? listId}
-      className={cx(command().list, className)}
+      className={cx(styles.list, className)}
+      aria-hidden={mode === "dropdown" && !open ? true : undefined}
+      data-open={open || undefined}
       data-slot="command-list"
+      hidden={mode === "dropdown" && !open ? true : undefined}
       role="listbox"
     />
   );

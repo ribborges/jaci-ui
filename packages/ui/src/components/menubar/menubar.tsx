@@ -8,6 +8,7 @@ import type { MenuRoot as BaseMenuRoot } from "@base-ui/react/menu";
 
 import { menu, menubar } from "../../styled-system/recipes";
 import { withRecipeClassName } from "../base-ui";
+import { useThemePortalProps } from "../../theme/theme-scope";
 
 export type MenubarOrientation = "horizontal" | "vertical";
 
@@ -81,7 +82,9 @@ export const MenubarTrigger = forwardRef<HTMLButtonElement, MenubarTriggerProps>
 );
 
 export type MenubarPortalProps = ComponentPropsWithoutRef<typeof BaseMenu.Portal>;
-export const MenubarPortal: typeof BaseMenu.Portal = BaseMenu.Portal;
+export function MenubarPortal(props: MenubarPortalProps) {
+  return <BaseMenu.Portal {...useThemePortalProps(props)} />;
+}
 
 export type MenubarPositionerProps = ComponentPropsWithoutRef<typeof BaseMenu.Positioner>;
 

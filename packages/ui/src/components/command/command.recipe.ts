@@ -71,5 +71,33 @@ export const commandRecipe = defineSlotRecipe({
     loading: { color: "fg.muted", fontSize: "sm", p: "4", textAlign: "center" },
     separator: { backgroundColor: "border.default", height: "1px", marginBlock: "1" },
   },
+  variants: {
+    mode: {
+      default: {},
+      dropdown: {
+        root: {
+          position: "relative",
+          overflow: "visible",
+        },
+        list: {
+          backdropBlur: "md",
+          backdropFilter: "auto",
+          backgroundColor: "surface.overlay",
+          borderColor: "border.default",
+          borderRadius: "lg",
+          borderStyle: "solid",
+          borderWidth: "1px",
+          boxShadow: "lg",
+          left: "0",
+          maxWidth: "calc(100vw - 2rem)",
+          position: "absolute",
+          top: "calc(100% + 0.5rem)",
+          width: "min(100%, calc(100vw - 2rem))",
+          zIndex: "50",
+        },
+      },
+    },
+  },
+  defaultVariants: { mode: "default" },
   staticCss: ["*"],
 });
