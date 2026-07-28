@@ -68,4 +68,8 @@ Import the stylesheet once at the application root. Component modules are indepe
 exported so bundlers can tree-shake unused families; the packed fixture validates this with a
 Button-only application.
 
+Import `jaci-ui/styles.css` before application utility CSS when using responsive `className`
+rules. Popups rendered inside a `ThemeProvider` inherit its local theme and accent tokens
+automatically; portal `container` props remain available for advanced layouts.
+
 Run `pnpm dev` to watch all available development targets together.

@@ -111,3 +111,50 @@ export const ErrorAndAction: Story = {
     );
   },
 };
+
+export const TranslucentStatuses: Story = {
+  render: () => (
+    <Toast.Provider timeout={0}>
+      <Toast.Portal>
+        <Toast.Viewport>
+          {(
+            [
+              ["info", "Information", "A translucent surface with an opaque status border."],
+              ["success", "Saved", "The project was saved successfully."],
+              ["warning", "Review needed", "Some fields still need your attention."],
+              ["danger", "Failed", "The request could not be completed."],
+            ] as const
+          ).map(([tone, title, description]) => (
+            <Toast.Root key={tone} toast={{ id: tone, title, description }} tone={tone}>
+              <Toast.Content>
+                <Toast.Text>
+                  <Toast.Title />
+                  <Toast.Description />
+                </Toast.Text>
+                <Toast.Close />
+              </Toast.Content>
+            </Toast.Root>
+          ))}
+        </Toast.Viewport>
+      </Toast.Portal>
+    </Toast.Provider>
+  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<Toast.Provider timeout={0}>
+  <Toast.Portal>
+    <Toast.Viewport>
+      <Toast.Root toast={{ id: "saved", title: "Saved", description: "Done" }} tone="success">
+        <Toast.Content>
+          <Toast.Text><Toast.Title /><Toast.Description /></Toast.Text>
+          <Toast.Close />
+        </Toast.Content>
+      </Toast.Root>
+    </Toast.Viewport>
+  </Toast.Portal>
+</Toast.Provider>`,
+      },
+    },
+  },
+};

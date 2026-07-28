@@ -195,3 +195,36 @@ export const InDialog: Story = {
     },
   },
 };
+
+export const CompactDropdown: Story = {
+  render: () => (
+    <Command.Root mode="dropdown" aria-label="Quick actions">
+      <Command.Input aria-label="Search commands" placeholder="Search commands..." />
+      <Command.List>
+        <Command.Item value="new" onSelect={() => undefined}>
+          New document
+        </Command.Item>
+        <Command.Item value="open" onSelect={() => undefined}>
+          Open project
+        </Command.Item>
+        <Command.Item value="settings" onSelect={() => undefined}>
+          Open settings
+        </Command.Item>
+      </Command.List>
+    </Command.Root>
+  ),
+  parameters: {
+    docs: {
+      source: {
+        language: "tsx",
+        code: `<Command.Root mode="dropdown" aria-label="Quick actions">
+  <Command.Input aria-label="Search commands" placeholder="Search commands..." />
+  <Command.List>
+    <Command.Item value="new" onSelect={handleSelect}>New document</Command.Item>
+    <Command.Item value="open" onSelect={handleSelect}>Open project</Command.Item>
+  </Command.List>
+</Command.Root>`,
+      },
+    },
+  },
+};
