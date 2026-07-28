@@ -6,7 +6,7 @@
     "dev": "remix vite:dev",
     "build": "remix vite:build",
     "check": "pnpm build",
-    "lint": "biome lint .",
+    "lint": "biome check --assist-enabled=false .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
   },

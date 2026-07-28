@@ -89,7 +89,7 @@
     "build": "pnpm panda:codegen && tsdown && pnpm ensure:sourcemaps && pnpm panda:css && pnpm verify:client-boundaries",
     "prepublishOnly": "pnpm build",
     "dev": "pnpm panda:codegen && tsdown --watch",
-    "lint": "biome lint src scripts panda.config.ts tsdown.config.ts",
+    "lint": "biome check --assist-enabled=false src scripts panda.config.ts tsdown.config.ts",
     "format": "biome format --write src panda.config.ts tsdown.config.ts",
     "format:check": "biome format src panda.config.ts tsdown.config.ts",
     "typecheck": "pnpm panda:codegen && tsc --noEmit",

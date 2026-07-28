@@ -5,7 +5,7 @@
   "scripts": {
     "build": "vite build",
     "check": "pnpm build && node check-build.mjs",
-    "lint": "biome lint .",
+    "lint": "biome check --assist-enabled=false .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
   },
