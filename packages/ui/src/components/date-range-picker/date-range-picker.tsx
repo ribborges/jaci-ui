@@ -18,6 +18,7 @@ import type { PopoverRoot as BasePopoverRoot } from "@base-ui/react/popover";
 import { cx } from "../../styled-system/css";
 import { dateRangePicker } from "../../styled-system/recipes";
 import { withRecipeClassName } from "../base-ui";
+import { useThemePortalProps } from "../../theme/theme-scope";
 import {
   addDays,
   addMonths,
@@ -428,7 +429,9 @@ export const DateRangePickerClear = forwardRef<HTMLButtonElement, DateRangePicke
 );
 
 export type DateRangePickerPortalProps = ComponentPropsWithoutRef<typeof BasePopover.Portal>;
-export const DateRangePickerPortal = BasePopover.Portal;
+export function DateRangePickerPortal(props: DateRangePickerPortalProps) {
+  return <BasePopover.Portal {...useThemePortalProps(props)} />;
+}
 export type DateRangePickerPositionerProps = ComponentPropsWithoutRef<
   typeof BasePopover.Positioner
 >;

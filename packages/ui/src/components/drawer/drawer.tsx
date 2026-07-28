@@ -8,6 +8,7 @@ import type { DrawerRoot as BaseDrawerRoot } from "@base-ui/react/drawer";
 import { cx } from "../../styled-system/css";
 import { drawer } from "../../styled-system/recipes";
 import { withRecipeClassName } from "../base-ui";
+import { useThemePortalProps } from "../../theme/theme-scope";
 
 export type DrawerSide = "bottom" | "left" | "right" | "top";
 export type DrawerSize = "sm" | "md" | "lg";
@@ -76,7 +77,9 @@ export const DrawerTrigger = forwardRef<HTMLButtonElement, DrawerTriggerProps>(
 );
 
 export type DrawerPortalProps = ComponentPropsWithoutRef<typeof BaseDrawer.Portal>;
-export const DrawerPortal: typeof BaseDrawer.Portal = BaseDrawer.Portal;
+export function DrawerPortal(props: DrawerPortalProps) {
+  return <BaseDrawer.Portal {...useThemePortalProps(props)} />;
+}
 
 export type DrawerBackdropProps = ComponentPropsWithoutRef<typeof BaseDrawer.Backdrop>;
 

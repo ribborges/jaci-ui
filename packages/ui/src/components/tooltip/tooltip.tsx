@@ -7,6 +7,7 @@ import type { TooltipRoot as BaseTooltipRoot } from "@base-ui/react/tooltip";
 
 import { tooltip } from "../../styled-system/recipes";
 import { withRecipeClassName } from "../base-ui";
+import { useThemePortalProps } from "../../theme/theme-scope";
 
 /** Preserves Base UI's controlled `open` API and uncontrolled `defaultOpen` API. */
 export type TooltipRootProps<Payload = unknown> = BaseTooltipRoot.Props<Payload>;
@@ -32,7 +33,9 @@ export const TooltipTrigger = forwardRef<HTMLButtonElement, TooltipTriggerProps>
 );
 
 /** Preserves Base UI's optional portal container and mount controls. */
-export const TooltipPortal: typeof BaseTooltip.Portal = BaseTooltip.Portal;
+export function TooltipPortal(props: ComponentPropsWithoutRef<typeof BaseTooltip.Portal>) {
+  return <BaseTooltip.Portal {...useThemePortalProps(props)} />;
+}
 
 export type TooltipPositionerProps = ComponentPropsWithoutRef<typeof BaseTooltip.Positioner>;
 

@@ -16,6 +16,7 @@ import type { NavigationMenuRoot as BaseNavigationMenuRoot } from "@base-ui/reac
 
 import { navigationMenu } from "../../styled-system/recipes";
 import { withRecipeClassName } from "../base-ui";
+import { useThemePortalProps } from "../../theme/theme-scope";
 
 export type NavigationMenuOrientation = "horizontal" | "vertical";
 
@@ -240,7 +241,11 @@ export const NavigationMenuIcon = forwardRef<HTMLSpanElement, NavigationMenuIcon
   },
 );
 
-export const NavigationMenuPortal = BaseNavigationMenu.Portal;
+export function NavigationMenuPortal(
+  props: ComponentPropsWithoutRef<typeof BaseNavigationMenu.Portal>,
+) {
+  return <BaseNavigationMenu.Portal {...useThemePortalProps(props)} />;
+}
 
 export type NavigationMenuPositionerProps = ComponentPropsWithoutRef<
   typeof BaseNavigationMenu.Positioner

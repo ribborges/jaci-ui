@@ -7,6 +7,7 @@ import type { MenuRoot as BaseMenuRoot, MenuTrigger as BaseMenuTrigger } from "@
 
 import { menu } from "../../styled-system/recipes";
 import { withRecipeClassName } from "../base-ui";
+import { useThemePortalProps } from "../../theme/theme-scope";
 
 /**
  * Groups the menu parts. It keeps Base UI's controlled `open`/
@@ -36,7 +37,9 @@ export const MenuTrigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(funct
 });
 
 /** Preserves Base UI's portal and optional container APIs. */
-export const MenuPortal = BaseMenu.Portal;
+export function MenuPortal(props: ComponentPropsWithoutRef<typeof BaseMenu.Portal>) {
+  return <BaseMenu.Portal {...useThemePortalProps(props)} />;
+}
 
 export type MenuPositionerProps = ComponentPropsWithoutRef<typeof BaseMenu.Positioner>;
 

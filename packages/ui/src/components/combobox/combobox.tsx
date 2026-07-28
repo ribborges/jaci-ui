@@ -10,6 +10,7 @@ import { cx } from "../../styled-system/css";
 import { combobox } from "../../styled-system/recipes";
 import { Field } from "../field";
 import { withRecipeClassName } from "../base-ui";
+import { useThemePortalProps } from "../../theme/theme-scope";
 
 export type ComboboxSize = "sm" | "md" | "lg";
 
@@ -150,7 +151,9 @@ export const ComboboxIcon = forwardRef<HTMLSpanElement, ComboboxIconProps>(funct
 export type ComboboxValueProps = ComponentPropsWithoutRef<typeof BaseCombobox.Value>;
 export const ComboboxValue = BaseCombobox.Value;
 
-export const ComboboxPortal = BaseCombobox.Portal;
+export function ComboboxPortal(props: ComponentPropsWithoutRef<typeof BaseCombobox.Portal>) {
+  return <BaseCombobox.Portal {...useThemePortalProps(props)} />;
+}
 
 export type ComboboxPositionerProps = ComponentPropsWithoutRef<typeof BaseCombobox.Positioner>;
 export const ComboboxPositioner = forwardRef<HTMLDivElement, ComboboxPositionerProps>(

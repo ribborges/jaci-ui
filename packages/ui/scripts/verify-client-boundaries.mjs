@@ -58,6 +58,7 @@ const expectedClientModules = [
   "components/tree-view/tree-view.js",
   "components/upload/upload.js",
   "theme/theme-provider.js",
+  "theme/theme-scope.js",
 ];
 
 const emittedFiles = new Set();

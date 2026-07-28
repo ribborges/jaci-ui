@@ -8,6 +8,7 @@ import type { DialogRoot as BaseDialogRoot } from "@base-ui/react/dialog";
 import { cx } from "../../styled-system/css";
 import { bottomNavigation, navbar } from "../../styled-system/recipes";
 import { withRecipeClassName } from "../base-ui";
+import { useThemePortalProps } from "../../theme/theme-scope";
 
 /**
  * Groups a responsive navigation bar and its mobile drawer. The `open`,
@@ -124,9 +125,10 @@ export const NavbarDrawer = forwardRef<HTMLDivElement, NavbarDrawerProps>(functi
   ref,
 ) {
   const styles = navbar();
+  const scopedPortalProps = useThemePortalProps(portalProps ?? {});
 
   return (
-    <BaseDialog.Portal {...portalProps}>
+    <BaseDialog.Portal {...scopedPortalProps}>
       <BaseDialog.Backdrop
         className={withRecipeClassName(styles.drawerBackdrop, undefined)}
         data-slot="navbar-drawer-backdrop"
