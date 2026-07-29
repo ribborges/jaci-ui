@@ -297,6 +297,7 @@ export const CommandInput = forwardRef<HTMLInputElement, CommandInputProps>(func
     setOpen,
     setSearch,
   } = useCommandContext();
+  const styles = command({ mode });
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChange?.(event);
     const next = event.target.value;
@@ -313,8 +314,9 @@ export const CommandInput = forwardRef<HTMLInputElement, CommandInputProps>(func
       role="combobox"
       aria-haspopup="listbox"
       aria-expanded={open}
-      className={cx(command().input, className)}
+      className={cx(styles.input, className)}
       data-slot="command-input"
+      data-mode={mode}
       disabled={disabled || props.disabled}
       onChange={(event) => {
         handleChange(event);

@@ -33,6 +33,7 @@ describe("ThemeProvider", () => {
 
     expect(html).toContain('data-jaci-theme="dark"');
     expect(html).toContain('data-jaci-component="theme-provider"');
+    expect(html).not.toContain("data-jaci-theme-portal");
   });
 
   it("applies scoped semantic tokens and supports uncontrolled changes", () => {
@@ -81,7 +82,7 @@ describe("ThemeProvider", () => {
     expect(container.querySelector("[data-portal-scope=local]")).not.toBeNull();
   });
 
-  it("mounts Jaci portals inside the nearest provider", () => {
+  it("mounts Jaci portals inside a separate themed host", () => {
     const container = renderInDocument(
       <ThemeProvider tokens={{ colors: { accent: { default: "#7c3aed" } } }}>
         <Dialog.Root defaultOpen>
@@ -96,9 +97,81 @@ describe("ThemeProvider", () => {
     );
 
     const provider = container.querySelector('[data-slot="theme-provider"]');
+    const portalHost = document.body.querySelector('[data-jaci-theme-portal="true"]');
     const popup = container.querySelector('[data-slot="dialog-popup"]');
     expect(provider).not.toBeNull();
-    expect(popup).not.toBeNull();
-    expect(provider?.contains(popup)).toBe(true);
+    expect(portalHost).not.toBeNull();
+    expect(portalHost?.getAttribute("data-jaci-theme")).toBe("light");
+    expect(
+      (portalHost as HTMLElement | null)?.style.getPropertyValue("--jaci-colors-accent-default"),
+    ).toBe("#7c3aed");
+    expect(popup).toBeNull();
+
+    const portalPopup = portalHost?.querySelector('[data-slot="dialog-popup"]');
+    expect(portalPopup).not.toBeNull();
+    expect(provider?.contains(portalPopup ?? null)).toBe(false);
+  });
+
+  it("updates the themed host when the provider theme changes", () => {
+    const container = renderInDocument(
+      <ThemeProvider defaultTheme="light">
+        <ThemeButton />
+      </ThemeProvider>,
+    );
+
+    const portalHost = document.body.querySelector('[data-jaci-theme-portal="true"]');
+    expect(portalHost?.getAttribute("data-jaci-theme")).toBe("light");
+
+    act(() => container.querySelector("button")?.click());
+    expect(portalHost?.getAttribute("data-jaci-theme")).toBe("dark");
+  });
+
+  it("uses the nearest nested provider host for a popup", () => {
+    const container = renderInDocument(
+      <ThemeProvider defaultTheme="dark" tokens={{ colors: { accent: { default: "#dc2626" } } }}>
+        <ThemeProvider defaultTheme="light" tokens={{ colors: { accent: { default: "#2563eb" } } }}>
+          <Dialog.Root defaultOpen>
+            <Dialog.Portal>
+              <Dialog.Viewport>
+                <Dialog.Popup aria-label="Nested dialog">Nested dialog</Dialog.Popup>
+              </Dialog.Viewport>
+            </Dialog.Portal>
+          </Dialog.Root>
+        </ThemeProvider>
+      </ThemeProvider>,
+    );
+
+    const hosts = document.body.querySelectorAll('[data-jaci-theme-portal="true"]');
+    expect(hosts).toHaveLength(2);
+    const popup = document.body.querySelector('[data-slot="dialog-popup"]');
+    const nestedHost = Array.from(hosts).find((host) => host.contains(popup));
+    expect(nestedHost?.getAttribute("data-jaci-theme")).toBe("light");
+    expect(
+      (nestedHost as HTMLElement | undefined)?.style.getPropertyValue(
+        "--jaci-colors-accent-default",
+      ),
+    ).toBe("#2563eb");
+    expect(container.querySelector('[data-jaci-theme="dark"]')).not.toBeNull();
+  });
+
+  it("preserves an explicitly provided portal container", () => {
+    const explicitContainer = document.createElement("div");
+    document.body.append(explicitContainer);
+
+    renderInDocument(
+      <ThemeProvider defaultTheme="dark">
+        <Dialog.Root defaultOpen>
+          <Dialog.Portal container={explicitContainer}>
+            <Dialog.Viewport>
+              <Dialog.Popup aria-label="Explicit dialog">Explicit dialog</Dialog.Popup>
+            </Dialog.Viewport>
+          </Dialog.Portal>
+        </Dialog.Root>
+      </ThemeProvider>,
+    );
+
+    expect(explicitContainer.querySelector('[data-slot="dialog-popup"]')).not.toBeNull();
+    const themedHost = document.body.querySelector('[data-jaci-theme-portal="true"]');
+    expect(themedHost?.querySelector('[data-slot="dialog-popup"]')).toBeNull();
   });
 });

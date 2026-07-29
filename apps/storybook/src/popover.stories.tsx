@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { Popover } from "jaci-ui";
+import { Popover, ThemeProvider } from "jaci-ui";
 
 const meta = {
   title: "Overlays/Popover",
@@ -71,17 +71,11 @@ export const KeyboardFocus: Story = {
 
 export const DarkTheme: Story = {
   render: function ThemedPopover() {
-    const [portalContainer, setPortalContainer] = useState<HTMLDivElement | null>(null);
-
     return (
-      <div
-        ref={setPortalContainer}
-        data-jaci-theme="dark"
-        style={{ minHeight: "14rem", padding: "2rem" }}
-      >
+      <ThemeProvider defaultTheme="dark" style={{ minHeight: "14rem", padding: "2rem" }}>
         <Popover.Root defaultOpen>
           <Popover.Trigger>Workspace details</Popover.Trigger>
-          <Popover.Portal container={portalContainer}>
+          <Popover.Portal>
             <Popover.Positioner align="start" side="bottom" sideOffset={8}>
               <Popover.Popup>
                 <Popover.Arrow />
@@ -94,7 +88,7 @@ export const DarkTheme: Story = {
             </Popover.Positioner>
           </Popover.Portal>
         </Popover.Root>
-      </div>
+      </ThemeProvider>
     );
   },
 };

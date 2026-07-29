@@ -26,7 +26,28 @@ export const codeRecipe = defineRecipe({
       true: { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
       false: {},
     },
+    lineNumbers: {
+      true: {
+        "&[data-line-numbers='true']": {
+          columnGap: "3",
+          display: "grid",
+          gridTemplateColumns: "auto minmax(0, 1fr)",
+        },
+        "&[data-line-numbers='true'] [data-slot='code-gutter']": {
+          color: "fg.muted",
+          display: "flex",
+          flexDirection: "column",
+          minWidth: "3ch",
+          textAlign: "end",
+          userSelect: "none",
+        },
+        "&[data-line-numbers='true'] [data-slot='code-content']": {
+          minWidth: "0",
+        },
+      },
+      false: {},
+    },
   },
-  defaultVariants: { variant: "inline", wrap: false, truncate: false },
+  defaultVariants: { variant: "inline", wrap: false, truncate: false, lineNumbers: false },
   staticCss: ["*"],
 });

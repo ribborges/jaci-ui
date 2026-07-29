@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { DatePicker, Stack, Text } from "jaci-ui";
+import { DatePicker, Stack, Text, ThemeProvider } from "jaci-ui";
 
 const meta = {
   title: "Forms/DatePicker",
@@ -362,19 +362,19 @@ export const BirthDate: Story = {
 
 export const DarkTheme: Story = {
   render: () => (
-    <div data-jaci-theme="dark" style={{ padding: "1.5rem" }}>
+    <ThemeProvider defaultTheme="dark" style={{ padding: "1.5rem" }}>
       <PickerComposition />
-    </div>
+    </ThemeProvider>
   ),
   parameters: {
     docs: {
       source: {
-        code: `<div data-jaci-theme="dark">
+        code: `<ThemeProvider defaultTheme="dark">
   <DatePicker.Root defaultValue={new Date(2025, 3, 15, 12)}>
     <DatePicker.Trigger><DatePicker.Value /></DatePicker.Trigger>
     {/* compose the Portal, Positioner, Popup, Header and Calendar parts */}
   </DatePicker.Root>
-</div>`,
+</ThemeProvider>`,
         language: "tsx",
       },
     },

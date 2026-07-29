@@ -1,13 +1,24 @@
 import type { Preview } from "@storybook/react-vite";
 
+import { ThemeProvider } from "jaci-ui";
 import "jaci-ui/styles.css";
 
 const preview: Preview = {
   decorators: [
     (Story, context) => (
-      <div data-jaci-theme={context.globals.theme} style={{ minHeight: "100vh", padding: "2rem" }}>
+      <ThemeProvider
+        theme={context.globals.theme}
+        style={{
+          boxSizing: "border-box",
+          maxWidth: "none",
+          minHeight: "100vh",
+          minWidth: 0,
+          padding: "2rem",
+          width: "100%",
+        }}
+      >
         <Story />
-      </div>
+      </ThemeProvider>
     ),
   ],
   globalTypes: {

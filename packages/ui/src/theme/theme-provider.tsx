@@ -148,6 +148,7 @@ export const ThemeProvider = forwardRef<HTMLElement, ThemeProviderProps>(functio
     initialSystemTheme(ssrTheme),
   );
   const [scopeElement, setScopeElement] = useState<HTMLElement | null>(null);
+  const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
   const currentTheme = theme ?? uncontrolledTheme;
 
   useEffect(() => {
@@ -181,6 +182,7 @@ export const ThemeProvider = forwardRef<HTMLElement, ThemeProviderProps>(functio
     [currentTheme, resolvedTheme, setTheme],
   );
   const mergedStyle = useMemo(() => ({ ...style, ...tokenStyles(tokens) }), [style, tokens]);
+  const scopedTokenStyles = useMemo(() => tokenStyles(tokens), [tokens]);
   const Root = as;
   const setRootRef = useCallback(
     (element: HTMLElement | null) => {
@@ -191,9 +193,43 @@ export const ThemeProvider = forwardRef<HTMLElement, ThemeProviderProps>(functio
     [ref],
   );
 
+  useEffect(() => {
+    if (!scopeElement || typeof document === "undefined") return;
+
+    const host = document.createElement("div");
+    host.dataset.jaciThemePortal = "true";
+    host.dataset.jaciComponent = "theme-portal";
+    host.dataset.slot = "theme-portal";
+    // Keep the host out of the Storybook/app layout. Its descendants still
+    // inherit the theme attribute and scoped custom properties.
+    host.style.display = "contents";
+    document.body.append(host);
+    setPortalContainer(host);
+
+    return () => {
+      setPortalContainer((current) => (current === host ? null : current));
+      host.remove();
+    };
+  }, [scopeElement]);
+
+  useEffect(() => {
+    if (!portalContainer) return;
+
+    portalContainer.dataset.jaciTheme = resolvedTheme;
+    for (const [property, value] of Object.entries(scopedTokenStyles)) {
+      portalContainer.style.setProperty(property, value);
+    }
+
+    return () => {
+      for (const property of Object.keys(scopedTokenStyles)) {
+        portalContainer.style.removeProperty(property);
+      }
+    };
+  }, [portalContainer, resolvedTheme, scopedTokenStyles]);
+
   return (
     <ThemeContext.Provider value={contextValue}>
-      <ThemeScopeContext.Provider value={{ container: scopeElement }}>
+      <ThemeScopeContext.Provider value={{ container: portalContainer }}>
         {createElement(
           Root,
           {
