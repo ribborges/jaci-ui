@@ -82,6 +82,11 @@ import { statRecipe } from "./src/components/stat/stat.recipe";
 import { statGroupRecipe } from "./src/components/stat/stat-group.recipe";
 import { figureRecipe } from "./src/components/figure/figure.recipe";
 import { quoteRecipe } from "./src/components/quote/quote.recipe";
+import { carouselRecipe } from "./src/components/carousel/carousel.recipe";
+import { colorSwatchRecipe } from "./src/components/color-swatch/color-swatch.recipe";
+import { downloadTriggerRecipe } from "./src/components/download-trigger/download-trigger.recipe";
+import { qrCodeRecipe } from "./src/components/qr-code/qr-code.recipe";
+import { spacerRecipe } from "./src/components/spacer/spacer.recipe";
 import { jaciConditions, jaciTheme } from "./src/styles/theme";
 
 export default defineConfig({
@@ -129,6 +134,10 @@ export default defineConfig({
         aspectRatioBox: aspectRatioRecipe,
         quote: quoteRecipe,
         statGroup: statGroupRecipe,
+        colorSwatch: colorSwatchRecipe,
+        downloadTrigger: downloadTriggerRecipe,
+        qrCode: qrCodeRecipe,
+        layoutSpacer: spacerRecipe,
       },
       slotRecipes: {
         accordion: accordionRecipe,
@@ -188,6 +197,7 @@ export default defineConfig({
         image: imageRecipe,
         stat: statRecipe,
         figure: figureRecipe,
+        carousel: carouselRecipe,
       },
     },
   },

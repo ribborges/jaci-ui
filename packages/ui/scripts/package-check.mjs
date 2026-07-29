@@ -109,7 +109,13 @@ function assertContract(tarball) {
     }
   }
 
-  const runtimeFiles = entries.filter((entry) => entry.endsWith(".js") || entry.endsWith(".cjs"));
+  // Rolldown may emit a tiny internal CJS helper for external dependencies. It is
+  // implementation detail (not a public module) and does not have a source map;
+  // every public JavaScript artifact still must have its corresponding map.
+  const runtimeFiles = entries.filter(
+    (entry) =>
+      !entry.startsWith("dist/_virtual/") && (entry.endsWith(".js") || entry.endsWith(".cjs")),
+  );
   const missingSourceMaps = runtimeFiles.filter((entry) => !entrySet.has(`${entry}.map`));
   if (missingSourceMaps.length > 0) {
     throw new Error(`JavaScript artifacts without sourcemaps: ${missingSourceMaps.join(", ")}`);

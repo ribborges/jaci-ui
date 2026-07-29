@@ -84,6 +84,64 @@ import { AspectRatio, Code, Figure, Image, Kbd, Quote, Stat, StatGroup } from "j
 </StatGroup.Root>;
 ```
 
+### Mídia e utilitários visuais
+
+`Carousel` oferece slides acessíveis com navegação por teclado, indicadores, swipe e autoplay
+opcional. Sempre forneça um `aria-label` no root e texto alternativo nas imagens:
+
+```tsx
+<Carousel.Root aria-label="Featured projects" loop>
+  <Carousel.Viewport>
+    <Carousel.Track>
+      <Carousel.Item index={0}>
+        <Carousel.Media><Image src="/project.jpg" alt="Project preview" /></Carousel.Media>
+        <Carousel.Caption>
+          <Carousel.Title>Project title</Carousel.Title>
+          <Carousel.Description>Project description</Carousel.Description>
+        </Carousel.Caption>
+      </Carousel.Item>
+    </Carousel.Track>
+  </Carousel.Viewport>
+  <Carousel.Previous />
+  <Carousel.Next />
+  <Carousel.Indicators />
+</Carousel.Root>
+```
+
+`QRCode` gera SVG no servidor e no cliente, com módulos circulares e olhos quadrados
+arredondados. O valor pode ser controlado diretamente pela aplicação:
+
+```tsx
+<QRCode
+  value="https://jaci-ui.dev"
+  size={240}
+  errorCorrectionLevel="Q"
+  label="Jaci UI website"
+/>
+```
+
+Para downloads, `DownloadTrigger` é um link HTML comum e não faz fetch nem cria `Blob`:
+
+```tsx
+<DownloadTrigger href="/files/report.pdf" download="report.pdf">
+  Download report
+</DownloadTrigger>
+```
+
+Em URLs cross-origin, o nome e a própria autorização do download continuam sujeitos às regras
+do navegador e aos headers do servidor.
+
+Use `Separator` para uma linha semântica ou decorativa entre seções e `Spacer` quando precisar
+apenas de espaço, sem linha:
+
+```tsx
+<Separator orientation="horizontal" />
+<Spacer axis="vertical" size="lg" />
+```
+
+Todos esses componentes continuam compatíveis com SSR e React 18/19. `Carousel` é o único novo
+módulo interativo; os demais não acessam APIs do navegador durante importação ou renderização.
+
 `AspectRatio` fills the available inline size of its parent. In shrink-to-fit or flex
 layouts, give the parent an explicit `width`/`max-width` so the ratio has a measurable
 size.
