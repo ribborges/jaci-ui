@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { Field, FieldError, Select, Stack, Text } from "jaci-ui";
+import { expect } from "storybook/test";
+import { Field, FieldError, Select, Stack, Text, ThemeProvider } from "jaci-ui";
 
 const meta = {
   title: "Forms/Select",
@@ -146,7 +147,7 @@ export const LoadingAndEmpty: Story = {
           <Select.Positioner>
             <Select.Popup>
               <Select.Loading>Loading plans…</Select.Loading>
-              <Select.List />
+              <Select.List aria-label="Loading plans" />
             </Select.Popup>
           </Select.Positioner>
         </Select.Portal>
@@ -161,13 +162,23 @@ export const LoadingAndEmpty: Story = {
           <Select.Positioner>
             <Select.Popup>
               <Select.Empty>No plans found.</Select.Empty>
-              <Select.List />
+              <Select.List aria-label="Available plans" />
             </Select.Popup>
           </Select.Positioner>
         </Select.Portal>
       </Select.Root>
     </Stack>
   ),
+  parameters: {
+    // Base UI uses intentionally focusable, aria-hidden guards around
+    // portaled popups. Axe reports those implementation details as
+    // aria-hidden-focus while the visual story is intentionally left open.
+    a11y: {
+      config: {
+        rules: [{ id: "aria-hidden-focus", enabled: false }],
+      },
+    },
+  },
 };
 
 export const KeyboardNavigation: Story = {
@@ -200,12 +211,12 @@ export const Invalid: Story = {
 
 export const DarkTheme: Story = {
   render: () => (
-    <div
-      data-jaci-theme="dark"
+    <ThemeProvider
+      defaultTheme="dark"
       style={{ display: "grid", gap: "0.5rem", minWidth: "20rem", padding: "1.5rem" }}
     >
       <PlanSelect />
-    </div>
+    </ThemeProvider>
   ),
 };
 
@@ -227,7 +238,7 @@ export const OverlayBlur: Story = {
         <Select.Portal>
           <Select.Positioner align="start" side="bottom" sideOffset={8}>
             <Select.Popup>
-              <Select.List>
+              <Select.List aria-label="Workspace plans">
                 <PlanOptions />
               </Select.List>
             </Select.Popup>
@@ -236,6 +247,15 @@ export const OverlayBlur: Story = {
       </Select.Root>
     </div>
   ),
+  play: async () => {
+    const popup = document.body.querySelector('[data-slot="select-popup"]');
+    expect(popup).not.toBeNull();
+
+    const portalHost = popup?.closest('[data-jaci-theme-portal="true"]');
+    expect(portalHost).not.toBeNull();
+    expect(portalHost?.getAttribute("data-jaci-theme")).toBe("light");
+    expect((popup as HTMLElement).getBoundingClientRect().width).toBeGreaterThan(0);
+  },
   parameters: {
     // Base UI uses intentionally focusable, aria-hidden guards around portaled
     // popups. Axe reports those implementation details as aria-hidden-focus

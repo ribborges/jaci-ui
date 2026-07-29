@@ -28,9 +28,9 @@ export const Decimal: Story = {
     <NumberField.Root defaultValue={12.5} format={{ maximumFractionDigits: 2 }} step={0.5}>
       <NumberField.Label>Budget</NumberField.Label>
       <NumberField.Group>
+        <NumberField.Decrement />
         <NumberField.Input aria-label="Budget" />
         <NumberField.Increment />
-        <NumberField.Decrement />
       </NumberField.Group>
       <Text size="sm" tone="muted">
         Supports locale-aware formatting and keyboard stepping.

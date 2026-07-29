@@ -4,12 +4,14 @@ import {
   AlertDialog,
   Button,
   Calendar,
+  Carousel,
   Checkbox,
   ColorPicker,
   Combobox,
   ContextMenu,
   DataView as JaciDataView,
   DateRangePicker,
+  DownloadTrigger,
   Drawer,
   Field,
   FieldError,
@@ -21,6 +23,7 @@ import {
   List,
   NumberField,
   PinInput,
+  QRCode,
   Menubar,
   RadioGroup,
   Stack,
@@ -96,6 +99,15 @@ const html = renderToString(
         <List.Root>
           <List.Item>SSR list item</List.Item>
         </List.Root>
+        <Carousel.Root aria-label="SSR slides">
+          <Carousel.Viewport>
+            <Carousel.Track>
+              <Carousel.Item index={0}>SSR slide</Carousel.Item>
+            </Carousel.Track>
+          </Carousel.Viewport>
+        </Carousel.Root>
+        <DownloadTrigger href="data:text/plain,SSR">Download SSR file</DownloadTrigger>
+        <QRCode label="SSR QR code" value="https://jaci-ui.dev" />
         <JaciDataView.Root layout="list">
           <JaciDataView.Content>SSR data view</JaciDataView.Content>
         </JaciDataView.Root>
@@ -201,6 +213,9 @@ if (
   !html.includes('data-slot="menubar-trigger"') ||
   !html.includes('data-slot="table-cell"') ||
   !html.includes('data-jaci-component="list"') ||
+  !html.includes('data-jaci-component="carousel"') ||
+  !html.includes('data-jaci-component="download-trigger"') ||
+  !html.includes('data-jaci-component="qr-code"') ||
   !html.includes('data-jaci-component="data-view"') ||
   !html.includes('data-slot="color-picker-trigger"') ||
   !html.includes('data-slot="calendar"') ||

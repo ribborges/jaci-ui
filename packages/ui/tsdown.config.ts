@@ -13,6 +13,6 @@ export default defineConfig({
   target: "es2022",
   clean: true,
   deps: {
-    neverBundle: ["react", "react-dom", "react/jsx-runtime"],
+    neverBundle: ["react", "react-dom", "react/jsx-runtime", "qrcode"],
   },
 });

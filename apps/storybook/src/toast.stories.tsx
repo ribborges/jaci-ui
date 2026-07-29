@@ -113,32 +113,39 @@ export const ErrorAndAction: Story = {
 };
 
 export const TranslucentStatuses: Story = {
-  render: () => (
-    <Toast.Provider timeout={0}>
-      <Toast.Portal>
-        <Toast.Viewport>
-          {(
-            [
-              ["info", "Information", "A translucent surface with an opaque status border."],
-              ["success", "Saved", "The project was saved successfully."],
-              ["warning", "Review needed", "Some fields still need your attention."],
-              ["danger", "Failed", "The request could not be completed."],
-            ] as const
-          ).map(([tone, title, description]) => (
-            <Toast.Root key={tone} toast={{ id: tone, title, description }} tone={tone}>
-              <Toast.Content>
-                <Toast.Text>
-                  <Toast.Title />
-                  <Toast.Description />
-                </Toast.Text>
-                <Toast.Close />
-              </Toast.Content>
-            </Toast.Root>
-          ))}
-        </Toast.Viewport>
-      </Toast.Portal>
-    </Toast.Provider>
-  ),
+  render: function TranslucentStatusToasts() {
+    type StatusToast = readonly ["info" | "success" | "warning" | "danger", string, string];
+    const [toasts, setToasts] = useState<StatusToast[]>([
+      ["info", "Information", "A translucent surface with an opaque status border."],
+      ["success", "Saved", "The project was saved successfully."],
+      ["warning", "Review needed", "Some fields still need your attention."],
+      ["danger", "Failed", "The request could not be completed."],
+    ]);
+
+    return (
+      <Toast.Provider timeout={0}>
+        <Toast.Portal>
+          <Toast.Viewport>
+            {toasts.map(([tone, title, description]) => (
+              <Toast.Root key={tone} toast={{ id: tone, title, description }} tone={tone}>
+                <Toast.Content>
+                  <Toast.Text>
+                    <Toast.Title />
+                    <Toast.Description />
+                  </Toast.Text>
+                  <Toast.Close
+                    onClick={() =>
+                      setToasts((current) => current.filter((item) => item[0] !== tone))
+                    }
+                  />
+                </Toast.Content>
+              </Toast.Root>
+            ))}
+          </Toast.Viewport>
+        </Toast.Portal>
+      </Toast.Provider>
+    );
+  },
   parameters: {
     docs: {
       source: {
