@@ -36,6 +36,26 @@ describe("Carousel", () => {
     expect(container.querySelector('[data-index="0"]')?.getAttribute("aria-hidden")).toBe("true");
   });
 
+  it("renders distinct previous and next controls", () => {
+    const container = renderInDocument(<Example />);
+    const previous = container.querySelector<HTMLButtonElement>('[data-slot="carousel-previous"]');
+    const next = container.querySelector<HTMLButtonElement>('[data-slot="carousel-next"]');
+
+    expect(previous).not.toBeNull();
+    expect(next).not.toBeNull();
+    expect(previous?.getAttribute("aria-label")).toBe("Previous slide");
+    expect(next?.getAttribute("aria-label")).toBe("Next slide");
+  });
+
+  it("uses vertical arrow controls for vertical carousels", () => {
+    const container = renderInDocument(<Example orientation="vertical" />);
+    const previous = container.querySelector<HTMLButtonElement>('[data-slot="carousel-previous"]');
+    const next = container.querySelector<HTMLButtonElement>('[data-slot="carousel-next"]');
+
+    expect(previous?.textContent).toBe("↑");
+    expect(next?.textContent).toBe("↓");
+  });
+
   it("moves with keyboard arrows and renders indicators", () => {
     const onIndexChange = vi.fn();
     const container = renderInDocument(<Example onIndexChange={onIndexChange} />);

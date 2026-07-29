@@ -306,10 +306,10 @@ export const CarouselTrack = forwardRef<HTMLDivElement, CarouselTrackProps>(func
   );
 });
 
-export interface CarouselItemProps extends ComponentPropsWithoutRef<"article"> {
+export interface CarouselItemProps extends ComponentPropsWithoutRef<"div"> {
   index: number;
 }
-export const CarouselItem = forwardRef<HTMLElement, CarouselItemProps>(function CarouselItem(
+export const CarouselItem = forwardRef<HTMLDivElement, CarouselItemProps>(function CarouselItem(
   { children, className, index, ...props },
   ref,
 ) {
@@ -318,7 +318,7 @@ export const CarouselItem = forwardRef<HTMLElement, CarouselItemProps>(function 
   const active = currentIndex === index;
   return (
     // biome-ignore lint/a11y/useSemanticElements: carousel slides use the ARIA group role.
-    <article
+    <div
       {...props}
       ref={ref}
       aria-hidden={!active}
@@ -332,7 +332,7 @@ export const CarouselItem = forwardRef<HTMLElement, CarouselItemProps>(function 
       tabIndex={active ? 0 : -1}
     >
       {children}
-    </article>
+    </div>
   );
 });
 
@@ -381,10 +381,16 @@ export interface CarouselControlProps extends ComponentPropsWithoutRef<"button">
 }
 export const CarouselPrevious = forwardRef<HTMLButtonElement, CarouselControlProps>(
   function CarouselPrevious(
-    { "aria-label": ariaLabel = "Previous slide", children = "‹", className, disabled, ...props },
+    { "aria-label": ariaLabel = "Previous slide", children, className, disabled, ...props },
     ref,
   ) {
-    const { disabled: contextDisabled, getNextIndex, setIndex, styles } = useCarouselContext();
+    const {
+      disabled: contextDisabled,
+      getNextIndex,
+      orientation,
+      setIndex,
+      styles,
+    } = useCarouselContext();
     return (
       <button
         {...props}
@@ -396,7 +402,7 @@ export const CarouselPrevious = forwardRef<HTMLButtonElement, CarouselControlPro
         onClick={() => setIndex(getNextIndex(-1))}
         type="button"
       >
-        {children}
+        {children ?? (orientation === "vertical" ? "↑" : "‹")}
       </button>
     );
   },
@@ -404,10 +410,16 @@ export const CarouselPrevious = forwardRef<HTMLButtonElement, CarouselControlPro
 
 export const CarouselNext = forwardRef<HTMLButtonElement, CarouselControlProps>(
   function CarouselNext(
-    { "aria-label": ariaLabel = "Next slide", children = "›", className, disabled, ...props },
+    { "aria-label": ariaLabel = "Next slide", children, className, disabled, ...props },
     ref,
   ) {
-    const { disabled: contextDisabled, getNextIndex, setIndex, styles } = useCarouselContext();
+    const {
+      disabled: contextDisabled,
+      getNextIndex,
+      orientation,
+      setIndex,
+      styles,
+    } = useCarouselContext();
     return (
       <button
         {...props}
@@ -419,7 +431,7 @@ export const CarouselNext = forwardRef<HTMLButtonElement, CarouselControlProps>(
         onClick={() => setIndex(getNextIndex(1))}
         type="button"
       >
-        {children}
+        {children ?? (orientation === "vertical" ? "↓" : "›")}
       </button>
     );
   },
