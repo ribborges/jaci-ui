@@ -105,6 +105,8 @@ describe("Command", () => {
 
     expect(root.getAttribute("data-open")).toBeNull();
     expect(list.hidden).toBe(true);
+    expect(input.getAttribute("data-mode")).toBe("dropdown");
+    expect(input.className).toContain("mode_dropdown");
 
     act(() => input.focus());
     expect(root.getAttribute("data-open")).toBe("true");

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
+import { expect } from "storybook/test";
 import { Command, Dialog, Stack, Text } from "jaci-ui";
 
 const meta = {
@@ -224,6 +225,61 @@ export const CompactDropdown: Story = {
     <Command.Item value="open" onSelect={handleSelect}>Open project</Command.Item>
   </Command.List>
 </Command.Root>`,
+      },
+    },
+  },
+};
+
+export const DefaultAndDropdown: Story = {
+  render: () => (
+    <Stack direction="horizontal" gap="lg" style={{ alignItems: "flex-start", flexWrap: "wrap" }}>
+      <Command.Root aria-label="Inline command">
+        <Command.Input aria-label="Inline command search" placeholder="Search commands..." />
+        <Command.List aria-label="Inline command results">
+          <Command.Item value="new">New document</Command.Item>
+          <Command.Item value="open">Open project</Command.Item>
+        </Command.List>
+      </Command.Root>
+      <Command.Root mode="dropdown" defaultOpen aria-label="Compact command">
+        <Command.Input aria-label="Compact command search" placeholder="Open command menu..." />
+        <Command.List aria-label="Compact command results">
+          <Command.Item value="new">New document</Command.Item>
+          <Command.Item value="open">Open project</Command.Item>
+        </Command.List>
+      </Command.Root>
+    </Stack>
+  ),
+  play: async () => {
+    const dropdownRoot = document.querySelector<HTMLElement>(
+      '[data-slot="command"][data-mode="dropdown"]',
+    );
+    const dropdownInput = dropdownRoot?.querySelector<HTMLInputElement>(
+      '[data-slot="command-input"]',
+    );
+    const dropdownList = dropdownRoot?.querySelector<HTMLElement>('[data-slot="command-list"]');
+    if (!dropdownRoot || !dropdownInput || !dropdownList) {
+      throw new Error("The compact Command story did not render its dropdown parts.");
+    }
+
+    await expect(dropdownRoot).toHaveAttribute("data-open", "true");
+    await expect(dropdownList).toBeVisible();
+    expect(getComputedStyle(dropdownList).position).toBe("absolute");
+    expect(getComputedStyle(dropdownInput).borderBottomWidth).toBe("1px");
+  },
+  parameters: {
+    docs: {
+      source: {
+        language: "tsx",
+        code: `<>
+  <Command.Root>
+    <Command.Input aria-label="Search commands" />
+    <Command.List>{/* command items */}</Command.List>
+  </Command.Root>
+  <Command.Root mode="dropdown" defaultOpen>
+    <Command.Input aria-label="Open command menu" />
+    <Command.List>{/* opens over content */}</Command.List>
+  </Command.Root>
+</>`,
       },
     },
   },
