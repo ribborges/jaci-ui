@@ -45,3 +45,22 @@ export const WithCopyable: Story = {
     },
   },
 };
+
+export const Numbered: Story = {
+  args: { lineNumbers: true, variant: "block" },
+  render: (args) => (
+    <Code
+      {...args}
+    >{`export function greet(name: string) {\n  return \`Hello, \${name}!\`;\n}\n`}</Code>
+  ),
+  parameters: {
+    docs: {
+      source: {
+        language: "tsx",
+        code: `<Code variant="block" lineNumbers language="tsx">
+  {source}
+</Code>`,
+      },
+    },
+  },
+};
