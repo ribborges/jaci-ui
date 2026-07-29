@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.0
+
+### Minor Changes
+
+- d06e214: Add Carousel, ColorSwatch, DownloadTrigger, QRCode and Spacer components, and consolidate the Separator utilities.
+
 ## 0.8.0
 
 ### Minor Changes
