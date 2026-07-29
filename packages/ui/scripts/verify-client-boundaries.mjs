@@ -4,6 +4,7 @@ import { join } from "node:path";
 const root = new URL("../dist/", import.meta.url).pathname;
 const expectedClientModules = [
   "components/accordion/accordion.js",
+  "components/carousel/carousel.js",
   "components/alert-dialog/alert-dialog.js",
   "components/avatar/avatar.js",
   "components/button/button.js",
