@@ -2,6 +2,15 @@ name: Publish package
 
 on:
   workflow_dispatch:
+    inputs:
+      dist_tag:
+        description: "npm dist-tag (use rc for prereleases)"
+        required: true
+        default: latest
+        type: choice
+        options:
+          - latest
+          - rc
 
 concurrency:
   group: npm-publish
@@ -33,4 +42,4 @@ jobs:
       - run: pnpm --filter @jaci-ui/storybook exec playwright install --with-deps chromium
       - run: pnpm test
       - run: pnpm package:check
-      - run: pnpm --filter jaci-ui publish --access public --no-git-checks
+      - run: pnpm --filter jaci-ui publish --access public --no-git-checks --tag "${{ inputs.dist_tag }}"
