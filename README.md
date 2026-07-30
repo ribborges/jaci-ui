@@ -1,3 +1,7 @@
+<div style="text-align: center; padding: 20px;">
+    <img src="media/jaci-ui-logo.svg" alt="Jaci UI logo" width="250">
+</div>
+
 # Jaci UI
 
 Jaci UI is an accessible React component library with a neutral default visual language,
