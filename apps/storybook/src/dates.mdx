@@ -1,0 +1,27 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Guides/Dates" />
+
+# Dates
+
+`Calendar` is the independent engine for date selection. `DatePicker` and `DateRangePicker` add
+control, popups, native form support and dismissal behavior.
+
+```tsx
+<Calendar.Root
+  referenceDate={new Date(2025, 3, 1, 12)}
+  locale="pt-BR"
+  onValueChange={setDate}
+>
+  <Calendar.Header>
+    <Calendar.Previous />
+    <Calendar.MonthSelect />
+    <Calendar.YearSelect />
+    <Calendar.Next />
+  </Calendar.Header>
+  <Calendar.Grid />
+</Calendar.Root>
+```
+
+Use `referenceDate` in SSR and tests to avoid an implicit dependency on the current date. Public
+values are `Date` objects in the local timezone.

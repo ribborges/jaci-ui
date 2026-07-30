@@ -1,0 +1,26 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Guides/Data collections" />
+
+# Tables and collections
+
+`DataView` organizes states and layouts. `Table`, `List`, `Pagination` and `DataToolbar` remain
+consumer-controlled compositions without fetching, virtualization or a column engine.
+
+```tsx
+<DataView.Root layout="table" status="ready">
+  <DataView.Toolbar>
+    <DataToolbar.Root aria-label="Project tools">
+      <DataToolbar.Search placeholder="Search projects" />
+    </DataToolbar.Root>
+  </DataView.Toolbar>
+  <DataView.Content>
+    <Table.Root>{/* rows controlled by the application */}</Table.Root>
+  </DataView.Content>
+  <DataView.Pagination>
+    <Pagination.Root page={1} pageCount={4} />
+  </DataView.Pagination>
+</DataView.Root>
+```
+
+Sorting, filters, selection and pagination must be connected explicitly through public callbacks.
