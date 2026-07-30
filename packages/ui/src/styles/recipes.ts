@@ -1,5 +1,7 @@
 import { defineRecipe, defineSlotRecipe } from "@pandacss/dev";
 
+import { createBackdropBlurStyles, createBackdropFilterStyles } from "./backdrop";
+
 export const headingRecipe = defineRecipe({
   className: "heading",
   base: {
@@ -471,7 +473,7 @@ export const cardRecipe = defineSlotRecipe({
   base: {
     root: {
       backgroundColor: "surface.default",
-      backdropFilter: "blur(12px)",
+      ...createBackdropFilterStyles("blur(12px)"),
       borderColor: "border.default",
       borderRadius: "2xl",
       borderStyle: "solid",
@@ -1065,8 +1067,7 @@ export const dialogRecipe = defineSlotRecipe({
       },
     },
     backdrop: {
-      backdropBlur: "xs",
-      backdropFilter: "auto",
+      ...createBackdropBlurStyles("xs"),
       backgroundColor: "surface.overlay",
       inset: "0",
       minHeight: "100dvh",
@@ -1344,8 +1345,7 @@ export const selectRecipe = defineSlotRecipe({
       zIndex: "50",
     },
     popup: {
-      backdropBlur: "md",
-      backdropFilter: "auto",
+      ...createBackdropBlurStyles("md"),
       backgroundColor: "surface.overlay",
       borderColor: "border.default",
       borderRadius: "2xl",
@@ -1540,7 +1540,7 @@ export const menuRecipe = defineSlotRecipe({
     },
     popup: {
       backgroundColor: "surface.overlay",
-      backdropFilter: "blur(12px)",
+      ...createBackdropFilterStyles("blur(12px)"),
       borderColor: "border.default",
       borderRadius: "2xl",
       borderStyle: "solid",
@@ -1658,8 +1658,7 @@ export const toastRecipe = defineSlotRecipe({
       "--jaci-toast-peek": "0.75rem",
       "--jaci-toast-scale": "calc(max(0, 1 - (var(--toast-index) * 0.08)))",
       "--jaci-toast-shrink": "calc(1 - var(--jaci-toast-scale))",
-      backdropBlur: "md",
-      backdropFilter: "auto",
+      ...createBackdropBlurStyles("md"),
       backgroundColor: "surface.overlay",
       borderColor: "border.default",
       borderRadius: "xl",
@@ -1903,8 +1902,7 @@ export const sidebarRecipe = defineSlotRecipe({
       padding: "0",
     },
     backdrop: {
-      backdropBlur: "xs",
-      backdropFilter: "auto",
+      ...createBackdropBlurStyles("xs"),
       backgroundColor: "surface.overlay",
       inset: "0",
       position: "fixed",
@@ -2096,10 +2094,7 @@ export const navbarRecipe = defineSlotRecipe({
   base: {
     bar: {
       alignItems: "center",
-      // Keep this as a literal CSS property so Panda does not emit a paired
-      // -webkit declaration. Next's Lightning CSS drops the standard property
-      // when both forms are already present in the imported stylesheet.
-      "backdrop-filter": "var(--jaci-navbar-backdrop-filter, blur(4px))" as never,
+      ...createBackdropFilterStyles("var(--jaci-navbar-backdrop-filter, blur(4px))"),
       backgroundColor: "surface.overlay",
       borderColor: "border.default",
       borderRadius: "2xl",
@@ -2169,8 +2164,7 @@ export const navbarRecipe = defineSlotRecipe({
       _hover: { backgroundColor: "surface.subtle" },
     },
     drawerBackdrop: {
-      // See the Navbar bar note above; this remains a CSS-only fallback.
-      "backdrop-filter": "var(--jaci-navbar-backdrop-filter, blur(4px))" as never,
+      ...createBackdropFilterStyles("var(--jaci-navbar-backdrop-filter, blur(4px))"),
       backgroundColor: "surface.overlay",
       inset: "0",
       position: "fixed",
@@ -2192,8 +2186,7 @@ export const navbarRecipe = defineSlotRecipe({
     },
     drawer: {
       backgroundColor: "surface.default",
-      // See the Navbar bar note above; this remains a CSS-only fallback.
-      "backdrop-filter": "var(--jaci-navbar-drawer-backdrop-filter, blur(8px))" as never,
+      ...createBackdropFilterStyles("var(--jaci-navbar-drawer-backdrop-filter, blur(8px))"),
       borderColor: "border.default",
       borderRightStyle: "solid",
       borderRightWidth: "1px",
@@ -2312,8 +2305,7 @@ export const bottomNavigationRecipe = defineSlotRecipe({
   base: {
     root: {
       alignItems: "center",
-      backdropBlur: "sm",
-      backdropFilter: "auto",
+      ...createBackdropBlurStyles("sm"),
       backgroundColor: "surface.overlay",
       borderColor: "border.default",
       borderRadius: { base: "full", lg: "2xl" },

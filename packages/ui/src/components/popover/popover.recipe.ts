@@ -1,5 +1,7 @@
 import { defineSlotRecipe } from "@pandacss/dev";
 
+import { createBackdropBlurStyles } from "../../styles/backdrop";
+
 /**
  * Neutral zinc Popover slots. The recipe remains co-located with its
  * component and is registered by Panda during the package integration step.
@@ -9,8 +11,7 @@ export const popoverRecipe = defineSlotRecipe({
   slots: ["trigger", "positioner", "popup", "title", "description", "close", "arrow"],
   base: {
     arrow: {
-      backdropBlur: "md",
-      backdropFilter: "auto",
+      ...createBackdropBlurStyles("md"),
       backgroundColor: "surface.overlay",
       borderColor: "border.default",
       borderRightStyle: "solid",
@@ -56,8 +57,7 @@ export const popoverRecipe = defineSlotRecipe({
       margin: "0",
     },
     popup: {
-      backdropBlur: "md",
-      backdropFilter: "auto",
+      ...createBackdropBlurStyles("md"),
       backgroundColor: "surface.overlay",
       borderColor: "border.default",
       borderRadius: "xl",

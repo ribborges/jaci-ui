@@ -1,5 +1,7 @@
 import { defineSlotRecipe } from "@pandacss/dev";
 
+import { createBackdropBlurStyles } from "../../styles/backdrop";
+
 export const imageRecipe = defineSlotRecipe({
   className: "image",
   slots: [
@@ -60,8 +62,7 @@ export const imageRecipe = defineSlotRecipe({
       textAlign: "center",
     },
     backdrop: {
-      backdropBlur: "md",
-      backdropFilter: "auto",
+      ...createBackdropBlurStyles("md"),
       backgroundColor: "surface.overlay",
       inset: "0",
       minHeight: "100dvh",

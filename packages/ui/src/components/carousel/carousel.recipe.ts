@@ -1,5 +1,7 @@
 import { defineSlotRecipe } from "@pandacss/dev";
 
+import { createBackdropBlurStyles } from "../../styles/backdrop";
+
 export const carouselRecipe = defineSlotRecipe({
   className: "carousel",
   slots: [
@@ -108,8 +110,7 @@ export const carouselRecipe = defineSlotRecipe({
         track: { flexDirection: "row" },
         indicators: {
           backgroundColor: "surface.raised",
-          backdropBlur: "sm",
-          backdropFilter: "auto",
+          ...createBackdropBlurStyles("sm"),
           borderColor: "border.default",
           borderRadius: "lg",
           borderStyle: "solid",
@@ -154,8 +155,7 @@ export const carouselRecipe = defineSlotRecipe({
         caption: { flex: "0 0 auto", paddingBottom: "12", width: "100%" },
         indicators: {
           backgroundColor: "surface.raised",
-          backdropBlur: "sm",
-          backdropFilter: "auto",
+          ...createBackdropBlurStyles("sm"),
           borderColor: "border.default",
           borderRadius: "lg",
           borderStyle: "solid",

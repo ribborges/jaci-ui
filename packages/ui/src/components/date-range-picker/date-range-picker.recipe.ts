@@ -1,5 +1,7 @@
 import { defineSlotRecipe } from "@pandacss/dev";
 
+import { createBackdropBlurStyles } from "../../styles/backdrop";
+
 export const dateRangePickerRecipe = defineSlotRecipe({
   className: "date-range-picker",
   slots: [
@@ -88,8 +90,7 @@ export const dateRangePickerRecipe = defineSlotRecipe({
     },
     positioner: { outline: "none", zIndex: "50" },
     popup: {
-      backdropBlur: "md",
-      backdropFilter: "auto",
+      ...createBackdropBlurStyles("md"),
       backgroundColor: "surface.overlay",
       borderColor: "border.default",
       borderRadius: "xl",

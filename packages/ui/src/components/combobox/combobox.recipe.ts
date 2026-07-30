@@ -1,5 +1,7 @@
 import { defineSlotRecipe } from "@pandacss/dev";
 
+import { createBackdropBlurStyles } from "../../styles/backdrop";
+
 export const comboboxRecipe = defineSlotRecipe({
   className: "combobox",
   slots: [
@@ -120,8 +122,7 @@ export const comboboxRecipe = defineSlotRecipe({
     },
     positioner: { outline: "none", zIndex: "50" },
     popup: {
-      backdropBlur: "md",
-      backdropFilter: "auto",
+      ...createBackdropBlurStyles("md"),
       backgroundColor: "surface.overlay",
       borderColor: "border.default",
       borderRadius: "2xl",
