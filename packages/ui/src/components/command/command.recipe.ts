@@ -1,5 +1,7 @@
 import { defineSlotRecipe } from "@pandacss/dev";
 
+import { createBackdropBlurStyles } from "../../styles/backdrop";
+
 export const commandRecipe = defineSlotRecipe({
   className: "command",
   slots: [
@@ -148,7 +150,8 @@ export const commandRecipe = defineSlotRecipe({
           },
         },
         list: {
-          backgroundColor: "surface.raised",
+          ...createBackdropBlurStyles("md"),
+          backgroundColor: "surface.overlay",
           borderColor: "border.default",
           borderRadius: "lg",
           borderStyle: "solid",
