@@ -54,6 +54,24 @@ export const Interactive: Story = {
   },
 };
 
+export const Downloadable: Story = {
+  args: {
+    download: "example-com-qr.svg",
+    downloadLabel: "Download example.com QR code",
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `<QRCode
+  value="https://example.com"
+  download="example-com-qr.svg"
+  downloadLabel="Download example.com QR code"
+/>`,
+      },
+    },
+  },
+};
+
 export const LongValue: Story = {
   args: {
     value:
