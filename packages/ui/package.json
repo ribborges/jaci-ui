@@ -97,9 +97,10 @@
     "test": "pnpm panda:codegen && vitest run",
     "test:watch": "pnpm panda:codegen && vitest",
     "verify:client-boundaries": "node scripts/verify-client-boundaries.mjs",
-    "package:check": "pnpm build && pnpm performance:check && pnpm package:contract",
+    "package:check": "pnpm build && pnpm performance:check && pnpm package:contract && pnpm backdrop:check",
     "package:contract": "node scripts/package-check.mjs",
-    "performance:check": "node scripts/performance-check.mjs"
+    "performance:check": "node scripts/performance-check.mjs",
+    "backdrop:check": "node ../../scripts/check-backdrop-filter.mjs --package-only"
   },
   "publishConfig": {
     "access": "public"

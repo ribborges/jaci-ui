@@ -1,5 +1,7 @@
 import { defineSlotRecipe } from "@pandacss/dev";
 
+import { createBackdropBlurStyles } from "../../styles/backdrop";
+
 export const colorPickerRecipe = defineSlotRecipe({
   className: "color-picker",
   slots: [
@@ -78,8 +80,7 @@ export const colorPickerRecipe = defineSlotRecipe({
     },
     positioner: { zIndex: "10" },
     popup: {
-      backdropBlur: "md",
-      backdropFilter: "auto",
+      ...createBackdropBlurStyles("md"),
       backgroundColor: "surface.overlay",
       borderColor: "border.default",
       borderRadius: "xl",

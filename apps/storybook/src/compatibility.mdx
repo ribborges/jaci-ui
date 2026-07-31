@@ -1,0 +1,24 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Guides/Compatibility" />
+
+# Compatibility
+
+The published package supports:
+
+- React 18.2 and React 19;
+- Node 18.18 or newer for consumers;
+- Next App Router, Vite, React Router/Remix and direct SSR;
+- ESM and CJS modules, TypeScript declarations and sourcemaps.
+
+Development and CI use Node 22.18 or newer; the publishing workflow uses Node 24.
+
+Validate a real tarball before publishing:
+
+```sh
+pnpm build
+pnpm fixtures:pack-check
+```
+
+Import `jaci-ui/styles.css` once at the application root. The CSS uses `preflight: false`, so
+the reset and layout decisions remain under the consuming application’s control.

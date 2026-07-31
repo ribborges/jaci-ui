@@ -1,0 +1,44 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Guides/ThemeProvider" />
+
+# ThemeProvider
+
+`ThemeProvider` is optional. Use `data-jaci-theme` directly on the HTML when the theme comes from
+the server:
+
+```tsx
+<html data-jaci-theme="dark">
+  <body>{children}</body>
+</html>
+```
+
+For a local scope and dynamic tokens, use the provider inside a client boundary:
+
+```tsx
+"use client";
+
+import { ThemeProvider } from "jaci-ui";
+import "jaci-ui/styles.css";
+
+export function ThemedArea({ children }: { children: React.ReactNode }) {
+  return (
+    <ThemeProvider
+      theme="dark"
+      tokens={{
+        colors: {
+          accent: {
+            default: "#7c3aed",
+            hover: "#6d28d9",
+          },
+        },
+      }}
+    >
+      {children}
+    </ThemeProvider>
+  );
+}
+```
+
+Nested providers create independent scopes for tokens and portals. The provider does not persist
+preferences automatically; the application must save the theme if that experience is desired.

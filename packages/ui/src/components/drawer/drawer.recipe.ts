@@ -1,5 +1,7 @@
 import { defineSlotRecipe } from "@pandacss/dev";
 
+import { createBackdropBlurStyles } from "../../styles/backdrop";
+
 export const drawerRecipe = defineSlotRecipe({
   className: "drawer",
   slots: [
@@ -43,8 +45,7 @@ export const drawerRecipe = defineSlotRecipe({
       _hover: { backgroundColor: "surface.subtle", borderColor: "fg.muted" },
     },
     backdrop: {
-      backdropBlur: "xs",
-      backdropFilter: "auto",
+      ...createBackdropBlurStyles("xs"),
       backgroundColor: "surface.overlay",
       inset: "0",
       position: "fixed",

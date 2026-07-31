@@ -1,0 +1,21 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Guides/Forms" />
+
+# Forms
+
+Use `Field` to keep the label, description, error and control associated. The control can be a
+native input or any Jaci composition that preserves `id` and ARIA props.
+
+```tsx
+<Field.Root name="email" validationMode="onBlur">
+  <Field.Label>Email</Field.Label>
+  <Input type="email" placeholder="you@example.com" />
+  <Field.Description>We will never share your email.</Field.Description>
+  <Field.Error />
+</Field.Root>
+```
+
+`Input`, `Textarea`, `Select`, `Combobox`, `PinInput`, `TagsInput` and `Upload` preserve native
+props, refs and controlled/uncontrolled states. External validation remains the responsibility of
+the application.

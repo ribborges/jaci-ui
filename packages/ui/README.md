@@ -440,6 +440,10 @@ for the component recipes.
 
 ## Development
 
+The public API contract is generated from the package entrypoint and declaration files. Run
+`pnpm api:contract` from the workspace to detect unreviewed changes to exports, callbacks,
+compound slots, aliases and client boundaries.
+
 This repository uses pnpm, Turborepo, Panda CSS and Storybook. From the repository root:
 
 ```sh
