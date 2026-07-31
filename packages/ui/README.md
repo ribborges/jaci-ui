@@ -117,8 +117,13 @@ arredondados. O valor pode ser controlado diretamente pela aplicação:
   size={240}
   errorCorrectionLevel="Q"
   label="Jaci UI website"
+  download="jaci-ui-qr.svg"
+  downloadLabel="Download Jaci UI QR code"
 />
 ```
+
+Quando `download` é informado, o SVG expõe um link nativo para baixar o código sem usar APIs
+do navegador durante SSR.
 
 Para downloads, `DownloadTrigger` é um link HTML comum e não faz fetch nem cria `Blob`:
 

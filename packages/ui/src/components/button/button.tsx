@@ -1,7 +1,13 @@
 "use client";
 
 import { cloneElement, forwardRef } from "react";
-import type { ComponentPropsWithoutRef, MouseEventHandler, ReactElement, ReactNode } from "react";
+import type {
+  ComponentPropsWithoutRef,
+  MouseEvent,
+  MouseEventHandler,
+  ReactElement,
+  ReactNode,
+} from "react";
 
 import { cx } from "../../styled-system/css";
 import { button } from "../../styled-system/recipes";
@@ -46,6 +52,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     startIcon,
     endIcon,
     disabled,
+    onClick: buttonOnClick,
     render,
     type = "button",
     ...props
@@ -56,11 +63,20 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   const childrenWithIcons = content(children, loading, startIcon, endIcon);
 
   if (render) {
-    const renderedProps = render.props as {
-      className?: string;
-      children?: ReactNode;
-      onClick?: MouseEventHandler<HTMLElement>;
-    };
+    // Some framework adapters (notably React Server Component boundaries) can
+    // provide a React element whose props are unavailable until cloning. Keep
+    // the render path tolerant of that representation.
+    const renderedProps = render.props ?? {};
+    const renderedOnClick = renderedProps.onClick as MouseEventHandler<HTMLElement> | undefined;
+    const handleRenderedClick: MouseEventHandler<HTMLElement> | undefined =
+      disabled || loading
+        ? (event) => event.preventDefault()
+        : (event) => {
+            renderedOnClick?.(event);
+            if (!event.defaultPrevented) {
+              buttonOnClick?.(event as unknown as MouseEvent<HTMLButtonElement>);
+            }
+          };
 
     return cloneElement(render, {
       ...props,
@@ -70,7 +86,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       "data-jaci-component": "button",
       "data-slot": "button",
       children: childrenWithIcons,
-      onClick: disabled || loading ? undefined : renderedProps.onClick,
+      onClick: handleRenderedClick,
     });
   }
 
@@ -82,6 +98,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       data-jaci-component="button"
       data-slot="button"
       disabled={disabled || loading}
+      onClick={buttonOnClick}
       ref={ref}
       type={type}
     >
