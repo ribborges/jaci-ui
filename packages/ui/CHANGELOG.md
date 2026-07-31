@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.1
+
+### Patch Changes
+
+- 8588c34: Fix production backdrop blur declarations and restore blur in the Command dropdown.
+
 ## 0.9.0
 
 ### Minor Changes
