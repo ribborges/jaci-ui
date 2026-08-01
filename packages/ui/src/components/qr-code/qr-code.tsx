@@ -198,11 +198,12 @@ export const QRCode = forwardRef<SVGSVGElement, QRCodeProps>(function QRCode(
       </>
     );
 
-    return (
+    const svg = (
       <svg
         {...props}
         ref={ref}
-        aria-label={label}
+        aria-hidden={downloadHref ? true : undefined}
+        aria-label={downloadHref ? undefined : label}
         className={cx(qrCode(), className)}
         data-dot-shape="circle"
         data-download={download ? "true" : undefined}
@@ -210,20 +211,28 @@ export const QRCode = forwardRef<SVGSVGElement, QRCodeProps>(function QRCode(
         data-jaci-component="qr-code"
         data-slot="qr-code"
         height={safeSize}
-        role="img"
+        role={downloadHref ? undefined : "img"}
         style={style}
         viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
         width={safeSize}
       >
         <title>{label}</title>
-        {downloadHref ? (
-          <a aria-label={downloadLabel} download={downloadFilename} href={downloadHref}>
-            {visualCode}
-          </a>
-        ) : (
-          visualCode
-        )}
+        {visualCode}
       </svg>
+    );
+
+    return downloadHref ? (
+      <a
+        aria-label={downloadLabel}
+        data-jaci-component="qr-code-download"
+        data-slot="qr-code-download"
+        download={downloadFilename}
+        href={downloadHref}
+      >
+        {svg}
+      </a>
+    ) : (
+      svg
     );
   } catch {
     return (

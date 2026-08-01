@@ -39,6 +39,7 @@ describe("QRCode", () => {
       />,
     );
     expect(html).toContain('data-download="true"');
+    expect(html).toContain('data-slot="qr-code-download"');
     expect(html).toContain('download="example-qr.svg"');
     expect(html).toContain('aria-label="Download example QR"');
     expect(html).toContain("data:image/svg+xml");
