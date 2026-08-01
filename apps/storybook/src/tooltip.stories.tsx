@@ -5,6 +5,14 @@ import { Tooltip } from "jaci-ui";
 const meta = {
   title: "Overlays/Tooltip",
   tags: ["autodocs"],
+  component: Tooltip.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Tooltip.Root><Tooltip.Trigger>Hover me</Tooltip.Trigger><Tooltip.Portal><Tooltip.Positioner><Tooltip.Popup>Help</Tooltip.Popup></Tooltip.Positioner></Tooltip.Portal></Tooltip.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

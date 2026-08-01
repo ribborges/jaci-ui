@@ -5,6 +5,8 @@ import { Button, Toast } from "jaci-ui";
 const meta = {
   title: "Feedback/Toast",
   tags: ["autodocs"],
+  component: Toast.Root,
+  args: { toast: { id: "story", title: "Story toast", description: "A toast example." } },
 } satisfies Meta;
 
 export default meta;

@@ -5,6 +5,14 @@ import { Dialog, Text } from "jaci-ui";
 const meta = {
   title: "Overlays/Dialog",
   tags: ["autodocs"],
+  component: Dialog.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Dialog.Root><Dialog.Trigger>Open dialog</Dialog.Trigger><Dialog.Portal><Dialog.Backdrop /><Dialog.Viewport><Dialog.Popup><Dialog.Title>Project details</Dialog.Title><Dialog.Description>Details</Dialog.Description><Dialog.Close /></Dialog.Popup></Dialog.Viewport></Dialog.Portal></Dialog.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

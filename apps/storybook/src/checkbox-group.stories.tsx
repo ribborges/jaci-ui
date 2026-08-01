@@ -5,6 +5,14 @@ import { CheckboxGroup, FieldError, Stack } from "jaci-ui";
 const meta = {
   title: "Forms/CheckboxGroup",
   tags: ["autodocs"],
+  component: CheckboxGroup.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<CheckboxGroup.Root defaultValue={["react"]}><CheckboxGroup.Label>Skills</CheckboxGroup.Label><CheckboxGroup.Options><CheckboxGroup.Option><CheckboxGroup.Item value="react"><CheckboxGroup.Indicator /></CheckboxGroup.Item>React</CheckboxGroup.Option></CheckboxGroup.Options></CheckboxGroup.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

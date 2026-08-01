@@ -6,6 +6,13 @@ const meta = {
   tags: ["autodocs"],
   component: Meter.Root,
   args: { value: 50 },
+  parameters: {
+    docs: {
+      source: {
+        code: `<Meter.Root value={72} max={100} tone="accent"><Meter.Label>Storage</Meter.Label><Meter.Track><Meter.Indicator /></Meter.Track><Meter.Value /></Meter.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;

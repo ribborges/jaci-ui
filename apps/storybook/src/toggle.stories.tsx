@@ -6,6 +6,12 @@ import { Stack, Text, Toggle, ToggleGroup } from "jaci-ui";
 const meta = {
   title: "Forms/Toggle",
   tags: ["autodocs"],
+  component: Toggle,
+  parameters: {
+    docs: {
+      source: { code: `<Toggle pressed={enabled} onPressedChange={setEnabled}>Preview</Toggle>` },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

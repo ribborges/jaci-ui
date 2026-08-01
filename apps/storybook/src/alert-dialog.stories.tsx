@@ -5,6 +5,14 @@ import { AlertDialog, Button, Text } from "jaci-ui";
 const meta = {
   title: "Overlays/AlertDialog",
   tags: ["autodocs"],
+  component: AlertDialog.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<AlertDialog.Root><AlertDialog.Trigger>Delete project</AlertDialog.Trigger><AlertDialog.Portal><AlertDialog.Backdrop /><AlertDialog.Viewport><AlertDialog.Popup><AlertDialog.Title>Delete project?</AlertDialog.Title><AlertDialog.Footer><AlertDialog.Cancel /><AlertDialog.Action>Delete</AlertDialog.Action></AlertDialog.Footer></AlertDialog.Popup></AlertDialog.Viewport></AlertDialog.Portal></AlertDialog.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

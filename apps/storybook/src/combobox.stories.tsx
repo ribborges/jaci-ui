@@ -7,6 +7,14 @@ const frameworks = ["React", "Remix", "Next.js", "Vite", "Astro"];
 const meta = {
   title: "Forms/Combobox",
   tags: ["autodocs"],
+  component: Combobox.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Combobox.Root items={["React", "Vite"]}><Combobox.Label>Framework</Combobox.Label><Combobox.InputGroup><Combobox.Input placeholder="Search" /><Combobox.Trigger aria-label="Open options"><Combobox.Icon /></Combobox.Trigger></Combobox.InputGroup><Combobox.Portal><Combobox.Positioner><Combobox.Popup><Combobox.List>{(item) => <Combobox.Item value={item}>{item}</Combobox.Item>}</Combobox.List></Combobox.Popup></Combobox.Positioner></Combobox.Portal></Combobox.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

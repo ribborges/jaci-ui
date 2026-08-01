@@ -5,6 +5,13 @@ const meta = {
   title: "Navigation/Breadcrumbs",
   tags: ["autodocs"],
   component: Breadcrumbs.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Breadcrumbs.Root aria-label="Breadcrumb"><Breadcrumbs.List><Breadcrumbs.Item><Breadcrumbs.Link href="/docs">Docs</Breadcrumbs.Link></Breadcrumbs.Item><Breadcrumbs.Separator /><Breadcrumbs.Item><Breadcrumbs.Current>Install</Breadcrumbs.Current></Breadcrumbs.Item></Breadcrumbs.List></Breadcrumbs.Root>`,
+      },
+    },
+  },
 } satisfies Meta<typeof Breadcrumbs.Root>;
 
 export default meta;

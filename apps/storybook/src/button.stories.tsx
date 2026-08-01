@@ -8,6 +8,7 @@ const meta = {
   args: {
     children: "Continue",
   },
+  parameters: { docs: { source: { code: `<Button variant="solid" size="md">Continue</Button>` } } },
   argTypes: {
     variant: {
       control: "select",

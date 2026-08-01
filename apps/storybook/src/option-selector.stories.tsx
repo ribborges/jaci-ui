@@ -5,6 +5,14 @@ import { OptionSelector, Stack, Text } from "jaci-ui";
 const meta = {
   title: "Forms/OptionSelector",
   tags: ["autodocs"],
+  component: OptionSelector,
+  parameters: {
+    docs: {
+      source: {
+        code: `<OptionSelector label="Workspace plan" name="plan" options={[{ label: "Starter", value: "starter" }, { label: "Pro", value: "pro" }]} />`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

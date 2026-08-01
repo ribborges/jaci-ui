@@ -16,6 +16,13 @@ const meta = {
   title: "Forms/Field",
   tags: ["autodocs"],
   component: Field,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Field name="email"><FieldLabel>Email</FieldLabel><Input type="email" /><FieldDescription>We never share your email.</FieldDescription><FieldError /></Field>`,
+      },
+    },
+  },
 } satisfies Meta<typeof Field>;
 
 export default meta;

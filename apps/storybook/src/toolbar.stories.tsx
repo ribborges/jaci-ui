@@ -5,6 +5,14 @@ import { Toolbar } from "jaci-ui";
 const meta = {
   title: "Navigation/Toolbar",
   tags: ["autodocs"],
+  component: Toolbar.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Toolbar.Root aria-label="Editor actions"><Toolbar.Button>Bold</Toolbar.Button><Toolbar.Separator /><Toolbar.Input placeholder="Search" /></Toolbar.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

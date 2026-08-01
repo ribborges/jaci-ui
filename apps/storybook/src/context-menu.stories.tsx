@@ -4,6 +4,14 @@ import { ContextMenu, Stack, Text } from "jaci-ui";
 const meta = {
   title: "Navigation/ContextMenu",
   tags: ["autodocs"],
+  component: ContextMenu.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<ContextMenu.Root><ContextMenu.Trigger>Right click here</ContextMenu.Trigger><ContextMenu.Portal><ContextMenu.Positioner><ContextMenu.Popup><ContextMenu.Item>Rename</ContextMenu.Item></ContextMenu.Popup></ContextMenu.Positioner></ContextMenu.Portal></ContextMenu.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

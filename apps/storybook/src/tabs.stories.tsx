@@ -4,6 +4,14 @@ import { Tabs, Text } from "jaci-ui";
 const meta = {
   title: "Navigation/Tabs",
   tags: ["autodocs"],
+  component: Tabs.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Tabs.Root defaultValue="projects"><Tabs.List><Tabs.Tab value="projects">Projects</Tabs.Tab></Tabs.List><Tabs.Panel value="projects">Content</Tabs.Panel></Tabs.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

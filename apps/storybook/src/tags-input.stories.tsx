@@ -18,6 +18,9 @@ const meta = {
         component:
           "Entrada de tags com sugestões, remoção individual e suporte controlado para integração com formulários.",
       },
+      source: {
+        code: `<TagsInput data={["React", "TypeScript"]} label="Technologies" placeholder="Type a tag and press comma" />`,
+      },
     },
   },
 } satisfies Meta<typeof TagsInput>;

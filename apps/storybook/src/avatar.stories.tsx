@@ -9,6 +9,13 @@ const meta = {
   title: "Data Display/Avatar",
   tags: ["autodocs"],
   component: Avatar.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Avatar.Root aria-label="Jaci"><Avatar.Image src="/avatar.jpg" alt="" /><Avatar.Fallback>JB</Avatar.Fallback></Avatar.Root>`,
+      },
+    },
+  },
 } satisfies Meta<typeof Avatar.Root>;
 
 export default meta;

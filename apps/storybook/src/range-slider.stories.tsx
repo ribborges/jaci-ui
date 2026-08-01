@@ -2,7 +2,18 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { RangeSlider, Stack, Text } from "jaci-ui";
 
-const meta = { title: "Forms/RangeSlider", tags: ["autodocs"] } satisfies Meta;
+const meta = {
+  title: "Forms/RangeSlider",
+  tags: ["autodocs"],
+  component: RangeSlider.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<RangeSlider.Root defaultValue={[20, 80]}><RangeSlider.Control><RangeSlider.Track><RangeSlider.Indicator /><RangeSlider.Thumb index={0} aria-label="Minimum" /><RangeSlider.Thumb index={1} aria-label="Maximum" /></RangeSlider.Track></RangeSlider.Control></RangeSlider.Root>`,
+      },
+    },
+  },
+} satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

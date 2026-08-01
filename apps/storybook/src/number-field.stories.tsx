@@ -5,6 +5,14 @@ import { NumberField, Stack, Text } from "jaci-ui";
 const meta = {
   title: "Forms/NumberField",
   tags: ["autodocs"],
+  component: NumberField.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<NumberField.Root defaultValue={2} min={0} max={10}><NumberField.Label>Seats</NumberField.Label><NumberField.Group><NumberField.Decrement /><NumberField.Input /><NumberField.Increment /></NumberField.Group></NumberField.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

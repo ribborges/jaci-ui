@@ -6,6 +6,7 @@ const meta = {
   tags: ["autodocs"],
   component: Skeleton,
   args: { animated: true, variant: "rect" },
+  parameters: { docs: { source: { code: `<Skeleton variant="rect" animated />` } } },
 } satisfies Meta;
 
 export default meta;

@@ -13,6 +13,7 @@ import {
 const meta = {
   title: "Data Display/DataView",
   tags: ["autodocs", "test"],
+  component: JaciDataView.Root,
 } satisfies Meta;
 
 export default meta;

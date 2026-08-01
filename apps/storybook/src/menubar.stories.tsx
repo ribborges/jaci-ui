@@ -4,6 +4,14 @@ import { Menubar, Text } from "jaci-ui";
 const meta = {
   title: "Navigation/Menubar",
   tags: ["autodocs"],
+  component: Menubar.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Menubar.Root><Menubar.Menu><Menubar.Trigger>File</Menubar.Trigger><Menubar.Portal><Menubar.Positioner><Menubar.Popup><Menubar.Item>New project</Menubar.Item></Menubar.Popup></Menubar.Positioner></Menubar.Portal></Menubar.Menu></Menubar.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

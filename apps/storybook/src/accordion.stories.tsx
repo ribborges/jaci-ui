@@ -4,6 +4,14 @@ import { Accordion, Collapsible, Stack, Text } from "jaci-ui";
 const meta = {
   title: "Disclosure/Accordion",
   tags: ["autodocs"],
+  component: Accordion.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Accordion.Root><Accordion.Item value="installation"><Accordion.Header><Accordion.Trigger>How do I install?</Accordion.Trigger></Accordion.Header><Accordion.Panel>Install jaci-ui.</Accordion.Panel></Accordion.Item></Accordion.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

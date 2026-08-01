@@ -5,6 +5,14 @@ import { Popover, ThemeProvider } from "jaci-ui";
 const meta = {
   title: "Overlays/Popover",
   tags: ["autodocs"],
+  component: Popover.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Popover.Root><Popover.Trigger>Share project</Popover.Trigger><Popover.Portal><Popover.Positioner><Popover.Popup><Popover.Title>Project sharing</Popover.Title><Popover.Description>Invite collaborators.</Popover.Description><Popover.Close /></Popover.Popup></Popover.Positioner></Popover.Portal></Popover.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

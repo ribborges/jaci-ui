@@ -5,6 +5,7 @@ import { Sidebar } from "jaci-ui";
 const meta = {
   title: "Navigation/Sidebar",
   tags: ["autodocs"],
+  component: Sidebar.Root,
 } satisfies Meta;
 
 export default meta;

@@ -4,6 +4,7 @@ import { Button, List } from "jaci-ui";
 const meta = {
   title: "Data Display/List",
   tags: ["autodocs", "test"],
+  component: List.Root,
 } satisfies Meta;
 
 export default meta;

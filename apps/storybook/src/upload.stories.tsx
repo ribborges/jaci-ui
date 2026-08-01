@@ -5,6 +5,14 @@ import { Stack, Text, Upload } from "jaci-ui";
 const meta = {
   title: "Forms/Upload",
   tags: ["autodocs"],
+  component: Upload.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Upload.Root accept="image/*" multiple><Upload.Dropzone><Upload.Input /><Upload.Icon /><Upload.Text>Choose files</Upload.Text></Upload.Dropzone><Upload.List /></Upload.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

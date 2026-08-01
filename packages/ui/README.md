@@ -84,10 +84,10 @@ import { AspectRatio, Code, Figure, Image, Kbd, Quote, Stat, StatGroup } from "j
 </StatGroup.Root>;
 ```
 
-### Mídia e utilitários visuais
+### Media and visual utilities
 
-`Carousel` oferece slides acessíveis com navegação por teclado, indicadores, swipe e autoplay
-opcional. Sempre forneça um `aria-label` no root e texto alternativo nas imagens:
+`Carousel` provides accessible slides with keyboard navigation, indicators, swipe support and
+optional autoplay. Always provide an `aria-label` on the root and alternative text for images:
 
 ```tsx
 <Carousel.Root aria-label="Featured projects" loop>
@@ -108,8 +108,8 @@ opcional. Sempre forneça um `aria-label` no root e texto alternativo nas imagen
 </Carousel.Root>
 ```
 
-`QRCode` gera SVG no servidor e no cliente, com módulos circulares e olhos quadrados
-arredondados. O valor pode ser controlado diretamente pela aplicação:
+`QRCode` generates SVG on the server and client, with circular modules and rounded square eyes.
+The application can control the value directly:
 
 ```tsx
 <QRCode
@@ -122,10 +122,10 @@ arredondados. O valor pode ser controlado diretamente pela aplicação:
 />
 ```
 
-Quando `download` é informado, o SVG expõe um link nativo para baixar o código sem usar APIs
-do navegador durante SSR.
+When `download` is provided, the SVG exposes a native link for downloading the code without
+using browser APIs during SSR.
 
-Para downloads, `DownloadTrigger` é um link HTML comum e não faz fetch nem cria `Blob`:
+For downloads, `DownloadTrigger` is a regular HTML link: it does not fetch or create a `Blob`:
 
 ```tsx
 <DownloadTrigger href="/files/report.pdf" download="report.pdf">
@@ -133,19 +133,19 @@ Para downloads, `DownloadTrigger` é um link HTML comum e não faz fetch nem cri
 </DownloadTrigger>
 ```
 
-Em URLs cross-origin, o nome e a própria autorização do download continuam sujeitos às regras
-do navegador e aos headers do servidor.
+For cross-origin URLs, the filename and the download authorization remain subject to browser
+rules and server headers.
 
-Use `Separator` para uma linha semântica ou decorativa entre seções e `Spacer` quando precisar
-apenas de espaço, sem linha:
+Use `Separator` for a semantic or decorative line between sections, and `Spacer` when only
+space—not a line—is needed:
 
 ```tsx
 <Separator orientation="horizontal" />
 <Spacer axis="vertical" size="lg" />
 ```
 
-Todos esses componentes continuam compatíveis com SSR e React 18/19. `Carousel` é o único novo
-módulo interativo; os demais não acessam APIs do navegador durante importação ou renderização.
+These components support SSR and React 18/19. Interactive modules declare their client boundary
+where required and do not access browser APIs during import or server rendering.
 
 `AspectRatio` fills the available inline size of its parent. In shrink-to-fit or flex
 layouts, give the parent an explicit `width`/`max-width` so the ratio has a measurable

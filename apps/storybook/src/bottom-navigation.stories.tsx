@@ -4,6 +4,7 @@ import { BottomNavigation, Text } from "jaci-ui";
 const meta = {
   title: "Navigation/BottomNavigation",
   tags: ["autodocs"],
+  component: BottomNavigation,
 } satisfies Meta;
 
 export default meta;

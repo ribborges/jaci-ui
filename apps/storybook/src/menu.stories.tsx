@@ -5,6 +5,14 @@ import { Menu, Text } from "jaci-ui";
 const meta = {
   title: "Overlays/Menu",
   tags: ["autodocs"],
+  component: Menu.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Menu.Root><Menu.Trigger>Project actions</Menu.Trigger><Menu.Portal><Menu.Positioner><Menu.Popup><Menu.Item>Duplicate</Menu.Item><Menu.Item>Archive</Menu.Item></Menu.Popup></Menu.Positioner></Menu.Portal></Menu.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

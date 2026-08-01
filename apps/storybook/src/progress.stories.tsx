@@ -6,6 +6,7 @@ const meta = {
   tags: ["autodocs"],
   component: Progress,
   args: { value: 36, max: 100 },
+  parameters: { docs: { source: { code: `<Progress value={72} max={100} label="Uploading" />` } } },
 } satisfies Meta;
 
 export default meta;

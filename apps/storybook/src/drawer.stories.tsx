@@ -5,6 +5,14 @@ import { Drawer, Stack, Text } from "jaci-ui";
 const meta = {
   title: "Overlays/Drawer",
   tags: ["autodocs"],
+  component: Drawer.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Drawer.Root><Drawer.Trigger>Open drawer</Drawer.Trigger><Drawer.Portal><Drawer.Backdrop /><Drawer.Viewport><Drawer.Popup><Drawer.Title>Navigation</Drawer.Title><Drawer.Content>Content</Drawer.Content><Drawer.Close /></Drawer.Popup></Drawer.Viewport></Drawer.Portal></Drawer.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

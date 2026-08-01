@@ -5,6 +5,17 @@ import { Copyable, Stack, Text } from "jaci-ui";
 const meta = {
   title: "Feedback/Copyable",
   tags: ["autodocs"],
+  component: Copyable.Root,
+  args: {
+    value: "pnpm add jaci-ui",
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `<Copyable.Root value="pnpm add jaci-ui"><Copyable.Content>pnpm add jaci-ui</Copyable.Content><Copyable.Indicator /></Copyable.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

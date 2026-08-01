@@ -4,6 +4,14 @@ import { FieldError, RadioGroup, Stack, Text } from "jaci-ui";
 const meta = {
   title: "Forms/RadioGroup",
   tags: ["autodocs"],
+  component: RadioGroup.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<RadioGroup.Root defaultValue="pro"><RadioGroup.Label>Plan</RadioGroup.Label><RadioGroup.Options><RadioGroup.Option><RadioGroup.Item value="pro"><RadioGroup.Indicator /></RadioGroup.Item>Pro</RadioGroup.Option></RadioGroup.Options></RadioGroup.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

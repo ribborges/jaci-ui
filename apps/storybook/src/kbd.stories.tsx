@@ -6,6 +6,7 @@ const meta = {
   tags: ["autodocs"],
   component: Kbd,
   args: { children: "⌘K", size: "md", variant: "subtle" },
+  parameters: { docs: { source: { code: `<Kbd size="md" variant="subtle">⌘K</Kbd>` } } },
 } satisfies Meta<typeof Kbd>;
 
 export default meta;

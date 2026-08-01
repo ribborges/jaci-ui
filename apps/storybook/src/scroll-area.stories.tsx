@@ -5,6 +5,14 @@ import { ScrollArea, Stack, Text } from "jaci-ui";
 const meta = {
   title: "Layout/ScrollArea",
   tags: ["autodocs"],
+  component: ScrollArea.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<ScrollArea.Root><ScrollArea.Viewport><ScrollArea.Content>Long content</ScrollArea.Content></ScrollArea.Viewport><ScrollArea.Scrollbar><ScrollArea.Thumb /></ScrollArea.Scrollbar></ScrollArea.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

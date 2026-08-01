@@ -5,6 +5,14 @@ import { Slider, Stack, Text } from "jaci-ui";
 const meta = {
   title: "Forms/Slider",
   tags: ["autodocs"],
+  component: Slider.Root,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Slider.Root defaultValue={42} min={0} max={100}><Slider.Label>Volume</Slider.Label><Slider.Control><Slider.Track><Slider.Indicator /><Slider.Thumb aria-label="Volume" /></Slider.Track></Slider.Control></Slider.Root>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

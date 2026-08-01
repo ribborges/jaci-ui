@@ -5,6 +5,7 @@ import { Button, ButtonGroup, EmptyState, IconButton, Input, InputGroup, Stack }
 const meta = {
   title: "Foundations/High reuse components",
   tags: ["autodocs"],
+  component: ButtonGroup,
   parameters: {
     docs: {
       source: {

@@ -14,6 +14,13 @@
     "url": "https://github.com/ribborges/jaci-ui.git"
   },
   "packageManager": "pnpm@10.15.1",
+  "pnpm": {
+    "overrides": {
+      "postcss": "8.5.18",
+      "sharp": "0.35.0",
+      "turbo-stream": "3.0.0"
+    }
+  },
   "engines": {
     "node": ">=22.18.0"
   },
@@ -27,7 +34,8 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "storybook": "pnpm --filter jaci-ui build && pnpm --filter @jaci-ui/storybook dev",
-    "storybook:build": "pnpm --filter jaci-ui build && pnpm --filter @jaci-ui/storybook build && pnpm backdrop:check",
+    "storybook:build": "pnpm storybook:contract && pnpm --filter jaci-ui build && pnpm --filter @jaci-ui/storybook build && pnpm backdrop:check",
+    "storybook:contract": "node scripts/storybook-contract.mjs",
     "package:check": "pnpm --filter jaci-ui package:check && pnpm api:contract",
     "package:contract": "pnpm --filter jaci-ui package:contract",
     "performance:check": "pnpm --filter jaci-ui performance:check",
@@ -36,6 +44,8 @@
     "api:contract:update": "node scripts/api-contract.mjs --update && node scripts/coverage-contract.mjs --update",
     "coverage:contract": "node scripts/coverage-contract.mjs",
     "coverage:contract:update": "node scripts/coverage-contract.mjs --update",
+    "coverage:contract:strict": "node scripts/coverage-contract.mjs --strict",
+    "audit:dependencies": "pnpm audit --prod --audit-level high",
     "compatibility:check": "node scripts/check-packed-fixtures.mjs",
     "fixtures:check": "turbo run check --filter=@jaci-ui/fixture-next --filter=@jaci-ui/fixture-react-router --filter=@jaci-ui/fixture-vite --filter=@jaci-ui/fixture-react18 --filter=@jaci-ui/fixture-remix --filter=@jaci-ui/fixture-tree-shaking",
     "fixtures:pack-check": "node scripts/check-packed-fixtures.mjs",

@@ -15,6 +15,14 @@ import {
 const meta = {
   title: "Forms/Form",
   tags: ["autodocs"],
+  component: Form,
+  parameters: {
+    docs: {
+      source: {
+        code: `<Form onFormSubmit={() => undefined}><Field><FieldLabel>Name</FieldLabel><Input /></Field><Button type="submit">Save</Button></Form>`,
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

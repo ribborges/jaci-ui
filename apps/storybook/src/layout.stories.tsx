@@ -11,6 +11,7 @@ const meta = {
   title: "Foundations/Layout",
   tags: ["autodocs"],
   component: Stack,
+  parameters: { docs: { source: { code: `<Stack gap="md"><Text>Content</Text></Stack>` } } },
 } satisfies Meta<typeof Stack>;
 
 export default meta;

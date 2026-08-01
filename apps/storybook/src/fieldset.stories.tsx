@@ -11,6 +11,9 @@ const meta = {
         component:
           "Agrupa campos relacionados com uma legenda e descrição acessíveis, sem aplicar reset global ao formulário.",
       },
+      source: {
+        code: `<Fieldset.Root><Fieldset.Legend>Contact details</Fieldset.Legend><Fieldset.Description>Visible to your team.</Fieldset.Description><Field name="email"><FieldLabel>Email</FieldLabel><Input type="email" /></Field></Fieldset.Root>`,
+      },
     },
   },
 } satisfies Meta<typeof Fieldset.Root>;
