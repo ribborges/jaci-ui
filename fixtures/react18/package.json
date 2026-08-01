@@ -18,12 +18,12 @@
   },
   "devDependencies": {
     "@base-ui/react": "^1.6.0",
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
-    "@vitejs/plugin-react": "^6.0.3",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^6.0.5",
     "jsdom": "^27.4.0",
-    "typescript": "^6.0.2",
-    "vite": "^8.1.4",
+    "typescript": "^6.0.3",
+    "vite": "^8.1.5",
     "vitest": "^4.1.10"
   }
 }
