@@ -32,6 +32,7 @@ jobs:
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
+      - run: pnpm audit:dependencies
       - run: pnpm --filter @jaci-ui/storybook exec playwright install --with-deps chromium
       - run: CI=true pnpm test
       - run: pnpm build

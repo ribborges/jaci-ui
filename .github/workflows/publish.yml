@@ -39,7 +39,9 @@ jobs:
           package-manager-cache: false
       - run: corepack enable
       - run: pnpm install --frozen-lockfile
+      - run: pnpm audit:dependencies
       - run: pnpm --filter @jaci-ui/storybook exec playwright install --with-deps chromium
       - run: pnpm test
+      - run: pnpm coverage:contract:strict
       - run: pnpm package:check
       - run: pnpm --filter jaci-ui publish --access public --no-git-checks --tag "${{ inputs.dist_tag }}"
