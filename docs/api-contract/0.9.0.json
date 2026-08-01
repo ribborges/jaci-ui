@@ -1287,6 +1287,7 @@
       "popover",
       "progress",
       "qr-code",
+      "qr-code-download",
       "quote",
       "radio",
       "range-slider",
@@ -1692,7 +1693,15 @@
         "progress-track",
         "progress-value"
       ],
-      "qr-code": ["qr-code", "qr-code-dot", "qr-code-eye"],
+      "qr-code": [
+        "qr-code",
+        "qr-code-dot",
+        "qr-code-download",
+        "qr-code-eye",
+        "qr-code-eye-cutout",
+        "qr-code-eye-frame",
+        "qr-code-eyeball"
+      ],
       "quote": ["quote", "quote-author", "quote-content", "quote-footer", "quote-source"],
       "radio": ["radio"],
       "range-slider": [
