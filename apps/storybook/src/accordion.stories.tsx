@@ -19,7 +19,10 @@ type Story = StoryObj<typeof meta>;
 
 export const Single: Story = {
   render: () => (
-    <Accordion.Root defaultValue={["installation"]} style={{ maxWidth: "42rem" }}>
+    <Accordion.Root
+      defaultValue={["installation"]}
+      style={{ maxWidth: "42rem", width: "min(42rem, calc(100vw - 2rem))" }}
+    >
       <Accordion.Item value="installation">
         <Accordion.Header>
           <Accordion.Trigger>How do I install Jaci UI?</Accordion.Trigger>
@@ -50,7 +53,7 @@ export const Single: Story = {
 
 export const MultipleAndCollapsible: Story = {
   render: () => (
-    <Stack style={{ maxWidth: "42rem" }}>
+    <Stack style={{ maxWidth: "42rem", width: "min(42rem, calc(100vw - 2rem))" }}>
       <Accordion.Root defaultValue={["first", "second"]} multiple>
         <Accordion.Item value="first">
           <Accordion.Header>

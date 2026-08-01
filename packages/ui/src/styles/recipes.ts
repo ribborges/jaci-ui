@@ -890,7 +890,9 @@ export const accordionRecipe = defineSlotRecipe({
       borderStyle: "solid",
       borderWidth: "1px",
       color: "fg.default",
+      minWidth: "0",
       overflow: "hidden",
+      width: "100%",
     },
     item: {
       borderBottomColor: "border.default",
