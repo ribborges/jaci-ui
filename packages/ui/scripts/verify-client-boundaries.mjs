@@ -7,7 +7,6 @@ const expectedClientModules = [
   "components/carousel/carousel.js",
   "components/alert-dialog/alert-dialog.js",
   "components/avatar/avatar.js",
-  "components/button/button.js",
   "components/collapsible/collapsible.js",
   "components/combobox/combobox.js",
   "components/controls/checkbox.js",

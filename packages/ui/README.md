@@ -38,6 +38,9 @@ export function Example() {
     <Stack gap="md">
       <Button variant="solid">Continue</Button>
 
+      {/* Button links also work in a Next App Router Server Component. */}
+      <Button variant="outline" render={<a href="/docs" />}>Read the docs</Button>
+
       <ColorPicker.Root defaultValue="#2563eb" name="brand-color">
         <ColorPicker.Label>Brand color</ColorPicker.Label>
         <ColorPicker.Control>

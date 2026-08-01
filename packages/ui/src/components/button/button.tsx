@@ -1,5 +1,3 @@
-"use client";
-
 import { cloneElement, forwardRef } from "react";
 import type {
   ComponentPropsWithoutRef,
@@ -16,6 +14,7 @@ import { Spinner } from "../layout";
 type RenderableButtonProps = Record<string, unknown> & {
   children?: ReactNode | undefined;
   className?: string | undefined;
+  href?: string | undefined;
   onClick?: MouseEventHandler<HTMLElement> | undefined;
 };
 
@@ -63,20 +62,31 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   const childrenWithIcons = content(children, loading, startIcon, endIcon);
 
   if (render) {
-    // Some framework adapters (notably React Server Component boundaries) can
-    // provide a React element whose props are unavailable until cloning. Keep
-    // the render path tolerant of that representation.
+    // Keep the render path tolerant of framework-rendered elements and avoid
+    // adding a synthetic client handler when the composed element has none.
     const renderedProps = render.props ?? {};
     const renderedOnClick = renderedProps.onClick as MouseEventHandler<HTMLElement> | undefined;
     const handleRenderedClick: MouseEventHandler<HTMLElement> | undefined =
-      disabled || loading
-        ? (event) => event.preventDefault()
-        : (event) => {
-            renderedOnClick?.(event);
-            if (!event.defaultPrevented) {
-              buttonOnClick?.(event as unknown as MouseEvent<HTMLButtonElement>);
+      renderedOnClick || buttonOnClick
+        ? disabled || loading
+          ? (event) => event.preventDefault()
+          : (event) => {
+              renderedOnClick?.(event);
+              if (!event.defaultPrevented) {
+                buttonOnClick?.(event as unknown as MouseEvent<HTMLButtonElement>);
+              }
             }
-          };
+        : undefined;
+
+    // A server component can compose Button with a native anchor. Remove its
+    // href while disabled/loading instead of attaching a client-only event
+    // handler during the server render.
+    const renderedHref =
+      disabled || loading
+        ? render.type === "a"
+          ? undefined
+          : renderedProps.href
+        : renderedProps.href;
 
     return cloneElement(render, {
       ...props,
@@ -87,6 +97,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       "data-slot": "button",
       children: childrenWithIcons,
       onClick: handleRenderedClick,
+      ...(render.type === "a" && (disabled || loading) ? { href: renderedHref, tabIndex: -1 } : {}),
     });
   }
 
