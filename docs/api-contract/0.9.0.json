@@ -1328,13 +1328,7 @@
         "accordion-panel",
         "accordion-trigger"
       ],
-      "alert": [
-        "alert",
-        "alert-actions",
-        "alert-description",
-        "alert-icon",
-        "alert-title"
-      ],
+      "alert": ["alert", "alert-actions", "alert-description", "alert-icon", "alert-title"],
       "alert-dialog": [
         "alert-dialog-action",
         "alert-dialog-backdrop",
@@ -1348,17 +1342,9 @@
         "alert-dialog-trigger",
         "alert-dialog-viewport"
       ],
-      "aspect-ratio": [
-        "aspect-ratio"
-      ],
-      "avatar": [
-        "avatar",
-        "avatar-fallback",
-        "avatar-image"
-      ],
-      "badge": [
-        "badge"
-      ],
+      "aspect-ratio": ["aspect-ratio"],
+      "avatar": ["avatar", "avatar-fallback", "avatar-image"],
+      "badge": ["badge"],
       "breadcrumbs": [
         "breadcrumbs",
         "breadcrumbs-current",
@@ -1367,12 +1353,8 @@
         "breadcrumbs-list",
         "breadcrumbs-separator"
       ],
-      "button": [
-        "button"
-      ],
-      "button-group": [
-        "button-group"
-      ],
+      "button": ["button"],
+      "button-group": ["button-group"],
       "calendar": [
         "calendar",
         "calendar-caption",
@@ -1386,13 +1368,7 @@
         "calendar-weekdays",
         "calendar-year-select"
       ],
-      "card": [
-        "card",
-        "card-content",
-        "card-footer",
-        "card-header",
-        "card-title"
-      ],
+      "card": ["card", "card-content", "card-footer", "card-header", "card-title"],
       "carousel": [
         "carousel",
         "carousel-indicator",
@@ -1403,17 +1379,8 @@
         "carousel-track",
         "carousel-viewport"
       ],
-      "checkbox": [
-        "checkbox",
-        "checkbox-indicator"
-      ],
-      "code": [
-        "code",
-        "code-content",
-        "code-gutter",
-        "code-line",
-        "code-line-number"
-      ],
+      "checkbox": ["checkbox", "checkbox-indicator"],
+      "code": ["code", "code-content", "code-gutter", "code-line", "code-line-number"],
       "collapsible": [
         "collapsible",
         "collapsible-indicator",
@@ -1437,9 +1404,7 @@
         "color-picker-trigger",
         "color-picker-value"
       ],
-      "color-swatch": [
-        "color-swatch"
-      ],
+      "color-swatch": ["color-swatch"],
       "combobox": [
         "combobox-arrow",
         "combobox-clear",
@@ -1487,12 +1452,7 @@
         "context-menu-submenu-trigger",
         "context-menu-trigger"
       ],
-      "copyable": [
-        "copyable",
-        "copyable-content",
-        "copyable-indicator",
-        "copyable-status"
-      ],
+      "copyable": ["copyable", "copyable-content", "copyable-indicator", "copyable-status"],
       "data-toolbar": [
         "data-toolbar",
         "data-toolbar-actions",
@@ -1568,9 +1528,7 @@
         "dialog-trigger",
         "dialog-viewport"
       ],
-      "download-trigger": [
-        "download-trigger"
-      ],
+      "download-trigger": ["download-trigger"],
       "drawer": [
         "drawer-backdrop",
         "drawer-close",
@@ -1590,15 +1548,8 @@
         "empty-state-icon",
         "empty-state-title"
       ],
-      "field": [
-        "field",
-        "field-error"
-      ],
-      "fieldset": [
-        "fieldset",
-        "fieldset-description",
-        "fieldset-legend"
-      ],
+      "field": ["field", "field-error"],
+      "fieldset": ["fieldset", "fieldset-description", "fieldset-legend"],
       "figure-trigger": [
         "figure",
         "figure-caption",
@@ -1612,15 +1563,9 @@
         "figure-lightbox-viewport",
         "figure-trigger"
       ],
-      "form": [
-        "form"
-      ],
-      "heading": [
-        "heading"
-      ],
-      "icon-button": [
-        "icon-button"
-      ],
+      "form": ["form"],
+      "heading": ["heading"],
+      "icon-button": ["icon-button"],
       "image": [
         "image",
         "image-content",
@@ -1633,16 +1578,9 @@
         "image-lightbox-viewport",
         "image-trigger"
       ],
-      "input-group": [
-        "input-group",
-        "input-group-addon"
-      ],
-      "kbd": [
-        "kbd"
-      ],
-      "link": [
-        "link"
-      ],
+      "input-group": ["input-group", "input-group-addon"],
+      "kbd": ["kbd"],
+      "link": ["link"],
       "list": [
         "list",
         "list-item",
@@ -1678,13 +1616,7 @@
         "menubar-submenu-trigger",
         "menubar-trigger"
       ],
-      "meter": [
-        "meter",
-        "meter-indicator",
-        "meter-label",
-        "meter-track",
-        "meter-value"
-      ],
+      "meter": ["meter", "meter-indicator", "meter-label", "meter-track", "meter-value"],
       "navbar": [
         "bottom-navigation",
         "bottom-navigation-item",
@@ -1734,15 +1666,8 @@
         "option-selector-option-label",
         "option-selector-options"
       ],
-      "pagination": [
-        "pagination",
-        "pagination-ellipsis",
-        "pagination-item",
-        "pagination-list"
-      ],
-      "paragraph": [
-        "paragraph"
-      ],
+      "pagination": ["pagination", "pagination-ellipsis", "pagination-item", "pagination-list"],
+      "paragraph": ["paragraph"],
       "pin-input": [
         "pin-input",
         "pin-input-control",
@@ -1777,16 +1702,8 @@
         "qr-code-eye-frame",
         "qr-code-eyeball"
       ],
-      "quote": [
-        "quote",
-        "quote-author",
-        "quote-content",
-        "quote-footer",
-        "quote-source"
-      ],
-      "radio": [
-        "radio"
-      ],
+      "quote": ["quote", "quote-author", "quote-content", "quote-footer", "quote-source"],
+      "radio": ["radio"],
       "range-slider": [
         "range-slider",
         "range-slider-control",
@@ -1835,9 +1752,7 @@
         "sidebar-toggle",
         "sidebar-viewport"
       ],
-      "skeleton": [
-        "skeleton"
-      ],
+      "skeleton": ["skeleton"],
       "slider": [
         "slider",
         "slider-control",
@@ -1847,15 +1762,8 @@
         "slider-track",
         "slider-value"
       ],
-      "spacer": [
-        "spacer"
-      ],
-      "stack": [
-        "grid",
-        "separator",
-        "spinner",
-        "stack"
-      ],
+      "spacer": ["spacer"],
+      "stack": ["grid", "separator", "spinner", "stack"],
       "stat": [
         "stat",
         "stat-description",
@@ -1875,10 +1783,7 @@
         "stepper-previous",
         "stepper-trigger"
       ],
-      "switch": [
-        "switch",
-        "switch-thumb"
-      ],
+      "switch": ["switch", "switch-thumb"],
       "table": [
         "table",
         "table-body",
@@ -1895,12 +1800,7 @@
         "table-selection-cell",
         "table-selection-header"
       ],
-      "tabs": [
-        "tabs",
-        "tabs-list",
-        "tabs-panel",
-        "tabs-tab"
-      ],
+      "tabs": ["tabs", "tabs-list", "tabs-panel", "tabs-tab"],
       "tags-input": [
         "tags-input",
         "tags-input-control",
@@ -1914,9 +1814,7 @@
         "tags-input-tag-list",
         "tags-input-tag-remove"
       ],
-      "text": [
-        "text"
-      ],
+      "text": ["text"],
       "toast-viewport": [
         "toast",
         "toast-action",
@@ -1927,13 +1825,8 @@
         "toast-title",
         "toast-viewport"
       ],
-      "toggle": [
-        "toggle"
-      ],
-      "toggle-group": [
-        "toggle-group",
-        "toggle-group-item"
-      ],
+      "toggle": ["toggle"],
+      "toggle-group": ["toggle-group", "toggle-group-item"],
       "toolbar": [
         "toolbar",
         "toolbar-button",
@@ -1942,12 +1835,7 @@
         "toolbar-link",
         "toolbar-separator"
       ],
-      "tooltip": [
-        "tooltip-arrow",
-        "tooltip-popup",
-        "tooltip-positioner",
-        "tooltip-trigger"
-      ],
+      "tooltip": ["tooltip-arrow", "tooltip-popup", "tooltip-positioner", "tooltip-trigger"],
       "tree-view": [
         "tree-view",
         "tree-view-empty",
@@ -2008,9 +1896,7 @@
         "upload-text",
         "upload-trigger"
       ],
-      "visually-hidden": [
-        "visually-hidden"
-      ]
+      "visually-hidden": ["visually-hidden"]
     }
   },
   "aliases": {
