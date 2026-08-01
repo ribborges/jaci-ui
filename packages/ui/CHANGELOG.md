@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.9.2
+
+### Patch Changes
+
+- 894b4e8: Update Storybook and compatible workspace tooling dependencies to their latest patch releases.
+- 10446a3: Fix `Button.render` with native and framework link elements, including Next.js client boundaries.
+- cdcfb85: Improve QRCode finder contrast in dark themes and add native SVG download support.
+- 77a1b9f: Improve QRCode's native SVG download link accessibility and preserve the QR code's image semantics.
+
 ## 0.9.1
 
 ### Patch Changes
