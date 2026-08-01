@@ -9,10 +9,9 @@ pnpm storybook for component work. Run pnpm format, pnpm lint, pnpm typecheck, p
 and pnpm build before opening a pull request. The complete gate is
 `CI=true pnpm test`, followed by `pnpm api:contract` and the packed fixture checks.
 
-Formatting is handled by Biome and follows the root `.editorconfig`: two spaces for
-indentation and LF line endings. Run `pnpm format` to apply formatting and `pnpm lint` to
-run formatting and lint checks together. YAML files intentionally keep space indentation
-because tabs are not valid YAML indentation.
+Formatting is handled by Biome: two-space indentation, LF line endings and a 100-character
+line width. Run `pnpm format` to apply formatting and `pnpm lint` to run lint checks. YAML
+files intentionally keep space indentation because tabs are not valid YAML indentation.
 
 The published package supports consumer applications on Node 18.18 or newer. The higher
 Node 22.18 requirement applies only to repository development and CI tooling (including the
@@ -35,11 +34,13 @@ use client boundary when required by React Server Components.
 ## Test organization
 
 Keep unit and interaction tests next to the component they cover, using the component name as
-the test file name (for example, `components/command/command.test.tsx`). Shared concerns that
-cross component families belong at the package root: `ssr.test.tsx` covers server rendering and
-`hydration.test.tsx` covers client hydration. Avoid release or milestone names in test files;
-tests should describe the public behavior they protect. Run the package tests with
-`pnpm --filter jaci-ui test` while developing a component.
+the test file name (for example, `components/command/command.test.tsx`). Every interactive
+component needs direct coverage for its public interaction and state; the API contract test is
+only a smoke test and does not substitute for it. Shared concerns that cross component families
+belong at the package root: `ssr.test.tsx` covers server rendering and `hydration.test.tsx`
+covers client hydration. Avoid release or milestone names in test files; tests should describe
+the public behavior they protect. Run the package tests with `pnpm --filter jaci-ui test` while
+developing a component.
 
 ## Releases
 

@@ -1,9 +1,10 @@
 {
-  "version": "0.9.0",
+  "version": "0.9.1",
   "entries": [
     {
       "module": "components/accordion",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/accordion/accordion.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/accordion.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -20,7 +21,8 @@
     },
     {
       "module": "components/alert",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/alert/alert.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/alert.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -38,6 +40,7 @@
     {
       "module": "components/alert-dialog",
       "test": "packages/ui/src/components/alert-dialog/alert-dialog.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/alert-dialog.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -55,6 +58,7 @@
     {
       "module": "components/aspect-ratio",
       "test": "packages/ui/src/components/aspect-ratio/aspect-ratio.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/aspect-ratio.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -71,7 +75,8 @@
     },
     {
       "module": "components/avatar",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/avatar/avatar.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/avatar.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -88,7 +93,8 @@
     },
     {
       "module": "components/breadcrumbs",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/breadcrumbs/breadcrumbs.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/breadcrumbs.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -105,7 +111,8 @@
     },
     {
       "module": "components/button",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/button/button.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/button.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -123,6 +130,7 @@
     {
       "module": "components/button-group",
       "test": "packages/ui/src/components/button-group/button-group.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/high-reuse.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -140,6 +148,7 @@
     {
       "module": "components/calendar",
       "test": "packages/ui/src/components/calendar/calendar.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/calendar.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -156,7 +165,8 @@
     },
     {
       "module": "components/card",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/card/card.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/card.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -174,6 +184,7 @@
     {
       "module": "components/carousel",
       "test": "packages/ui/src/components/carousel/carousel.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/carousel.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -191,6 +202,7 @@
     {
       "module": "components/checkbox-group",
       "test": "packages/ui/src/components/checkbox-group/checkbox-group.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/checkbox-group.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -208,6 +220,7 @@
     {
       "module": "components/code",
       "test": "packages/ui/src/components/code/code.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/code.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -224,7 +237,8 @@
     },
     {
       "module": "components/collapsible",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/collapsible/collapsible.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/accordion.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -242,6 +256,7 @@
     {
       "module": "components/color-picker",
       "test": "packages/ui/src/components/color-picker/color-picker.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/color-picker.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -259,6 +274,7 @@
     {
       "module": "components/color-swatch",
       "test": "packages/ui/src/components/color-swatch/color-swatch.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/color-swatch.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -276,6 +292,7 @@
     {
       "module": "components/combobox",
       "test": "packages/ui/src/components/combobox/combobox.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/combobox.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -293,6 +310,7 @@
     {
       "module": "components/command",
       "test": "packages/ui/src/components/command/command.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/command.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -310,6 +328,7 @@
     {
       "module": "components/context-menu",
       "test": "packages/ui/src/components/context-menu/context-menu.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/context-menu.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -326,7 +345,8 @@
     },
     {
       "module": "components/controls",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/controls/controls.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/forms.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -344,6 +364,7 @@
     {
       "module": "components/copyable",
       "test": "packages/ui/src/components/copyable/copyable.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/copyable.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -361,6 +382,7 @@
     {
       "module": "components/data-toolbar",
       "test": "packages/ui/src/components/data-toolbar/data-toolbar.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/data-toolbar.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -378,6 +400,7 @@
     {
       "module": "components/data-view",
       "test": "packages/ui/src/components/data-view/data-view.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/data-view.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -395,6 +418,7 @@
     {
       "module": "components/date-picker",
       "test": "packages/ui/src/components/date-picker/date-picker.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/date-picker.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -412,6 +436,7 @@
     {
       "module": "components/date-range-picker",
       "test": "packages/ui/src/components/date-range-picker/date-range-picker.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/date-range-picker.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -429,6 +454,7 @@
     {
       "module": "components/dialog",
       "test": "packages/ui/src/components/dialog/dialog.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/dialog.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -446,6 +472,7 @@
     {
       "module": "components/download-trigger",
       "test": "packages/ui/src/components/download-trigger/download-trigger.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/download-trigger.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -463,6 +490,7 @@
     {
       "module": "components/drawer",
       "test": "packages/ui/src/components/drawer/drawer.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/drawer.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -480,6 +508,7 @@
     {
       "module": "components/empty-state",
       "test": "packages/ui/src/components/empty-state/empty-state.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/high-reuse.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -496,7 +525,8 @@
     },
     {
       "module": "components/feedback",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/feedback/feedback.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/high-reuse.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -513,7 +543,8 @@
     },
     {
       "module": "components/field",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/field/field.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/forms.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -530,7 +561,8 @@
     },
     {
       "module": "components/fieldset",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/fieldset/fieldset.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/fieldset.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -548,6 +580,7 @@
     {
       "module": "components/figure",
       "test": "packages/ui/src/components/figure/figure.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/figure.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -564,7 +597,8 @@
     },
     {
       "module": "components/form",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/form/form.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/form.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -582,6 +616,7 @@
     {
       "module": "components/icon-button",
       "test": "packages/ui/src/components/icon-button/icon-button.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/high-reuse.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -599,6 +634,7 @@
     {
       "module": "components/image",
       "test": "packages/ui/src/components/image/image.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/image.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -616,6 +652,7 @@
     {
       "module": "components/input-group",
       "test": "packages/ui/src/components/input-group/input-group.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/high-reuse.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -633,6 +670,7 @@
     {
       "module": "components/kbd",
       "test": "packages/ui/src/components/kbd/kbd.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/kbd.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -649,7 +687,8 @@
     },
     {
       "module": "components/layout",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/layout/layout.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/layout.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -666,7 +705,8 @@
     },
     {
       "module": "components/list",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/list/list.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/list.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -684,6 +724,7 @@
     {
       "module": "components/menu",
       "test": "packages/ui/src/components/menu/menu.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/menu.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -701,6 +742,7 @@
     {
       "module": "components/menubar",
       "test": "packages/ui/src/components/menubar/menubar.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/menubar.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -718,6 +760,7 @@
     {
       "module": "components/meter",
       "test": "packages/ui/src/components/meter/meter.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/meter.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -734,7 +777,8 @@
     },
     {
       "module": "components/navigation",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/navigation/navigation.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/navbar.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -752,6 +796,7 @@
     {
       "module": "components/navigation-menu",
       "test": "packages/ui/src/components/navigation-menu/navigation-menu.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/navigation-menu.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -769,6 +814,7 @@
     {
       "module": "components/number-field",
       "test": "packages/ui/src/components/number-field/number-field.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/number-field.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -785,7 +831,8 @@
     },
     {
       "module": "components/option-selector",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/option-selector/option-selector.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/option-selector.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -803,6 +850,7 @@
     {
       "module": "components/pagination",
       "test": "packages/ui/src/components/pagination/pagination.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/pagination.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -820,6 +868,7 @@
     {
       "module": "components/pin-input",
       "test": "packages/ui/src/components/pin-input/pin-input.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/pin-input.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -836,7 +885,8 @@
     },
     {
       "module": "components/popover",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/popover/popover.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/popover.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -853,7 +903,8 @@
     },
     {
       "module": "components/progress",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/progress/progress.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/progress.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -871,6 +922,7 @@
     {
       "module": "components/qr-code",
       "test": "packages/ui/src/components/qr-code/qr-code.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/qr-code.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -888,6 +940,7 @@
     {
       "module": "components/quote",
       "test": "packages/ui/src/components/quote/quote.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/quote.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -905,6 +958,7 @@
     {
       "module": "components/radio-group",
       "test": "packages/ui/src/components/radio-group/radio-group.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/radio-group.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -922,6 +976,7 @@
     {
       "module": "components/range-slider",
       "test": "packages/ui/src/components/range-slider/range-slider.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/range-slider.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -938,7 +993,8 @@
     },
     {
       "module": "components/scroll-area",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/scroll-area/scroll-area.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/scroll-area.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -956,6 +1012,7 @@
     {
       "module": "components/select",
       "test": "packages/ui/src/components/select/select.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/select.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -972,7 +1029,8 @@
     },
     {
       "module": "components/sidebar",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/sidebar/sidebar.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/sidebar.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -989,7 +1047,8 @@
     },
     {
       "module": "components/skeleton",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/skeleton/skeleton.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/skeleton.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -1007,6 +1066,7 @@
     {
       "module": "components/slider",
       "test": "packages/ui/src/components/slider/slider.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/slider.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -1024,6 +1084,7 @@
     {
       "module": "components/spacer",
       "test": "packages/ui/src/components/spacer/spacer.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/separator-spacer.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -1041,6 +1102,7 @@
     {
       "module": "components/stat",
       "test": "packages/ui/src/components/stat/stat.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/stat.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -1057,7 +1119,8 @@
     },
     {
       "module": "components/stat-group",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/stat-group/stat-group.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/stat.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -1075,6 +1138,7 @@
     {
       "module": "components/stepper",
       "test": "packages/ui/src/components/stepper/stepper.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/stepper.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -1092,6 +1156,7 @@
     {
       "module": "components/table",
       "test": "packages/ui/src/components/table/table.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/table.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -1108,7 +1173,8 @@
     },
     {
       "module": "components/tabs",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/tabs/tabs.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/tabs.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -1126,6 +1192,7 @@
     {
       "module": "components/tags-input",
       "test": "packages/ui/src/components/tags-input/tags-input.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/tags-input.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -1143,6 +1210,7 @@
     {
       "module": "components/toast",
       "test": "packages/ui/src/components/toast/toast.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/toast.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -1159,7 +1227,8 @@
     },
     {
       "module": "components/toggle",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/toggle/toggle.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/toggle.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -1176,7 +1245,8 @@
     },
     {
       "module": "components/toggle-group",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/toggle-group/toggle-group.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/toggle.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -1193,7 +1263,8 @@
     },
     {
       "module": "components/toolbar",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/toolbar/toolbar.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/toolbar.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -1210,7 +1281,8 @@
     },
     {
       "module": "components/tooltip",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/tooltip/tooltip.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/tooltip.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -1228,6 +1300,7 @@
     {
       "module": "components/tree-view",
       "test": "packages/ui/src/components/tree-view/tree-view.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/tree-view.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -1244,7 +1317,8 @@
     },
     {
       "module": "components/typography",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/typography/typography.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/typography.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -1262,6 +1336,7 @@
     {
       "module": "components/upload",
       "test": "packages/ui/src/components/upload/upload.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/upload.stories.tsx",
       "capabilities": {
         "render": "required",
@@ -1278,7 +1353,8 @@
     },
     {
       "module": "components/visually-hidden",
-      "test": "packages/ui/src/public-api-contract.test.tsx",
+      "test": "packages/ui/src/components/visually-hidden/visually-hidden.test.tsx",
+      "verification": "direct-test",
       "story": "apps/storybook/src/high-reuse.stories.tsx",
       "capabilities": {
         "render": "required",

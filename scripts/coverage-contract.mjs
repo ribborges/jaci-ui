@@ -6,6 +6,7 @@ const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const sourceIndex = join(root, "packages/ui/src/index.ts");
 const snapshotPath = join(root, "docs/api-contract/coverage.json");
 const update = process.argv.includes("--update");
+const strict = process.argv.includes("--strict");
 
 const storyOverrides = {
   "button-group": "high-reuse.stories.tsx",
@@ -29,11 +30,15 @@ const storyOverrides = {
 
 const testOverrides = {
   controls: "packages/ui/src/public-api-contract.test.tsx",
-  feedback: "packages/ui/src/public-api-contract.test.tsx",
-  layout: "packages/ui/src/public-api-contract.test.tsx",
+  feedback: "packages/ui/src/components/feedback/feedback.test.tsx",
+  layout: "packages/ui/src/components/layout/layout.test.tsx",
   navigation: "packages/ui/src/public-api-contract.test.tsx",
+  "stat-group": "packages/ui/src/components/stat-group/stat-group.test.tsx",
   theme: "packages/ui/src/theme/theme-provider.test.tsx",
+  typography: "packages/ui/src/components/typography/typography.test.tsx",
 };
+
+const directTestOverrides = new Set(["feedback", "layout", "stat-group", "theme", "typography"]);
 
 const interactiveModules = new Set([
   "accordion",
@@ -150,8 +155,12 @@ function createCoverage() {
     .sort((a, b) => a.localeCompare(b));
 
   const entries = modules.map((name) => {
-    const test = existsSync(join(root, defaultTest(name)))
-      ? defaultTest(name)
+    const defaultTestPath = defaultTest(name);
+    const hasDirectTest = existsSync(join(root, defaultTestPath)) || directTestOverrides.has(name);
+    const test = hasDirectTest
+      ? directTestOverrides.has(name)
+        ? testOverrides[name]
+        : defaultTestPath
       : (testOverrides[name] ?? "packages/ui/src/public-api-contract.test.tsx");
     const storyFile = storyOverrides[name] ?? defaultStory(name);
     const story = `apps/storybook/src/${storyFile}`;
@@ -160,6 +169,7 @@ function createCoverage() {
     return {
       module: `components/${name}`,
       test,
+      verification: hasDirectTest ? "direct-test" : "api-smoke-test",
       story,
       capabilities: {
         render: "required",
@@ -189,7 +199,7 @@ function createCoverage() {
     };
   });
 
-  return { version: "0.9.0", entries };
+  return { version: "0.9.1", entries };
 }
 
 const coverage = createCoverage();
@@ -211,6 +221,23 @@ const missing = coverage.entries.flatMap((entry) =>
 );
 if (missing.length > 0) {
   throw new Error(`Coverage matrix references missing files: ${missing.join(", ")}`);
+}
+
+if (strict) {
+  const unverifiedInteractiveModules = coverage.entries
+    .filter(
+      (entry) =>
+        interactiveModules.has(entry.module.replace("components/", "")) &&
+        entry.verification !== "direct-test",
+    )
+    .map((entry) => entry.module);
+  if (unverifiedInteractiveModules.length > 0) {
+    throw new Error(
+      `Interactive modules require direct behavior tests before release: ${unverifiedInteractiveModules.join(
+        ", ",
+      )}`,
+    );
+  }
 }
 
 console.log(`Coverage matrix validated for ${coverage.entries.length} public modules.`);

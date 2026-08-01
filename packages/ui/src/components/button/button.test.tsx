@@ -14,12 +14,11 @@ describe("Button", () => {
         Contact
       </Button>,
     );
-
     const link = container.querySelector<HTMLAnchorElement>('a[data-jaci-component="button"]');
+
     expect(link).not.toBeNull();
     expect(link?.className).toContain("button");
     expect(link?.href).toContain("mailto:contato@example.com");
-
     act(() => link?.click());
     expect(onClick).toHaveBeenCalledTimes(1);
   });
@@ -31,10 +30,25 @@ describe("Button", () => {
         Disabled
       </Button>,
     );
-
     const link = container.querySelector<HTMLAnchorElement>("a");
+
     expect(link?.getAttribute("aria-disabled")).toBe("true");
     act(() => link?.click());
+    expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it("uses a native disabled button while loading", () => {
+    const onClick = vi.fn();
+    const container = renderInDocument(
+      <Button loading onClick={onClick}>
+        Save
+      </Button>,
+    );
+    const button = container.querySelector<HTMLButtonElement>("button");
+
+    expect(button?.disabled).toBe(true);
+    expect(button?.getAttribute("aria-busy")).toBe("true");
+    act(() => button?.click());
     expect(onClick).not.toHaveBeenCalled();
   });
 });

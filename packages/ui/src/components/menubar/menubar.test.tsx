@@ -7,7 +7,7 @@ import { Menubar } from "../../index";
 import { renderInDocument } from "../../test-utils/react";
 
 describe("Menubar", () => {
-  it("opens a menu and moves between top-level triggers with arrows", () => {
+  it("opens a menu and moves between top-level triggers with arrows", async () => {
     const container = renderInDocument(
       <Menubar.Root>
         <Menubar.Menu>
@@ -34,12 +34,16 @@ describe("Menubar", () => {
     );
     const triggers = container.querySelectorAll<HTMLButtonElement>("[data-slot='menubar-trigger']");
     expect(triggers).toHaveLength(2);
-    act(() => triggers[0]?.click());
+    await act(async () => {
+      triggers[0]?.click();
+      await Promise.resolve();
+    });
     expect(document.querySelector('[data-slot="menubar-popup"]')).not.toBeNull();
-    act(() => {
+    await act(async () => {
       triggers[0]?.dispatchEvent(
         new KeyboardEvent("keydown", { bubbles: true, key: "ArrowRight" }),
       );
+      await Promise.resolve();
     });
     expect(triggers[1]).toBeTruthy();
   });
