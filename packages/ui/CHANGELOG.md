@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.9.3
+
+### Patch Changes
+
+- caa17c1: Allow Button links composed with `render={<a />}` to render safely from Next.js server components.
+- 3efbbee: Keep Accordion roots at a stable responsive width when all panels are collapsed.
+
 ## 0.9.2
 
 ### Patch Changes
