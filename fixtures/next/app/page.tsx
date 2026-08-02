@@ -44,6 +44,9 @@ export default function Page() {
           <CardContent>
             <Text>This server component can render a Jaci UI button directly.</Text>
             <Button variant="solid">Continue</Button>
+            <Button variant="outline" render={<a href="/docs" />}>
+              Read the docs
+            </Button>
             <AlertDialogRoot>
               <AlertDialogTrigger>Delete item</AlertDialogTrigger>
             </AlertDialogRoot>
