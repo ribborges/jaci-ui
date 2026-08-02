@@ -83,3 +83,38 @@ export const BadgeVariants: Story = {
     },
   },
 };
+
+export const BadgeCustomColors: Story = {
+  name: "Badge custom colors",
+  render: () => (
+    <>
+      <style>{`
+        .badge-brand { background: #7c3aed; color: #ffffff; }
+        .badge-cyan { background: #cffafe; color: #155e75; }
+        .badge-coral { background: transparent; border: 1px solid #f97316; color: #c2410c; }
+      `}</style>
+      <Stack direction="horizontal" gap="sm" wrap="wrap">
+        <Badge tone="custom" variant="solid" className="badge-brand">
+          Brand
+        </Badge>
+        <Badge tone="custom" variant="soft" className="badge-cyan">
+          Cyan
+        </Badge>
+        <Badge tone="custom" variant="outline" className="badge-coral">
+          Coral
+        </Badge>
+      </Stack>
+    </>
+  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<Badge tone="custom" variant="solid" className="badge-brand">
+  Brand
+</Badge>
+
+/* .badge-brand { background: #7c3aed; color: #fff; } */`,
+      },
+    },
+  },
+};

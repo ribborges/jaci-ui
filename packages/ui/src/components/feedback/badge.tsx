@@ -5,7 +5,8 @@ import { cx } from "../../styled-system/css";
 import { badge } from "../../styled-system/recipes";
 
 export interface BadgeProps extends ComponentPropsWithoutRef<"span"> {
-  tone?: "neutral" | "accent" | "success" | "warning" | "danger";
+  /** Use `custom` when the color should be provided by a className or CSS module. */
+  tone?: "neutral" | "accent" | "success" | "warning" | "danger" | "custom";
   variant?: "solid" | "soft" | "outline";
 }
 
@@ -28,7 +29,10 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
     | "accent-outline"
     | "success-outline"
     | "warning-outline"
-    | "danger-outline";
+    | "danger-outline"
+    | "custom-solid"
+    | "custom-soft"
+    | "custom-outline";
 
   return (
     <span

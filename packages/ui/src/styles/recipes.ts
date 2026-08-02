@@ -232,6 +232,14 @@ export const badgeRecipe = defineRecipe({
         borderWidth: "1px",
         color: "danger",
       },
+      // Custom tones intentionally do not set color properties. This lets a
+      // consumer own the visual treatment through className or a CSS module.
+      "custom-solid": {},
+      "custom-soft": {},
+      "custom-outline": {
+        borderStyle: "solid",
+        borderWidth: "1px",
+      },
     },
   },
   defaultVariants: {
