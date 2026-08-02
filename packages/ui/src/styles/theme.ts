@@ -138,6 +138,32 @@ export const jaciTheme = {
           },
         },
       },
+      shadows: {
+        sm: {
+          value: {
+            base: "0 1px 2px rgb(0 0 0 / 0.08)",
+            _dark: "0 1px 2px rgb(255 255 255 / 0.08)",
+          },
+        },
+        md: {
+          value: {
+            base: "0 10px 24px rgb(0 0 0 / 0.12)",
+            _dark: "0 10px 24px rgb(255 255 255 / 0.1)",
+          },
+        },
+        lg: {
+          value: {
+            base: "0 18px 42px rgb(0 0 0 / 0.16)",
+            _dark: "0 18px 42px rgb(255 255 255 / 0.12)",
+          },
+        },
+        xl: {
+          value: {
+            base: "0 24px 52px rgb(0 0 0 / 0.2)",
+            _dark: "0 24px 52px rgb(255 255 255 / 0.14)",
+          },
+        },
+      },
     },
     textStyles: {
       body: {
