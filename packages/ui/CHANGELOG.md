@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.9.4
+
+### Patch Changes
+
+- b6389ad: Allow Badge custom tones to be styled with consumer CSS classes while preserving semantic theme tones.
+- fec5db2: Restore subtle light elevation shadows for raised components in dark themes.
+
 ## 0.9.3
 
 ### Patch Changes
