@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.0
+
+### Major Changes
+
+- bc5a3e1: Prepare the first stable 1.0.0 release by freezing the public component API, validating the
+  published contract across supported React frameworks, and completing the release-readiness
+  checks.
+
+### Patch Changes
+
+- bea249e: Update supported tooling and runtime dependencies, including Storybook, Base UI, date-fns, and security-patched transitive packages.
+
 ## 0.9.4
 
 ### Patch Changes
