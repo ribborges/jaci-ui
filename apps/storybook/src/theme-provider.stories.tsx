@@ -28,7 +28,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Provider opcional para controlar o modo claro/escuro e sobrescrever tokens semânticos em um escopo local.",
+          "Optional provider for controlling light/dark mode and overriding semantic tokens in a local scope.",
       },
       source: {
         code: `<ThemeProvider defaultTheme="system" ssrTheme="light">

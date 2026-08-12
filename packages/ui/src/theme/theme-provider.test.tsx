@@ -3,6 +3,7 @@
 import { act } from "react";
 import { renderToString } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import type { CSSProperties } from "react";
 
 import { ThemeProvider, useTheme } from "./theme-provider";
 import { useThemePortalContainer } from "./theme-scope";
@@ -50,6 +51,20 @@ describe("ThemeProvider", () => {
 
     act(() => button?.click());
     expect(provider.dataset.jaciTheme).toBe("dark");
+  });
+
+  it("gives scoped tokens deterministic precedence over colliding style variables", () => {
+    const container = renderInDocument(
+      <ThemeProvider
+        style={{ "--jaci-colors-accent-default": "#000000" } as CSSProperties}
+        tokens={{ colors: { accent: { default: "#7c3aed" } } }}
+      >
+        <span>Scoped tokens</span>
+      </ThemeProvider>,
+    );
+
+    const provider = container.firstElementChild as HTMLElement;
+    expect(provider.style.getPropertyValue("--jaci-colors-accent-default")).toBe("#7c3aed");
   });
 
   it("supports a controlled mode and local element props", () => {

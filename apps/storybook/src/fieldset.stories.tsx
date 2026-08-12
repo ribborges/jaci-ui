@@ -9,7 +9,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Agrupa campos relacionados com uma legenda e descrição acessíveis, sem aplicar reset global ao formulário.",
+          "Groups related fields with an accessible legend and description without applying a global form reset.",
       },
       source: {
         code: `<Fieldset.Root><Fieldset.Legend>Contact details</Fieldset.Legend><Fieldset.Description>Visible to your team.</Fieldset.Description><Field name="email"><FieldLabel>Email</FieldLabel><Input type="email" /></Field></Fieldset.Root>`,

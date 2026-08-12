@@ -13,18 +13,18 @@
   "dependencies": {
     "@remix-run/node": "^2.17.5",
     "@remix-run/react": "^2.17.5",
-    "isbot": "^5.1.44",
+    "isbot": "^5.2.1",
     "jaci-ui": "workspace:*",
-    "react": "^19.0.8",
-    "react-dom": "^19.0.8"
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.17.5",
-    "@types/node": "^22.15.35",
+    "@types/node": "^22.20.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "typescript": "^6.0.3",
-    "vite": "^6.3.7",
+    "vite": "^6.4.3",
     "vitest": "^4.1.10"
   }
 }

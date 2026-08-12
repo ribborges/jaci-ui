@@ -35,7 +35,7 @@ export const Localized: Story = {
   render: () => (
     <Progress
       format={{ maximumFractionDigits: 1, style: "percent" }}
-      getAriaValueText={(formatted) => `${formatted} concluído`}
+      getAriaValueText={(formatted) => `${formatted} complete`}
       label="Upload"
       locale="pt-BR"
       max={1}

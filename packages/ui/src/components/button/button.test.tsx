@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { act } from "react";
+import { act, createRef } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import { Button } from "../../index";
@@ -21,6 +21,17 @@ describe("Button", () => {
     expect(link?.href).toContain("mailto:contato@example.com");
     act(() => link?.click());
     expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("forwards the public ref to a rendered link", () => {
+    const ref = createRef<HTMLButtonElement>();
+    const container = renderInDocument(
+      <Button ref={ref} render={<a href="/docs" />}>
+        Documentation
+      </Button>,
+    );
+
+    expect(ref.current).toBe(container.querySelector("a"));
   });
 
   it("prevents activation when a rendered link is disabled", () => {

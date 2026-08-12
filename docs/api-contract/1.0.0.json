@@ -1,5 +1,5 @@
 {
-  "version": "0.9.0",
+  "version": "1.0.0",
   "generatedFrom": {
     "source": "packages/ui/src/index.ts",
     "declarations": "packages/ui/dist/index.d.ts"

@@ -31,30 +31,30 @@ type Story = StoryObj<typeof meta>;
 export const NativeConstraintsAndExternalErrors: Story = {
   render: () => (
     <Form
-      errors={{ email: "Use um endereço de e-mail válido." }}
+      errors={{ email: "Enter a valid email address." }}
       onFormSubmit={() => undefined}
       style={{ maxWidth: "32rem" }}
     >
       <Fieldset.Root>
-        <Fieldset.Legend>Perfil público</Fieldset.Legend>
+        <Fieldset.Legend>Public profile</Fieldset.Legend>
         <Fieldset.Description>
-          Os atributos nativos e os erros vindos do servidor usam a mesma composição.
+          Native constraints and server errors use the same composition.
         </Fieldset.Description>
         <Stack gap="md">
           <Field name="displayName">
-            <FieldLabel htmlFor="form-display-name">Nome</FieldLabel>
+            <FieldLabel htmlFor="form-display-name">Name</FieldLabel>
             <Input id="form-display-name" name="displayName" required />
-            <FieldDescription>Nome exibido para outras pessoas.</FieldDescription>
+            <FieldDescription>The name shown to other people.</FieldDescription>
           </Field>
           <Field name="email">
-            <FieldLabel htmlFor="form-email">E-mail</FieldLabel>
+            <FieldLabel htmlFor="form-email">Email</FieldLabel>
             <Input id="form-email" name="email" type="email" required />
             <FieldError />
           </Field>
         </Stack>
       </Fieldset.Root>
-      <Button type="submit">Salvar perfil</Button>
-      <VisuallyHidden>As mensagens de validação aparecem após o envio.</VisuallyHidden>
+      <Button type="submit">Save profile</Button>
+      <VisuallyHidden>Validation messages appear after submission.</VisuallyHidden>
     </Form>
   ),
 };
