@@ -7,7 +7,7 @@ import { Select } from "../../index";
 import { renderInDocument } from "../../test-utils/react";
 
 describe("Select", () => {
-  it("opens, selects an option and closes with Escape", () => {
+  it("opens, selects an option and closes with Escape", async () => {
     const container = renderInDocument(
       <Select.Root defaultValue="pro">
         <Select.Trigger aria-label="Workspace plan">
@@ -39,11 +39,12 @@ describe("Select", () => {
       (item) => item.textContent?.includes("Starter"),
     );
     expect(option).not.toBeNull();
-    act(() => option?.click());
+    await act(async () => {
+      option?.click();
+      await Promise.resolve();
+    });
     expect(trigger.textContent).toContain("starter");
 
-    expect(
-      document.querySelector('[data-slot="select-item"][data-selected]')?.textContent,
-    ).toContain("Starter");
+    expect(document.querySelector('[data-slot="select-popup"]')).toBeNull();
   });
 });
