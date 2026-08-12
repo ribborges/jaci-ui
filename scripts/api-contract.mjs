@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const sourceRoot = join(root, "packages/ui/src");
 const distRoot = join(root, "packages/ui/dist");
-const snapshotPath = join(root, "docs/api-contract/0.9.0.json");
+const snapshotPath = join(root, "docs/api-contract/1.0.0.json");
 const update = process.argv.includes("--update");
 
 function sorted(values) {
@@ -113,7 +113,7 @@ function readCallbackNames() {
 function createContract() {
   const data = readDataContract();
   return {
-    version: "0.9.0",
+    version: "1.0.0",
     generatedFrom: {
       source: "packages/ui/src/index.ts",
       declarations: "packages/ui/dist/index.d.ts",

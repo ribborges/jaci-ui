@@ -6,6 +6,10 @@ import { defineConfig } from "vitest/config";
 
 const configDir = fileURLToPath(new URL("./.storybook", import.meta.url));
 const browserTestsEnabled = process.env.JACI_STORYBOOK_BROWSER === "1" || process.env.CI === "true";
+const browsers = (process.env.JACI_STORYBOOK_BROWSERS ?? "chromium")
+  .split(",")
+  .map((browser) => browser.trim())
+  .filter(Boolean) as Array<"chromium" | "firefox" | "webkit">;
 
 // The addon checks VITEST while its plugin factory is evaluated. Vitest sets that
 // flag after loading the config, so set it explicitly for the opt-in browser job.
@@ -54,7 +58,7 @@ export default defineConfig({
                 headless: true,
                 provider: playwright(),
                 api: { host: "127.0.0.1", port: 0 },
-                instances: [{ browser: "chromium" }],
+                instances: browsers.map((browser) => ({ browser })),
               },
             },
           },

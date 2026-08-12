@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const sourceIndex = join(root, "packages/ui/src/index.ts");
-const snapshotPath = join(root, "docs/api-contract/coverage.json");
+const snapshotPath = join(root, "docs/api-contract/coverage-1.0.0.json");
 const update = process.argv.includes("--update");
 const strict = process.argv.includes("--strict");
 
@@ -199,14 +199,14 @@ function createCoverage() {
     };
   });
 
-  return { version: "0.9.1", entries };
+  return { version: "1.0.0", entries };
 }
 
 const coverage = createCoverage();
 if (update || !existsSync(snapshotPath)) {
   mkdirSync(join(root, "docs/api-contract"), { recursive: true });
   writeFileSync(snapshotPath, `${JSON.stringify(coverage, null, 2)}\n`);
-  console.log(`${update ? "Updated" : "Created"} docs/api-contract/coverage.json`);
+  console.log(`${update ? "Updated" : "Created"} docs/api-contract/coverage-1.0.0.json`);
 } else {
   const expected = JSON.parse(readFileSync(snapshotPath, "utf8"));
   if (JSON.stringify(expected) !== JSON.stringify(coverage)) {
