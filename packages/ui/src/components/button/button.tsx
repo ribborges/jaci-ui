@@ -3,6 +3,7 @@ import type {
   ComponentPropsWithoutRef,
   MouseEvent,
   MouseEventHandler,
+  Ref,
   ReactElement,
   ReactNode,
 } from "react";
@@ -16,6 +17,7 @@ type RenderableButtonProps = Record<string, unknown> & {
   className?: string | undefined;
   href?: string | undefined;
   onClick?: MouseEventHandler<HTMLElement> | undefined;
+  ref?: Ref<HTMLElement> | undefined;
 };
 
 export interface ButtonProps
@@ -97,6 +99,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       "data-slot": "button",
       children: childrenWithIcons,
       onClick: handleRenderedClick,
+      // `render` is intentionally polymorphic. Forward the public Button ref
+      // to the rendered element so anchors and framework links keep the same
+      // focus/ref contract as the native button path.
+      ref: ref as unknown as Ref<HTMLElement>,
       ...(render.type === "a" && (disabled || loading) ? { href: renderedHref, tabIndex: -1 } : {}),
     });
   }
