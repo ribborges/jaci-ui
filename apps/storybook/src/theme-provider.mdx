@@ -40,5 +40,20 @@ export function ThemedArea({ children }: { children: React.ReactNode }) {
 }
 ```
 
+In Next App Router, keep the provider inside `<body>` because its default root is a `<div>`. Set
+the initial server theme on `<html>` and place the provider in a client wrapper:
+
+```tsx
+// app/layout.tsx (server component)
+<html data-jaci-theme="dark">
+  <body>
+    <ThemeProvider ssrTheme="dark">{children}</ThemeProvider>
+  </body>
+</html>
+```
+
+When `tokens` and `style` define the same `--jaci-*` variable, the provider token wins. This
+keeps semantic overrides deterministic across the visual root and themed popup portals.
+
 Nested providers create independent scopes for tokens and portals. The provider does not persist
 preferences automatically; the application must save the theme if that experience is desired.

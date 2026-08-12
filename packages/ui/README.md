@@ -410,7 +410,17 @@ export function App() {
 
 `system` uses `ssrTheme` during server rendering and reads `prefers-color-scheme` only after
 mounting. The provider is a client module, so Next.js App Router applications should place it
-inside a client boundary. Direct `data-jaci-theme` and `--jaci-*` variables remain supported.
+inside a client boundary and inside `<body>` (the default provider root is a `<div>`):
+
+```tsx
+// app/layout.tsx
+<html data-jaci-theme="dark">
+  <body><ThemeProvider ssrTheme="dark">{children}</ThemeProvider></body>
+</html>
+```
+
+When `tokens` and `style` target the same `--jaci-*` variable, the provider token takes
+precedence. Direct `data-jaci-theme` and `--jaci-*` variables remain supported.
 
 Popups rendered through Jaci portal slots inherit the nearest `ThemeProvider` scope, including
 local accent tokens. An explicit `container` prop on a portal still takes precedence. Without a

@@ -20,3 +20,18 @@ pull request, then run the `Publish package` workflow after CI succeeds.
 
 The npm workflow uses GitHub Actions Trusted Publishing/OIDC. No long-lived npm token belongs in
 the repository or in GitHub secrets.
+
+## Stable release candidate
+
+Before the first stable release, consume all pending patch Changesets in the latest `0.9.x`
+release. Then enter prerelease mode and publish the real package tarball with the `rc` dist-tag:
+
+```sh
+pnpm changeset pre enter rc
+pnpm release:version
+npm publish --tag rc
+```
+
+Validate the candidate in the React 18/19, Next, Vite, React Router, Remix and Node 18 fixtures.
+When the candidate is approved, exit prerelease mode, generate the final release PR and publish
+`1.0.0` with the `latest` tag.

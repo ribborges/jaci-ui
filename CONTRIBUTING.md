@@ -53,18 +53,3 @@ Before opening a release pull request, run `pnpm package:contract`,
 tarball rather than the workspace link, including its ESM/CJS exports, types, sourcemaps,
 static CSS and framework fixtures. Keep the performance baseline file versioned and explain
 any intentional baseline update in the pull request.
-
-Jaci UI remains experimental through `0.9.x`; the public API is frozen for release candidates,
-and `1.0.0` will be the first stable release. Do not rename or remove a public export, callback,
-compound slot or data-slot during the freeze. If a breaking change is discovered, postpone it
-to the `1.0.0` planning cycle instead of adding a migration document to the experimental line.
-
-The `0.9.0` candidate is prepared with Changesets prerelease mode:
-
-```sh
-pnpm changeset pre enter rc
-pnpm release:version
-```
-
-Publish the generated package with the `rc` dist-tag only after the tarball has passed every
-consumer fixture. The stable release exits prerelease mode and uses the `latest` dist-tag.

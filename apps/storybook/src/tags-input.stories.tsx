@@ -16,7 +16,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Entrada de tags com sugestões, remoção individual e suporte controlado para integração com formulários.",
+          "Tag input with suggestions, individual removal and controlled state for form integration.",
       },
       source: {
         code: `<TagsInput data={["React", "TypeScript"]} label="Technologies" placeholder="Type a tag and press comma" />`,
