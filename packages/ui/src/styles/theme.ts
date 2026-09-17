@@ -1,6 +1,6 @@
 export const jaciConditions = {
   extend: {
-    dark: '[data-jaci-theme="dark"] &',
+    _dark: '[data-jaci-theme="dark"] &',
   },
 };
 
@@ -76,42 +76,42 @@ export const jaciTheme = {
       colors: {
         surface: {
           canvas: {
-            value: { base: "{colors.neutral.50}", dark: "{colors.neutral.950}" },
+            value: { base: "{colors.neutral.50}", _dark: "{colors.neutral.950}" },
           },
           default: {
-            value: { base: "{colors.neutral.100}", dark: "{colors.neutral.900}" },
+            value: { base: "{colors.neutral.100}", _dark: "{colors.neutral.900}" },
           },
           raised: {
-            value: { base: "{colors.neutral.50}", dark: "{colors.neutral.800}" },
+            value: { base: "{colors.neutral.50}", _dark: "{colors.neutral.800}" },
           },
           subtle: {
-            value: { base: "{colors.neutral.200}", dark: "{colors.neutral.800}" },
+            value: { base: "{colors.neutral.200}", _dark: "{colors.neutral.800}" },
           },
           overlay: {
             value: {
               base: "rgb(250 250 250 / 0.32)",
-              dark: "rgb(9 9 11 / 0.4)",
+              _dark: "rgb(9 9 11 / 0.4)",
             },
           },
         },
         fg: {
           default: {
-            value: { base: "{colors.neutral.900}", dark: "{colors.neutral.100}" },
+            value: { base: "{colors.neutral.900}", _dark: "{colors.neutral.100}" },
           },
           muted: {
-            value: { base: "{colors.neutral.600}", dark: "{colors.neutral.400}" },
+            value: { base: "{colors.neutral.600}", _dark: "{colors.neutral.400}" },
           },
           onAccent: { value: "{colors.neutral.50}" },
         },
         border: {
           default: {
-            value: { base: "{colors.neutral.300}", dark: "{colors.neutral.700}" },
+            value: { base: "{colors.neutral.300}", _dark: "{colors.neutral.700}" },
           },
           strong: {
-            value: { base: "{colors.neutral.500}", dark: "{colors.neutral.500}" },
+            value: { base: "{colors.neutral.500}", _dark: "{colors.neutral.500}" },
           },
           interactive: {
-            value: { base: "{colors.neutral.900}", dark: "{colors.neutral.200}" },
+            value: { base: "{colors.neutral.900}", _dark: "{colors.neutral.200}" },
           },
         },
         accent: {
@@ -124,17 +124,17 @@ export const jaciTheme = {
         info: { value: "{colors.blue.600}" },
         focus: { value: "{colors.blue.600}" },
         disabled: {
-          value: { base: "{colors.neutral.400}", dark: "{colors.neutral.600}" },
+          value: { base: "{colors.neutral.400}", _dark: "{colors.neutral.600}" },
         },
         selected: {
-          value: { base: "{colors.blue.50}", dark: "{colors.blue.950}" },
+          value: { base: "{colors.blue.50}", _dark: "{colors.blue.950}" },
         },
         link: {
           default: {
-            value: { base: "{colors.neutral.600}", dark: "{colors.neutral.400}" },
+            value: { base: "{colors.neutral.600}", _dark: "{colors.neutral.400}" },
           },
           hover: {
-            value: { base: "{colors.neutral.900}", dark: "{colors.neutral.200}" },
+            value: { base: "{colors.neutral.900}", _dark: "{colors.neutral.200}" },
           },
         },
       },
@@ -142,25 +142,25 @@ export const jaciTheme = {
         sm: {
           value: {
             base: "0 1px 2px rgb(0 0 0 / 0.08)",
-            dark: "0 1px 2px rgb(255 255 255 / 0.08)",
+            _dark: "0 1px 2px rgb(255 255 255 / 0.08)",
           },
         },
         md: {
           value: {
             base: "0 10px 24px rgb(0 0 0 / 0.12)",
-            dark: "0 10px 24px rgb(255 255 255 / 0.1)",
+            _dark: "0 10px 24px rgb(255 255 255 / 0.1)",
           },
         },
         lg: {
           value: {
             base: "0 18px 42px rgb(0 0 0 / 0.16)",
-            dark: "0 18px 42px rgb(255 255 255 / 0.12)",
+            _dark: "0 18px 42px rgb(255 255 255 / 0.12)",
           },
         },
         xl: {
           value: {
             base: "0 24px 52px rgb(0 0 0 / 0.2)",
-            dark: "0 24px 52px rgb(255 255 255 / 0.14)",
+            _dark: "0 24px 52px rgb(255 255 255 / 0.14)",
           },
         },
       },
