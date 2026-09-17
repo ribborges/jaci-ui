@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.1
+
+### Patch Changes
+
+- 58c4e2c: Fix semantic tokens for dark theme
+- 52c2715: Update packages
+
 ## 1.0.0
 
 ### Major Changes
