@@ -205,6 +205,17 @@ export default defineConfig({
     recipes: "*",
   },
   globalCss: {
+    '[data-jaci-theme="dark"]': {
+      "--jaci-colors-surface-canvas": "var(--jaci-colors-neutral-950)",
+      "--jaci-colors-surface-default": "var(--jaci-colors-neutral-900)",
+      "--jaci-colors-surface-raised": "var(--jaci-colors-neutral-800)",
+      "--jaci-colors-surface-subtle": "var(--jaci-colors-neutral-800)",
+      "--jaci-colors-surface-overlay": "rgb(9 9 11 / 0.4)",
+      "--jaci-colors-fg-default": "var(--jaci-colors-neutral-100)",
+      "--jaci-colors-fg-muted": "var(--jaci-colors-neutral-400)",
+      "--jaci-colors-border-default": "var(--jaci-colors-neutral-700)",
+      "--jaci-colors-border-interactive": "var(--jaci-colors-neutral-200)",
+    },
     ':where([data-slot="bottom-navigation"])': { display: "flex" },
     ':where([data-slot="sidebar"])': { display: "flex" },
     "@media (prefers-reduced-motion: reduce)": {
