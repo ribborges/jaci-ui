@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.4
+
+### Patch Changes
+
+- 6e41217: Fix button className
+- 8330e7b: Fix theme provider
+
 ## 1.0.3
 
 ### Patch Changes
