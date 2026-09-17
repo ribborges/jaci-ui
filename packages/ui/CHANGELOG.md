@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+### Patch Changes
+
+- 3bd3028: Override package versions with high severity vulnerabilities
+
 ## 1.0.1
 
 ### Patch Changes
