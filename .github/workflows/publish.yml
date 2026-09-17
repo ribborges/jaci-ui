@@ -37,7 +37,6 @@ jobs:
           node-version: 24
           registry-url: https://registry.npmjs.org
           package-manager-cache: false
-      - run: corepack enable
       - run: pnpm install --frozen-lockfile
       - run: pnpm audit:dependencies
       - run: pnpm --filter @jaci-ui/storybook exec playwright install --with-deps chromium

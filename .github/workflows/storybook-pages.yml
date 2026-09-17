@@ -30,7 +30,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_DEVELOPMENT_VERSION }}
           cache: pnpm
-      - run: corepack enable
       - run: pnpm install --frozen-lockfile
       - name: Build Storybook for project Pages base path
         env:
