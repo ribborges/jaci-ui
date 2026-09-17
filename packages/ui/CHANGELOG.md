@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3
+
+### Patch Changes
+
+- 01f9785: Fix theming
+
 ## 1.0.2
 
 ### Patch Changes
