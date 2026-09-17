@@ -66,7 +66,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   if (render) {
     // Keep the render path tolerant of framework-rendered elements and avoid
     // adding a synthetic client handler when the composed element has none.
-    const renderedProps = render.props ?? { className: '' };
+    const renderedProps = render.props ?? { className: "" };
     const renderedOnClick = renderedProps.onClick as MouseEventHandler<HTMLElement> | undefined;
     const handleRenderedClick: MouseEventHandler<HTMLElement> | undefined =
       renderedOnClick || buttonOnClick
