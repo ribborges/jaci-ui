@@ -41,12 +41,12 @@ const FieldContext = createContext<FieldContextValue>({
   valid: null,
 });
 
-function normalizeErrors(errors: ReactNode | ReactNode[] | undefined): ReactNode[] {
+function normalizeErrors(errors: unknown): ReactNode[] {
   if (errors === undefined || errors === null || errors === false) {
     return [];
   }
 
-  return Array.isArray(errors) ? errors : [errors];
+  return Array.isArray(errors) ? errors : [errors as ReactNode];
 }
 
 function renderErrors(errors: ReactNode[]) {
