@@ -639,6 +639,49 @@ export const inputRecipe = defineRecipe({
   staticCss: ["*"],
 });
 
+export const passwordInputRecipe = defineSlotRecipe({
+  className: "passwordInput",
+  slots: ["control", "toggle"],
+  base: {
+    control: {
+      flex: "1",
+      minWidth: "0",
+      position: "relative",
+      width: "100%",
+      "& > [data-slot=input]": { paddingInlineEnd: "10" },
+    },
+    toggle: {
+      alignItems: "center",
+      backgroundColor: "transparent",
+      border: "0",
+      borderRadius: "md",
+      color: "fg.muted",
+      cursor: "pointer",
+      display: "inline-flex",
+      height: "7",
+      insetInlineEnd: "1",
+      justifyContent: "center",
+      padding: "0",
+      position: "absolute",
+      top: "50%",
+      transform: "translateY(-50%)",
+      transitionDuration: "fast",
+      transitionProperty: "color, background-color",
+      transitionTimingFunction: "standard",
+      width: "7",
+      _disabled: { cursor: "not-allowed", opacity: "0.55" },
+      _focusVisible: {
+        outline: "2px solid",
+        outlineColor: "focus",
+        outlineOffset: "1px",
+      },
+      _hover: { backgroundColor: "surface.subtle", color: "fg.default" },
+      "& svg": { height: "4", width: "4" },
+    },
+  },
+  staticCss: ["*"],
+});
+
 export const textareaRecipe = defineRecipe({
   className: "textarea",
   base: {

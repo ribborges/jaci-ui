@@ -11,6 +11,7 @@ import {
   Switch,
   Textarea,
 } from "jaci-ui";
+import { expect } from "storybook/test";
 
 const meta = {
   title: "Forms/Field",
@@ -55,4 +56,24 @@ export const Controls: Story = {
       </Stack>
     </Stack>
   ),
+};
+
+export const Password: Story = {
+  render: () => (
+    <Field>
+      <FieldLabel htmlFor="password">Password</FieldLabel>
+      <Input id="password" defaultValue="secret" type="password" />
+      <FieldDescription>Use the embedded button to reveal or hide the password.</FieldDescription>
+    </Field>
+  ),
+  play: async () => {
+    const input = document.querySelector<HTMLInputElement>("input[type='password']");
+    const toggle = document.querySelector<HTMLButtonElement>("[data-slot='input-password-toggle']");
+    if (!input || !toggle)
+      throw new Error("The password input did not render its visibility toggle.");
+
+    expect(toggle).toHaveAttribute("aria-label", "Show password");
+    await toggle.click();
+    expect(input.type).toBe("text");
+  },
 };
