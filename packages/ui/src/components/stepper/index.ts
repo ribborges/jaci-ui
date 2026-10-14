@@ -1,5 +1,16 @@
+export type {
+  StepperActionsProps,
+  StepperContentProps,
+  StepperItemProps,
+  StepperNavigationButtonProps,
+  StepperOrientation,
+  StepperRootProps,
+  StepperStatus,
+  StepperTriggerProps,
+} from "./stepper";
 export {
   Stepper,
+  StepperActions,
   StepperContent,
   StepperDescription,
   StepperIndicator,
@@ -11,12 +22,4 @@ export {
   StepperSeparator,
   StepperTitle,
   StepperTrigger,
-} from "./stepper";
-export type {
-  StepperItemProps,
-  StepperNavigationButtonProps,
-  StepperOrientation,
-  StepperRootProps,
-  StepperStatus,
-  StepperTriggerProps,
 } from "./stepper";
