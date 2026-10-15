@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.1.0
+
+### Minor Changes
+
+- df9e45f: Add an accessible password visibility toggle to `Input` when `type="password"`.
+- 73081ea: Add Stepper layouts with separate navigation and content panels, `Stepper.Actions`, and optional
+  numbered indicators. The existing nested `Stepper.Content` composition remains available but is
+  deprecated and will be removed in v2.
+
+### Patch Changes
+
+- 554484c: Update dependencies
+
 ## 1.0.4
 
 ### Patch Changes
