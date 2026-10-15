@@ -322,6 +322,9 @@ import { Button, ButtonGroup, EmptyState, IconButton, Input, InputGroup } from "
 `IconButton` requires an accessible label for icon-only content. `ButtonGroup` and `InputGroup`
 also expose `.Root` aliases for compound composition.
 
+`Input` automatically adds an accessible visibility button for `type="password"`. The button
+reveals or masks the current value without changing it.
+
 ## Server rendering and frameworks
 
 Static components are server-safe and interactive modules preserve their `"use client"` boundary.

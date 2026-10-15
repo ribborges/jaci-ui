@@ -1859,6 +1859,8 @@
         "code-gutter",
         "data-view-content",
         "input-loading",
+        "input-password-control",
+        "input-password-toggle",
         "input-prefix",
         "input-suffix",
         "list-item",

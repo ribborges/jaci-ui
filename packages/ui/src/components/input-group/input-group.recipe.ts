@@ -10,6 +10,7 @@ export const inputGroupRecipe = defineSlotRecipe({
       minWidth: "0",
       width: "100%",
       "& > [data-slot=input]": { flex: "1", minWidth: "0" },
+      "& > [data-slot=input-password-control]": { flex: "1", minWidth: "0" },
     },
     addon: {
       alignItems: "center",
