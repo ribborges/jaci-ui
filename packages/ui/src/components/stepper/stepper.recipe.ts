@@ -12,6 +12,7 @@ export const stepperRecipe = defineSlotRecipe({
     "description",
     "content",
     "separator",
+    "actions",
     "previous",
     "next",
   ],
@@ -23,6 +24,14 @@ export const stepperRecipe = defineSlotRecipe({
       gap: "4",
       minWidth: "0",
       width: "100%",
+      "&[data-show-numbers]": { counterReset: "stepper" },
+      "&[data-show-numbers] [data-slot=stepper-indicator]": {
+        counterIncrement: "stepper",
+      },
+      "&[data-show-numbers] [data-slot=stepper-indicator]:not([data-status=complete]):not([data-has-custom-content])::before":
+        {
+          content: "counter(stepper)",
+        },
     },
     list: {
       display: "flex",
@@ -132,8 +141,9 @@ export const stepperRecipe = defineSlotRecipe({
     content: {
       color: "fg.default",
       minWidth: "0",
-      paddingTop: "4",
+      paddingTop: "0",
       width: "100%",
+      "&[data-legacy-content]": { paddingTop: "4" },
       "&[hidden]": { display: "none" },
     },
     separator: {
@@ -145,6 +155,7 @@ export const stepperRecipe = defineSlotRecipe({
       position: "relative",
       top: "1rem",
     },
+    actions: { display: "flex", gap: "2" },
     previous: {
       alignItems: "center",
       backgroundColor: "transparent",
@@ -201,9 +212,24 @@ export const stepperRecipe = defineSlotRecipe({
         },
       },
       vertical: {
-        list: { flexDirection: "column" },
-        item: { alignItems: "stretch", flexDirection: "column" },
+        root: {
+          alignItems: "start",
+          columnGap: "6",
+          display: "grid",
+          gridTemplateColumns: "minmax(12rem, 16rem) minmax(0, 1fr)",
+          rowGap: "4",
+        },
+        list: { flexDirection: "column", gridColumn: "1", gridRow: "1" },
+        item: {
+          alignItems: "stretch",
+          flex: "initial",
+          flexDirection: "column",
+        },
         trigger: { alignItems: "start" },
+        content: {
+          gridColumn: "2",
+          gridRow: "1",
+        },
         separator: {
           height: "1.5rem",
           marginInlineStart: "1rem",
@@ -211,6 +237,7 @@ export const stepperRecipe = defineSlotRecipe({
           marginBlock: "1",
           width: "1px",
         },
+        actions: { gridColumn: "2", gridRow: "2" },
       },
     },
     status: {

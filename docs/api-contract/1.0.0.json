@@ -917,7 +917,10 @@
     "StatValue",
     "StatValueProps",
     "Stepper",
+    "StepperActions",
+    "StepperActionsProps",
     "StepperContent",
+    "StepperContentProps",
     "StepperDescription",
     "StepperIndicator",
     "StepperItem",
@@ -1775,6 +1778,7 @@
       ],
       "stepper": [
         "stepper",
+        "stepper-actions",
         "stepper-content",
         "stepper-indicator",
         "stepper-item",

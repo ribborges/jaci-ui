@@ -1,5 +1,6 @@
 "use client";
 
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import {
   createContext,
   forwardRef,
@@ -9,7 +10,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
 import { cx } from "../../styled-system/css";
 import { stepper } from "../../styled-system/recipes";
@@ -58,6 +58,10 @@ function useStepperItemContext() {
   return context;
 }
 
+function useOptionalStepperItemContext() {
+  return useContext(StepperItemContext);
+}
+
 export interface StepperRootProps extends Omit<ComponentPropsWithoutRef<"nav">, "children"> {
   value?: string;
   defaultValue?: string;
@@ -66,6 +70,7 @@ export interface StepperRootProps extends Omit<ComponentPropsWithoutRef<"nav">, 
   linear?: boolean;
   allowStepSelect?: boolean;
   disabled?: boolean;
+  showNumbers?: boolean;
   name?: string;
   form?: string;
   children?: ReactNode;
@@ -84,6 +89,7 @@ export const StepperRoot = forwardRef<HTMLElement, StepperRootProps>(function St
     name,
     onValueChange,
     orientation = "horizontal",
+    showNumbers = false,
     value: controlledValue,
     ...props
   },
@@ -92,7 +98,6 @@ export const StepperRoot = forwardRef<HTMLElement, StepperRootProps>(function St
   const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue);
   const [records, setRecords] = useState<StepRecord[]>([]);
   const activeValue = controlledValue ?? uncontrolledValue ?? records[0]?.value;
-
   const register = useCallback((record: StepRecord) => {
     setRecords((current) => {
       const index = current.findIndex((item) => item.value === record.value);
@@ -198,6 +203,7 @@ export const StepperRoot = forwardRef<HTMLElement, StepperRootProps>(function St
         className={cx(stepper({ orientation }).root, className)}
         data-jaci-component="stepper"
         data-orientation={orientation}
+        data-show-numbers={showNumbers || undefined}
         data-slot="stepper"
         data-state={disabled ? "disabled" : "active"}
         ref={ref}
@@ -342,6 +348,7 @@ export const StepperIndicator = forwardRef<HTMLSpanElement, StepperIndicatorProp
         {...props}
         aria-hidden={props["aria-hidden"] ?? true}
         className={cx(styles.indicator, className)}
+        data-has-custom-content={children != null || undefined}
         data-slot="stepper-indicator"
         data-status={item.status}
         ref={ref}
@@ -374,17 +381,40 @@ function createSpanSlot(slot: "title" | "description" | "separator") {
 export const StepperTitle = createSpanSlot("title");
 export const StepperDescription = createSpanSlot("description");
 
-export const StepperContent = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<"div">>(
-  function StepperContent({ className, hidden, ...props }, ref) {
-    const item = useStepperItemContext();
-    const { orientation } = useStepperContext();
-    const styles = stepper({ orientation, status: item.status });
+interface StepperContentPanelProps extends Omit<ComponentPropsWithoutRef<"div">, "value"> {
+  value: string;
+}
+
+/**
+ * @deprecated Render `Stepper.Content` as a child of `Stepper.Root` and provide its `value`.
+ * This compatibility shape will be removed in v2.
+ */
+interface StepperContentLegacyProps extends Omit<ComponentPropsWithoutRef<"div">, "value"> {
+  value?: never;
+}
+
+export type StepperContentProps = StepperContentPanelProps | StepperContentLegacyProps;
+
+export const StepperContent = forwardRef<HTMLDivElement, StepperContentProps>(
+  function StepperContent({ className, hidden, value, ...props }, ref) {
+    const { activeValue, orientation } = useStepperContext();
+    const item = useOptionalStepperItemContext();
+    if (value === undefined && !item) {
+      throw new Error("Stepper.Content requires a value when it is rendered outside Stepper.Item.");
+    }
+
+    const contentValue = value ?? item?.value;
+    const isLegacy = value === undefined;
+    const styles = stepper({ orientation });
     return (
       <div
         {...props}
         className={cx(styles.content, className)}
+        data-legacy-content={isLegacy || undefined}
+        data-state={contentValue === activeValue ? "active" : "inactive"}
         data-slot="stepper-content"
-        hidden={hidden ?? item.status !== "current"}
+        data-value={contentValue}
+        hidden={hidden ?? contentValue !== activeValue}
         ref={ref}
       />
     );
@@ -392,6 +422,21 @@ export const StepperContent = forwardRef<HTMLDivElement, ComponentPropsWithoutRe
 );
 
 export const StepperSeparator = createSpanSlot("separator");
+
+export type StepperActionsProps = ComponentPropsWithoutRef<"div">;
+export const StepperActions = forwardRef<HTMLDivElement, StepperActionsProps>(
+  function StepperActions({ className, ...props }, ref) {
+    const { orientation } = useStepperContext();
+    return (
+      <div
+        {...props}
+        className={cx(stepper({ orientation }).actions, className)}
+        data-slot="stepper-actions"
+        ref={ref}
+      />
+    );
+  },
+);
 
 export interface StepperNavigationButtonProps extends ComponentPropsWithoutRef<"button"> {
   children?: ReactNode;
@@ -448,6 +493,7 @@ export const StepperNext = forwardRef<HTMLButtonElement, StepperNavigationButton
 
 export const Stepper = {
   Root: StepperRoot,
+  Actions: StepperActions,
   List: StepperList,
   Item: StepperItem,
   Trigger: StepperTrigger,

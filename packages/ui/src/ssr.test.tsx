@@ -513,22 +513,24 @@ describe("SSR rendering", () => {
               <Stepper.Indicator />
               <Stepper.Title>Account</Stepper.Title>
             </Stepper.Trigger>
-            <Stepper.Content>Account details</Stepper.Content>
+            <Stepper.Content>Legacy account details</Stepper.Content>
           </Stepper.Item>
           <Stepper.Item value="payment">
             <Stepper.Trigger>
               <Stepper.Indicator />
               <Stepper.Title>Payment</Stepper.Title>
             </Stepper.Trigger>
-            <Stepper.Content>Payment details</Stepper.Content>
           </Stepper.Item>
         </Stepper.List>
+        <Stepper.Content value="account">Account details</Stepper.Content>
+        <Stepper.Content value="payment">Payment details</Stepper.Content>
       </Stepper.Root>,
     );
 
     expect(html).toContain('data-jaci-component="stepper"');
     expect(html).toContain('aria-current="step"');
     expect(html).toContain('name="checkout-step"');
+    expect(html).toContain('data-legacy-content="true"');
   });
 
   it("renders fixed navigation and its accessible mobile trigger safely on the server", () => {

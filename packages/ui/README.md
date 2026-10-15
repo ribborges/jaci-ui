@@ -286,27 +286,36 @@ Use `Stepper` for linear or freely navigable workflows. Its public value is a st
 submit the current step through a native hidden field:
 
 ```tsx
-<Stepper.Root value={step} onValueChange={setStep} linear name="checkout-step">
+<Stepper.Root value={step} onValueChange={setStep} linear name="checkout-step" showNumbers>
   <Stepper.List>
     <Stepper.Item value="account">
       <Stepper.Trigger>
         <Stepper.Indicator />
         <Stepper.Title>Account</Stepper.Title>
       </Stepper.Trigger>
-      <Stepper.Content>Profile details</Stepper.Content>
     </Stepper.Item>
     <Stepper.Item value="payment">
       <Stepper.Trigger>
         <Stepper.Indicator />
         <Stepper.Title>Payment</Stepper.Title>
       </Stepper.Trigger>
-      <Stepper.Content>Billing information</Stepper.Content>
     </Stepper.Item>
   </Stepper.List>
-  <Stepper.Previous />
-  <Stepper.Next />
+  <Stepper.Content value="account">Profile details</Stepper.Content>
+  <Stepper.Content value="payment">Billing information</Stepper.Content>
+  <Stepper.Actions>
+    <Stepper.Previous />
+    <Stepper.Next />
+  </Stepper.Actions>
 </Stepper.Root>
 ```
+
+Set `showNumbers` to display the step number in current and upcoming indicators. Completed steps
+continue to show their checkmark.
+
+`Stepper.Content` nested inside `Stepper.Item` without a `value` remains supported for existing
+implementations, but is deprecated and will be removed in v2. Move it beside `Stepper.List` and
+set its matching `value` to use the full-width panel layout.
 
 Small composition helpers keep common layouts consistent:
 

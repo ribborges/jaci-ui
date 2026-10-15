@@ -16,16 +16,16 @@ function Example(props: { onValueChange?: (value: string) => void; value?: strin
             <Stepper.Title>Account</Stepper.Title>
           </Stepper.Trigger>
           <Stepper.Separator />
-          <Stepper.Content>Account content</Stepper.Content>
         </Stepper.Item>
         <Stepper.Item value="payment">
           <Stepper.Trigger>
             <Stepper.Indicator />
             <Stepper.Title>Payment</Stepper.Title>
           </Stepper.Trigger>
-          <Stepper.Content>Payment content</Stepper.Content>
         </Stepper.Item>
       </Stepper.List>
+      <Stepper.Content value="account">Account content</Stepper.Content>
+      <Stepper.Content value="payment">Payment content</Stepper.Content>
       <Stepper.Next />
     </Stepper.Root>
   );
@@ -49,6 +49,118 @@ describe("Stepper", () => {
     if (!next) throw new Error("Stepper next button was not rendered.");
     act(() => next.click());
     expect(onValueChange).toHaveBeenCalledWith("payment");
+  });
+
+  it("shows only the active step content", () => {
+    const container = renderInDocument(<Example />);
+    const accountContent = container.querySelector<HTMLElement>(
+      '[data-slot="stepper-content"][data-value="account"]',
+    );
+    const paymentContent = container.querySelector<HTMLElement>(
+      '[data-slot="stepper-content"][data-value="payment"]',
+    );
+    const payment = container.querySelector<HTMLButtonElement>(
+      '[data-value="payment"] [data-slot="stepper-trigger"]',
+    );
+    if (!accountContent || !paymentContent || !payment) {
+      throw new Error("Stepper content and trigger were not rendered.");
+    }
+
+    expect(accountContent.hidden).toBe(false);
+    expect(paymentContent.hidden).toBe(true);
+    act(() => payment.click());
+    expect(accountContent.hidden).toBe(true);
+    expect(paymentContent.hidden).toBe(false);
+  });
+
+  it("supports the deprecated content nested in a step item", () => {
+    const container = renderInDocument(
+      <Stepper.Root defaultValue="account">
+        <Stepper.List>
+          <Stepper.Item value="account">
+            <Stepper.Trigger>Account</Stepper.Trigger>
+            <Stepper.Content>Account content</Stepper.Content>
+          </Stepper.Item>
+          <Stepper.Item value="payment">
+            <Stepper.Trigger>Payment</Stepper.Trigger>
+            <Stepper.Content>Payment content</Stepper.Content>
+          </Stepper.Item>
+        </Stepper.List>
+      </Stepper.Root>,
+    );
+    const accountContent = container.querySelector<HTMLElement>(
+      '[data-slot="stepper-content"][data-value="account"]',
+    );
+    const paymentContent = container.querySelector<HTMLElement>(
+      '[data-slot="stepper-content"][data-value="payment"]',
+    );
+    const payment = container.querySelector<HTMLButtonElement>(
+      '[data-value="payment"] [data-slot="stepper-trigger"]',
+    );
+    if (!accountContent || !paymentContent || !payment) {
+      throw new Error("Legacy Stepper content and trigger were not rendered.");
+    }
+
+    expect(accountContent.getAttribute("data-legacy-content")).toBe("true");
+    expect(accountContent.hidden).toBe(false);
+    expect(paymentContent.hidden).toBe(true);
+    act(() => payment.click());
+    expect(accountContent.hidden).toBe(true);
+    expect(paymentContent.hidden).toBe(false);
+  });
+
+  it("keeps indicator numbering opt-in", () => {
+    const defaultContainer = renderInDocument(<Example />);
+    expect(
+      defaultContainer.querySelector('[data-slot="stepper"]')?.getAttribute("data-show-numbers"),
+    ).toBeNull();
+
+    const numberedContainer = renderInDocument(
+      <Stepper.Root defaultValue="account" showNumbers>
+        <Stepper.List>
+          <Stepper.Item value="account">
+            <Stepper.Trigger>
+              <Stepper.Indicator />
+              Account
+            </Stepper.Trigger>
+          </Stepper.Item>
+        </Stepper.List>
+      </Stepper.Root>,
+    );
+    expect(
+      numberedContainer.querySelector('[data-slot="stepper"]')?.getAttribute("data-show-numbers"),
+    ).toBe("true");
+  });
+
+  it("keeps the completion checkmark when numbering is enabled", () => {
+    const container = renderInDocument(
+      <Stepper.Root defaultValue="account" showNumbers>
+        <Stepper.List>
+          <Stepper.Item value="account">
+            <Stepper.Trigger>
+              <Stepper.Indicator />
+              Account
+            </Stepper.Trigger>
+          </Stepper.Item>
+          <Stepper.Item value="payment">
+            <Stepper.Trigger>
+              <Stepper.Indicator />
+              Payment
+            </Stepper.Trigger>
+          </Stepper.Item>
+        </Stepper.List>
+      </Stepper.Root>,
+    );
+    const payment = container.querySelector<HTMLButtonElement>(
+      '[data-value="payment"] [data-slot="stepper-trigger"]',
+    );
+    const accountIndicator = container.querySelector<HTMLElement>(
+      '[data-value="account"] [data-slot="stepper-indicator"]',
+    );
+    if (!payment || !accountIndicator) throw new Error("Stepper indicators were not rendered.");
+
+    act(() => payment.click());
+    expect(accountIndicator.textContent).toBe("✓");
   });
 
   it("does not allow disabled steps to be selected", () => {
