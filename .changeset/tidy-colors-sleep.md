@@ -2,4 +2,4 @@
 "jaci-ui": minor
 ---
 
-Improve ColorPicker hue, alpha, and native color input visuals with themed spectrum and transparency controls.
+Improve ColorPicker controls and add composable ColorWheel and HSV intensity inputs.

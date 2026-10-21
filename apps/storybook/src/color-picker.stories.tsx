@@ -1,6 +1,6 @@
-import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ColorPicker, Stack, Text } from "jaci-ui";
+import { useState } from "react";
 import { expect } from "storybook/test";
 
 const meta = {
@@ -13,9 +13,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 function Picker({
+  controls = "palette",
   defaultOpen = false,
   showAlpha = false,
 }: {
+  controls?: "palette" | "wheel" | "sliders";
   defaultOpen?: boolean;
   showAlpha?: boolean;
 }) {
@@ -40,8 +42,10 @@ function Picker({
         <ColorPicker.Portal>
           <ColorPicker.Positioner sideOffset={8}>
             <ColorPicker.Popup>
-              <ColorPicker.Palette />
+              {controls === "palette" ? <ColorPicker.Palette /> : null}
+              {controls === "wheel" ? <ColorPicker.ColorWheel /> : null}
               <ColorPicker.Hue />
+              {controls === "wheel" || controls === "sliders" ? <ColorPicker.Intensity /> : null}
               {showAlpha ? <ColorPicker.Alpha /> : null}
               <ColorPicker.Swatches aria-label="Suggested colors" />
               <ColorPicker.Input />
@@ -58,9 +62,11 @@ function Picker({
 }
 
 function source({
+  controls = "palette",
   defaultOpen = false,
   showAlpha = false,
 }: {
+  controls?: "palette" | "wheel" | "sliders";
   defaultOpen?: boolean;
   showAlpha?: boolean;
 }) {
@@ -88,8 +94,8 @@ function Example() {
         <ColorPicker.Portal>
           <ColorPicker.Positioner sideOffset={8}>
             <ColorPicker.Popup>
-              <ColorPicker.Palette />
-              <ColorPicker.Hue />
+              ${controls === "palette" ? "<ColorPicker.Palette />\n              " : ""}${controls === "wheel" ? "<ColorPicker.ColorWheel />\n              " : ""}<ColorPicker.Hue />
+              ${controls === "wheel" || controls === "sliders" ? "<ColorPicker.Intensity />\n              " : ""}
               ${showAlpha ? "<ColorPicker.Alpha />\n              " : ""}<ColorPicker.Swatches aria-label="Suggested colors" />
               <ColorPicker.Input />
               <ColorPicker.NativeInput />
@@ -106,6 +112,8 @@ function Example() {
 const hexSource = source({});
 const alphaSource = source({ showAlpha: true });
 const paletteSource = source({ defaultOpen: true });
+const wheelSource = source({ controls: "wheel", defaultOpen: true });
+const slidersSource = source({ controls: "sliders", defaultOpen: true });
 
 export const Hex: Story = {
   render: () => <Picker />,
@@ -142,6 +150,30 @@ export const PaletteDrag: Story = {
         story: "Drag across the saturation/lightness palette. The ring marks the current color.",
       },
       source: { code: paletteSource, language: "tsx" },
+    },
+  },
+};
+
+export const ColorWheel: Story = {
+  render: () => <Picker controls="wheel" defaultOpen />,
+  parameters: {
+    docs: {
+      description: {
+        story: "Select hue and saturation on the wheel, then adjust brightness below it.",
+      },
+      source: { code: wheelSource, language: "tsx" },
+    },
+  },
+};
+
+export const HueAndIntensity: Story = {
+  render: () => <Picker controls="sliders" defaultOpen />,
+  parameters: {
+    docs: {
+      description: {
+        story: "Use independent hue and HSV brightness controls without a palette.",
+      },
+      source: { code: slidersSource, language: "tsx" },
     },
   },
 };

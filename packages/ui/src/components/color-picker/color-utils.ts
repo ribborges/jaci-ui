@@ -7,7 +7,44 @@ export interface ColorModel {
   saturation: number;
 }
 
+export interface HsvColorModel {
+  hue: number;
+  saturation: number;
+  value: number;
+}
+
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+export function hslToHsv({ hue, lightness, saturation }: ColorModel): HsvColorModel {
+  const normalizedLightness = clamp(lightness / 100, 0, 1);
+  const normalizedSaturation = clamp(saturation / 100, 0, 1);
+  const value =
+    normalizedLightness +
+    normalizedSaturation * Math.min(normalizedLightness, 1 - normalizedLightness);
+
+  return {
+    hue: (hue + 360) % 360,
+    saturation: value === 0 ? 0 : 2 * (1 - normalizedLightness / value) * 100,
+    value: value * 100,
+  };
+}
+
+export function hsvToHsl({ hue, saturation, value }: HsvColorModel, alpha = 1): ColorModel {
+  const normalizedSaturation = clamp(saturation / 100, 0, 1);
+  const normalizedValue = clamp(value / 100, 0, 1);
+  const lightness = normalizedValue * (1 - normalizedSaturation / 2);
+  const hslSaturation =
+    lightness === 0 || lightness === 1
+      ? 0
+      : (normalizedValue - lightness) / Math.min(lightness, 1 - lightness);
+
+  return {
+    alpha: clamp(alpha, 0, 1),
+    hue: (hue + 360) % 360,
+    lightness: lightness * 100,
+    saturation: hslSaturation * 100,
+  };
+}
 
 function parseNumber(value: string, min: number, max: number) {
   const parsed = Number.parseFloat(value);

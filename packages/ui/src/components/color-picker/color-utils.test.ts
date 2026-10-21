@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { defaultColor, formatColor, parseColor } from "./color-utils";
+import { defaultColor, formatColor, hslToHsv, hsvToHsl, parseColor } from "./color-utils";
 
 describe("color conversion", () => {
   it("parses short and alpha hex values", () => {
@@ -32,5 +32,14 @@ describe("color conversion", () => {
     expect(parseColor("rebeccapurple")).toBeNull();
     expect(parseColor("#12")).toBeNull();
     expect(parseColor("rgb(nope, 0, 0)")).toBeNull();
+  });
+
+  it("converts between HSL and HSV without changing the rendered color", () => {
+    const color = defaultColor("rgba(37, 99, 235, 0.75)");
+    const hsv = hslToHsv(color);
+    const converted = hsvToHsl(hsv, color.alpha);
+
+    expect(formatColor(converted, "rgb", true)).toBe("rgba(37, 99, 235, 0.75)");
+    expect(hsv.value).toBeGreaterThan(90);
   });
 });
