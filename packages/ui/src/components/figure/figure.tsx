@@ -1,14 +1,14 @@
 "use client";
 
 import { Dialog as BaseDialog } from "@base-ui/react/dialog";
-import { Children, createContext, forwardRef, isValidElement, useContext } from "react";
 import type { ComponentPropsWithoutRef, ElementType, ReactElement, ReactNode } from "react";
+import { Children, createContext, forwardRef, isValidElement, useContext } from "react";
 
 import { cx } from "../../styled-system/css";
 import { figure as figureStyles } from "../../styled-system/recipes";
-import { Image } from "../image";
-import type { ImageProps } from "../image";
 import { useThemePortalProps } from "../../theme/theme-scope";
+import type { ImageProps } from "../image";
+import { Image } from "../image";
 
 interface FigureContextValue {
   lightbox: boolean;

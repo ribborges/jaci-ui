@@ -1,8 +1,8 @@
 "use client";
 
 import { Dialog as BaseDialog } from "@base-ui/react/dialog";
-import { forwardRef, useEffect, useState } from "react";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import { forwardRef, useEffect, useState } from "react";
 
 import { cx } from "../../styled-system/css";
 import { image } from "../../styled-system/recipes";

@@ -49,3 +49,27 @@ export const Static: Story = {
     </Figure.Root>
   ),
 };
+
+export const FullscreenLightbox: Story = {
+  args: { defaultOpen: true, lightbox: true },
+  render: (args) => (
+    <Figure.Root {...args} style={{ maxWidth: "36rem" }}>
+      <Figure.Image alt="Mountain landscape from Lorem Picsum" src={source} />
+      <Figure.Caption>Mountain landscape captured for the Jaci UI gallery.</Figure.Caption>
+    </Figure.Root>
+  ),
+  parameters: {
+    docs: {
+      description: { story: "Review the fullscreen caption and close control spacing." },
+      source: {
+        code: `<Figure.Root defaultOpen lightbox>
+  <Figure.Image
+    src="https://picsum.photos/seed/jaci-figure/1280/720"
+    alt="Mountain landscape"
+  />
+  <Figure.Caption>Mountain landscape captured for the gallery.</Figure.Caption>
+</Figure.Root>`,
+      },
+    },
+  },
+};

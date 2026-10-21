@@ -68,3 +68,23 @@ export const Lightbox: Story = {
     },
   },
 };
+
+export const FullscreenLightbox: Story = {
+  args: { defaultOpen: true, lightbox: true },
+  render: (args) => <Image {...args} style={{ height: "12rem", width: "20rem" }} />,
+  parameters: {
+    docs: {
+      description: {
+        story: "Review the fullscreen close control with safe spacing from the viewport.",
+      },
+      source: {
+        code: `<Image
+  src="https://picsum.photos/seed/jaci-ui/640/360"
+  alt="Random landscape from Lorem Picsum"
+  defaultOpen
+  lightbox
+/>`,
+      },
+    },
+  },
+};
