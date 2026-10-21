@@ -74,4 +74,38 @@ describe("ColorPicker palette", () => {
     expect(palette.style.getPropertyValue("--jaci-color-palette-saturation")).toBe("100%");
     expect(palette.style.getPropertyValue("--jaci-color-palette-lightness")).toBe("0%");
   });
+
+  it("provides the selected hue and opacity colors to the range controls", () => {
+    const container = renderInDocument(
+      <ColorPicker.Root defaultValue="rgba(37, 99, 235, 0.75)" showAlpha>
+        <ColorPicker.Hue />
+        <ColorPicker.Alpha />
+        <ColorPicker.NativeInput />
+      </ColorPicker.Root>,
+    );
+    const hue = container.querySelector<HTMLInputElement>('[data-slot="color-picker-hue"]');
+    const alpha = container.querySelector<HTMLInputElement>('[data-slot="color-picker-alpha"]');
+    const nativeInput = container.querySelector<HTMLInputElement>(
+      '[data-slot="color-picker-native-input"]',
+    );
+    if (!hue || !alpha || !nativeInput) throw new Error("Color controls were not rendered.");
+
+    expect(hue.style.getPropertyValue("--jaci-color-picker-thumb-color")).toContain("hsl(");
+    expect(alpha.style.getPropertyValue("--jaci-color-picker-alpha-color")).toBe(
+      "rgb(37, 99, 235)",
+    );
+    expect(alpha.style.getPropertyValue("--jaci-color-picker-thumb-color")).toBe(
+      "rgb(37, 99, 235)",
+    );
+    expect(nativeInput.value).toBe("#2563eb");
+  });
+
+  it("does not render the alpha control unless alpha is enabled", () => {
+    const container = renderInDocument(
+      <ColorPicker.Root defaultValue="#2563eb">
+        <ColorPicker.Alpha />
+      </ColorPicker.Root>,
+    );
+    expect(container.querySelector('[data-slot="color-picker-alpha"]')).toBeNull();
+  });
 });

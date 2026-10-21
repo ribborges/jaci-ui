@@ -388,7 +388,7 @@ export type ColorPickerHueProps = Omit<
   "max" | "min" | "onChange" | "step" | "type" | "value"
 >;
 export const ColorPickerHue = forwardRef<HTMLInputElement, ColorPickerHueProps>(
-  function ColorPickerHue({ className, onInput, ...props }, ref) {
+  function ColorPickerHue({ className, onInput, style, ...props }, ref) {
     const { color, setColor } = useColorPicker();
     return (
       <input
@@ -404,6 +404,12 @@ export const ColorPickerHue = forwardRef<HTMLInputElement, ColorPickerHueProps>(
           onInput?.(event);
         }}
         step={1}
+        style={
+          {
+            "--jaci-color-picker-thumb-color": `hsl(${color.hue} 100% 50%)`,
+            ...style,
+          } as CSSProperties
+        }
         type="range"
         value={color.hue}
       />
@@ -433,10 +439,13 @@ export const ColorPickerAlpha = forwardRef<HTMLInputElement, ColorPickerAlphaPro
           onInput?.(event);
         }}
         step={0.01}
-        style={{
-          ...style,
-          background: `linear-gradient(to right, transparent, ${formatColor({ ...color, alpha: 1 }, "rgb")})`,
-        }}
+        style={
+          {
+            "--jaci-color-picker-alpha-color": formatColor({ ...color, alpha: 1 }, "rgb"),
+            "--jaci-color-picker-thumb-color": formatColor({ ...color, alpha: 1 }, "rgb"),
+            ...style,
+          } as CSSProperties
+        }
         type="range"
         value={color.alpha}
       />
