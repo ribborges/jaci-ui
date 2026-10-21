@@ -112,6 +112,7 @@ function Example() {
 const hexSource = source({});
 const alphaSource = source({ showAlpha: true });
 const paletteSource = source({ defaultOpen: true });
+const copySource = source({ defaultOpen: true });
 const wheelSource = source({ controls: "wheel", defaultOpen: true });
 const slidersSource = source({ controls: "sliders", defaultOpen: true });
 
@@ -150,6 +151,18 @@ export const PaletteDrag: Story = {
         story: "Drag across the saturation/lightness palette. The ring marks the current color.",
       },
       source: { code: paletteSource, language: "tsx" },
+    },
+  },
+};
+
+export const CopyValue: Story = {
+  render: () => <Picker defaultOpen />,
+  parameters: {
+    docs: {
+      description: {
+        story: "Use the Copy action beside the editable value to copy the selected color.",
+      },
+      source: { code: copySource, language: "tsx" },
     },
   },
 };

@@ -2,4 +2,4 @@
 "jaci-ui": minor
 ---
 
-Improve ColorPicker controls and add composable ColorWheel and HSV intensity inputs.
+Improve ColorPicker controls with composable color selection, HSV intensity, and value copying.

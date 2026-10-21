@@ -3,12 +3,13 @@
 import type { PopoverRoot as BasePopoverRoot } from "@base-ui/react/popover";
 import { Popover as BasePopover } from "@base-ui/react/popover";
 import type { ComponentPropsWithoutRef, CSSProperties, PointerEvent, ReactNode } from "react";
-import { createContext, forwardRef, useContext, useEffect, useId, useState } from "react";
+import { createContext, forwardRef, useContext, useEffect, useId, useRef, useState } from "react";
 
 import { cx } from "../../styled-system/css";
 import { colorPicker } from "../../styled-system/recipes";
 import { useThemePortalProps } from "../../theme/theme-scope";
 import { withRecipeClassName } from "../base-ui";
+import { copyToClipboard } from "../copyable/copy-to-clipboard";
 import type { ColorFormat, ColorModel } from "./color-utils";
 import { defaultColor, formatColor, hslToHsv, hsvToHsl, parseColor } from "./color-utils";
 
@@ -261,6 +262,7 @@ function updateFromPoint(
   const saturation = Math.round(clamp((event.clientX - rect.left) / rect.width, 0, 1) * 100);
   const lightness = Math.round(clamp((event.clientY - rect.top) / rect.height, 0, 1) * 100);
   setColor(palettePositionToHsl(saturation, lightness, color));
+  return saturation;
 }
 
 export type ColorPickerPaletteProps = Omit<ComponentPropsWithoutRef<"div">, "onChange">;
@@ -281,11 +283,20 @@ export const ColorPickerPalette = forwardRef<HTMLDivElement, ColorPickerPaletteP
   ) {
     const { color, disabled, setColor, value } = useColorPicker();
     const [isDragging, setIsDragging] = useState(false);
+    const lastSaturationRef = useRef(hslToPalettePosition(color).saturation);
     const background = `linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, hsl(${color.hue} 100% 50%))`;
     const palettePosition = hslToPalettePosition(color);
+    if (palettePosition.lightness < 100) lastSaturationRef.current = palettePosition.saturation;
+    const displayedPalettePosition = {
+      ...palettePosition,
+      saturation:
+        palettePosition.lightness === 100 ? lastSaturationRef.current : palettePosition.saturation,
+    };
     const paletteStyle = {
-      "--jaci-color-palette-lightness": formatPalettePercentage(palettePosition.lightness),
-      "--jaci-color-palette-saturation": formatPalettePercentage(palettePosition.saturation),
+      "--jaci-color-palette-lightness": formatPalettePercentage(displayedPalettePosition.lightness),
+      "--jaci-color-palette-saturation": formatPalettePercentage(
+        displayedPalettePosition.saturation,
+      ),
       background,
       ...style,
     } as CSSProperties;
@@ -332,13 +343,16 @@ export const ColorPickerPalette = forwardRef<HTMLDivElement, ColorPickerPaletteP
                 : event.key === "ArrowUp"
                   ? Math.max(0, palettePosition.lightness - step)
                   : palettePosition.lightness;
+            lastSaturationRef.current = saturation;
             setColor(palettePositionToHsl(saturation, lightness, color));
           }
           onKeyDown?.(event);
         }}
         onPointerDown={(event) => {
           if (!disabled) {
-            updateFromPoint(event, setColor, color);
+            event.preventDefault();
+            event.currentTarget.focus({ preventScroll: true });
+            lastSaturationRef.current = updateFromPoint(event, setColor, color);
             setIsDragging(true);
             try {
               event.currentTarget.setPointerCapture(event.pointerId);
@@ -349,7 +363,9 @@ export const ColorPickerPalette = forwardRef<HTMLDivElement, ColorPickerPaletteP
           onPointerDown?.(event);
         }}
         onPointerMove={(event) => {
-          if (!disabled && isDragging) updateFromPoint(event, setColor, color);
+          if (!disabled && isDragging) {
+            lastSaturationRef.current = updateFromPoint(event, setColor, color);
+          }
           onPointerMove?.(event);
         }}
         onPointerUp={(event) => {
@@ -470,6 +486,8 @@ export const ColorPickerColorWheel = forwardRef<HTMLDivElement, ColorPickerColor
         }}
         onPointerDown={(event) => {
           if (!disabled) {
+            event.preventDefault();
+            event.currentTarget.focus({ preventScroll: true });
             updateWheelFromPoint(event, setColor, color);
             setIsDragging(true);
             try {
@@ -514,6 +532,12 @@ export type ColorPickerHueProps = Omit<
 export const ColorPickerHue = forwardRef<HTMLInputElement, ColorPickerHueProps>(
   function ColorPickerHue({ className, onInput, style, ...props }, ref) {
     const { color, setColor } = useColorPicker();
+    const [position, setPosition] = useState(color.hue);
+
+    useEffect(() => {
+      if (color.hue !== 0 || position !== 360) setPosition(color.hue);
+    }, [color.hue, position]);
+
     return (
       <input
         {...props}
@@ -524,18 +548,20 @@ export const ColorPickerHue = forwardRef<HTMLInputElement, ColorPickerHueProps>(
         max={360}
         min={0}
         onInput={(event) => {
-          setColor({ ...color, hue: Number(event.currentTarget.value) });
+          const nextPosition = Number(event.currentTarget.value);
+          setPosition(nextPosition);
+          setColor({ ...color, hue: nextPosition === 360 ? 0 : nextPosition });
           onInput?.(event);
         }}
         step={1}
         style={
           {
-            "--jaci-color-picker-thumb-color": `hsl(${color.hue} 100% 50%)`,
+            "--jaci-color-picker-thumb-color": `hsl(${position} 100% 50%)`,
             ...style,
           } as CSSProperties
         }
         type="range"
-        value={color.hue}
+        value={position}
       />
     );
   },
@@ -664,16 +690,42 @@ export const ColorPickerSwatch = forwardRef<HTMLButtonElement, ColorPickerSwatch
   },
 );
 
-export type ColorPickerInputProps = Omit<
-  ComponentPropsWithoutRef<"input">,
-  "onChange" | "type" | "value"
->;
+export interface ColorPickerInputProps
+  extends Omit<ComponentPropsWithoutRef<"input">, "onChange" | "type" | "value"> {
+  copiedDuration?: number;
+  copiedLabel?: string;
+  copyable?: boolean;
+  copyLabel?: string;
+  onCopy?: (value: string) => void;
+  onCopyError?: (error: unknown) => void;
+}
 export const ColorPickerInput = forwardRef<HTMLInputElement, ColorPickerInputProps>(
-  function ColorPickerInput({ className, onBlur, onKeyDown, ...props }, ref) {
-    const { format, setColor, showAlpha, value } = useColorPicker();
+  function ColorPickerInput(
+    {
+      className,
+      copiedDuration = 1500,
+      copiedLabel = "Copied",
+      copyable = true,
+      copyLabel = "Copy",
+      onBlur,
+      onCopy,
+      onCopyError,
+      onKeyDown,
+      ...props
+    },
+    ref,
+  ) {
+    const { disabled, format, setColor, showAlpha, value } = useColorPicker();
     const [draft, setDraft] = useState(value);
+    const [copied, setCopied] = useState(false);
     const [invalid, setInvalid] = useState(false);
+    const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
     useEffect(() => setDraft(value), [value]);
+    useEffect(() => {
+      return () => {
+        if (copyTimeoutRef.current !== undefined) clearTimeout(copyTimeoutRef.current);
+      };
+    }, []);
     const commit = () => {
       const parsed = parseColor(draft);
       if (!parsed) {
@@ -685,32 +737,64 @@ export const ColorPickerInput = forwardRef<HTMLInputElement, ColorPickerInputPro
       setColor(parsed);
       setDraft(formatColor(parsed, format, showAlpha));
     };
+    const handleCopy = async () => {
+      try {
+        await copyToClipboard(value);
+        setCopied(true);
+        onCopy?.(value);
+        if (copyTimeoutRef.current !== undefined) clearTimeout(copyTimeoutRef.current);
+        copyTimeoutRef.current = setTimeout(() => setCopied(false), copiedDuration);
+      } catch (error) {
+        setCopied(false);
+        onCopyError?.(error);
+      }
+    };
+
     return (
-      <input
-        {...props}
-        ref={ref}
-        aria-label={props["aria-label"] ?? "Color value"}
-        aria-invalid={invalid || undefined}
-        className={cx(colorPicker().input, className)}
-        data-slot="color-picker-input"
-        onBlur={(event) => {
-          commit();
-          onBlur?.(event);
-        }}
-        onChange={(event) => {
-          setDraft(event.currentTarget.value);
-          setInvalid(false);
-        }}
-        onKeyDown={(event) => {
-          if (event.key === "Enter") {
-            event.preventDefault();
+      <div className={colorPicker().inputControl} data-slot="color-picker-input-control">
+        <input
+          {...props}
+          ref={ref}
+          aria-label={props["aria-label"] ?? "Color value"}
+          aria-invalid={invalid || undefined}
+          className={cx(colorPicker().input, className)}
+          data-slot="color-picker-input"
+          disabled={props.disabled ?? disabled}
+          onBlur={(event) => {
             commit();
-          }
-          onKeyDown?.(event);
-        }}
-        type="text"
-        value={draft}
-      />
+            onBlur?.(event);
+          }}
+          onChange={(event) => {
+            setDraft(event.currentTarget.value);
+            setInvalid(false);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              commit();
+            }
+            onKeyDown?.(event);
+          }}
+          type="text"
+          value={draft}
+        />
+        {copyable ? (
+          <button
+            aria-label={`${copyLabel} color value`}
+            className={colorPicker().inputCopy}
+            data-copied={copied || undefined}
+            data-slot="color-picker-input-copy"
+            disabled={props.disabled ?? disabled}
+            onClick={() => void handleCopy()}
+            type="button"
+          >
+            {copied ? copiedLabel : copyLabel}
+            <span aria-live="polite" className={colorPicker().inputCopyStatus}>
+              {copied ? copiedLabel : ""}
+            </span>
+          </button>
+        ) : null}
+      </div>
     );
   },
 );

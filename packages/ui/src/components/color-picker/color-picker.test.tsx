@@ -18,7 +18,7 @@ function renderPalette() {
 }
 
 function pointerEvent(type: string, clientX: number, clientY: number) {
-  const event = new Event(type, { bubbles: true });
+  const event = new Event(type, { bubbles: true, cancelable: true });
   Object.defineProperties(event, {
     clientX: { value: clientX },
     clientY: { value: clientY },
@@ -107,6 +107,84 @@ describe("ColorPicker palette", () => {
       </ColorPicker.Root>,
     );
     expect(container.querySelector('[data-slot="color-picker-alpha"]')).toBeNull();
+  });
+
+  it("keeps the hue indicator at 360 degrees for the duplicate red endpoint", () => {
+    const onValueChange = vi.fn();
+    const container = renderInDocument(
+      <ColorPicker.Root defaultValue="#ff0000" onValueChange={onValueChange}>
+        <ColorPicker.Hue />
+      </ColorPicker.Root>,
+    );
+    const hue = container.querySelector<HTMLInputElement>('[data-slot="color-picker-hue"]');
+    if (!hue) throw new Error("ColorPicker hue control did not render.");
+
+    act(() => {
+      hue.value = "360";
+      hue.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+
+    expect(hue.value).toBe("360");
+    expect(onValueChange).toHaveBeenLastCalledWith("#ff0000");
+  });
+
+  it("keeps the palette indicator on its last saturation when selecting black", () => {
+    const { palette } = renderPalette();
+    Object.defineProperty(palette, "getBoundingClientRect", {
+      configurable: true,
+      value: () => ({ height: 100, left: 10, top: 20, width: 200 }),
+    });
+
+    act(() => palette.dispatchEvent(pointerEvent("pointerdown", 110, 120)));
+
+    expect(palette.style.getPropertyValue("--jaci-color-palette-saturation")).toBe("50%");
+    expect(palette.style.getPropertyValue("--jaci-color-palette-lightness")).toBe("100%");
+  });
+
+  it("prevents text selection while dragging the palette and color wheel", () => {
+    const container = renderInDocument(
+      <ColorPicker.Root defaultValue="#ff0000">
+        <ColorPicker.Palette />
+        <ColorPicker.ColorWheel />
+      </ColorPicker.Root>,
+    );
+    const palette = container.querySelector<HTMLElement>('[data-slot="color-picker-palette"]');
+    const wheel = container.querySelector<HTMLElement>('[data-slot="color-picker-color-wheel"]');
+    if (!palette || !wheel) throw new Error("ColorPicker drag controls did not render.");
+    for (const control of [palette, wheel]) {
+      Object.defineProperty(control, "getBoundingClientRect", {
+        configurable: true,
+        value: () => ({ height: 100, left: 10, top: 20, width: 100 }),
+      });
+      const event = pointerEvent("pointerdown", 60, 70);
+      act(() => control.dispatchEvent(event));
+      expect(event.defaultPrevented).toBe(true);
+    }
+  });
+
+  it("copies the selected color from the input and announces success", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+    const onCopy = vi.fn();
+    const container = renderInDocument(
+      <ColorPicker.Root defaultValue="#ff0000">
+        <ColorPicker.Input onCopy={onCopy} />
+      </ColorPicker.Root>,
+    );
+    const copy = container.querySelector<HTMLButtonElement>(
+      '[data-slot="color-picker-input-copy"]',
+    );
+    if (!copy) throw new Error("ColorPicker input copy action did not render.");
+
+    await act(async () => copy.click());
+
+    expect(writeText).toHaveBeenCalledWith("#ff0000");
+    expect(onCopy).toHaveBeenCalledWith("#ff0000");
+    expect(copy.dataset.copied).toBe("true");
+    expect(copy.textContent).toContain("Copied");
   });
 
   it("positions the color wheel for the current hue and saturation", () => {
