@@ -53,6 +53,7 @@ export default defineConfig({
             plugins: [storybookTest({ configDir })],
             test: {
               name: "storybook",
+              isolate: false,
               browser: {
                 enabled: true,
                 headless: true,
