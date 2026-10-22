@@ -16,6 +16,7 @@ native input or any Jaci composition that preserves `id` and ARIA props.
 </Field.Root>
 ```
 
-`Input`, `Textarea`, `Select`, `Combobox`, `PinInput`, `TagsInput` and `Upload` preserve native
-props, refs and controlled/uncontrolled states. External validation remains the responsibility of
-the application.
+`Input`, `TimePicker`, `Textarea`, `Select`, `Combobox`, `PinInput`, `TagsInput` and `Upload`
+preserve native props, refs and controlled/uncontrolled states. `TimePicker` uses a local time
+string such as `"09:30"`; its display follows the browser locale. External validation remains the
+responsibility of the application.

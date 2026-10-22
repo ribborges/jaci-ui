@@ -8,3 +8,5 @@ export { Switch } from "./switch";
 export type { SwitchProps } from "./switch";
 export { Textarea } from "./textarea";
 export type { TextareaProps } from "./textarea";
+export { TimePicker } from "./time-picker";
+export type { TimePickerProps } from "./time-picker";

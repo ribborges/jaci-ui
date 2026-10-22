@@ -14,6 +14,7 @@ const expectedClientModules = [
   "components/controls/radio.js",
   "components/controls/switch.js",
   "components/controls/textarea.js",
+  "components/controls/time-picker.js",
   "components/icon-button/icon-button.js",
   "components/image/image.js",
   "components/figure/figure.js",
