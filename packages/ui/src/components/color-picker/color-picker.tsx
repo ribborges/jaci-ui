@@ -691,7 +691,7 @@ export const ColorPickerSwatch = forwardRef<HTMLButtonElement, ColorPickerSwatch
 );
 
 export interface ColorPickerInputProps
-  extends Omit<ComponentPropsWithoutRef<"input">, "onChange" | "type" | "value"> {
+  extends Omit<ComponentPropsWithoutRef<"input">, "onChange" | "onCopy" | "type" | "value"> {
   copiedDuration?: number;
   copiedLabel?: string;
   copyable?: boolean;
