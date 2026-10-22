@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.0
+
+### Minor Changes
+
+- b9361c9: Add a standalone TimePicker component for selecting local times.
+- 9fef19f: Improve ColorPicker controls with composable color selection, HSV intensity, and value copying.
+
+### Patch Changes
+
+- 561f432: Add viewport spacing to Image and Figure lightboxes.
+
 ## 1.1.0
 
 ### Minor Changes
