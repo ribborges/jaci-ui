@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
-import { act } from "react";
+import { act, useState } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { Checkbox, Input, Radio, Switch, Textarea } from "../../index";
+import { Checkbox, Input, Radio, Switch, Textarea, TimePicker } from "../../index";
 import { renderInDocument } from "../../test-utils/react";
 
 describe("form controls", () => {
@@ -56,5 +56,66 @@ describe("form controls", () => {
     expect(
       container.querySelector<HTMLButtonElement>("[data-slot='input-password-toggle']")?.disabled,
     ).toBe(true);
+  });
+
+  it("renders a native time input with shared input styles and native constraints", () => {
+    const ref = { current: null as HTMLInputElement | null };
+    const container = renderInDocument(
+      <>
+        <Input aria-label="Reference input" />
+        <TimePicker
+          ref={ref}
+          aria-label="Start time"
+          defaultValue="09:30"
+          disabled
+          max="18:00"
+          min="08:00"
+          step={900}
+        />
+      </>,
+    );
+    const input = container.querySelector<HTMLInputElement>("input[type='time']");
+    const reference = container.querySelector<HTMLInputElement>(
+      "input[data-slot='input']:not([type])",
+    );
+    if (!input || !reference) throw new Error("TimePicker and Input did not render.");
+
+    expect(input.value).toBe("09:30");
+    expect(input.min).toBe("08:00");
+    expect(input.max).toBe("18:00");
+    expect(input.step).toBe("900");
+    expect(input.disabled).toBe(true);
+    expect(input.className).toBe(reference.className);
+    expect(ref.current).toBe(input);
+  });
+
+  it("updates a controlled time value and reports native change events", () => {
+    const onValueChange = vi.fn();
+    function ControlledTimePicker() {
+      const [value, setValue] = useState("09:30");
+      return (
+        <TimePicker
+          aria-label="Meeting time"
+          onChange={(event) => {
+            onValueChange(event.currentTarget.value);
+            setValue(event.currentTarget.value);
+          }}
+          value={value}
+        />
+      );
+    }
+
+    const container = renderInDocument(<ControlledTimePicker />);
+    const input = container.querySelector<HTMLInputElement>("input[type='time']");
+    if (!input) throw new Error("Controlled TimePicker did not render.");
+
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
+    act(() => {
+      setter?.call(input, "10:15");
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+
+    expect(onValueChange).toHaveBeenCalledWith("10:15");
+    expect(input.value).toBe("10:15");
   });
 });
