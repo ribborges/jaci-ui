@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ColorPicker, Stack, Text } from "jaci-ui";
 import { useState } from "react";
-import { expect } from "storybook/test";
+import { expect, userEvent, waitFor } from "storybook/test";
 
 const meta = {
   title: "Forms/ColorPicker",
@@ -120,6 +120,14 @@ export const Hex: Story = {
   render: () => <Picker />,
   parameters: { docs: { source: { code: hexSource, language: "tsx" } } },
   play: async () => {
+    const trigger = document.querySelector<HTMLButtonElement>("[data-slot='color-picker-trigger']");
+    if (!trigger) throw new Error("The color picker trigger did not render.");
+    await userEvent.click(trigger);
+
+    await waitFor(() => {
+      expect(document.querySelector("[data-slot='color-picker-hue']")).not.toBeNull();
+      expect(document.querySelector("[data-slot='color-picker-native-input']")).not.toBeNull();
+    });
     const hue = document.querySelector<HTMLInputElement>("[data-slot='color-picker-hue']");
     const nativeInput = document.querySelector<HTMLInputElement>(
       "[data-slot='color-picker-native-input']",
@@ -135,6 +143,13 @@ export const WithAlpha: Story = {
   render: () => <Picker showAlpha />,
   parameters: { docs: { source: { code: alphaSource, language: "tsx" } } },
   play: async () => {
+    const trigger = document.querySelector<HTMLButtonElement>("[data-slot='color-picker-trigger']");
+    if (!trigger) throw new Error("The color picker trigger did not render.");
+    await userEvent.click(trigger);
+
+    await waitFor(() => {
+      expect(document.querySelector("[data-slot='color-picker-alpha']")).not.toBeNull();
+    });
     const alpha = document.querySelector<HTMLInputElement>("[data-slot='color-picker-alpha']");
     if (!alpha) throw new Error("The alpha control did not render.");
 
