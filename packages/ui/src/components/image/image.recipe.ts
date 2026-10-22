@@ -85,12 +85,14 @@ export const imageRecipe = defineSlotRecipe({
     popup: {
       alignItems: "center",
       backgroundColor: "transparent",
+      boxSizing: "border-box",
       display: "flex",
       flexDirection: "column",
       gap: "2",
       height: "100dvh",
       minWidth: "0",
       overflow: "hidden",
+      padding: "4",
       position: "relative",
       transitionDuration: "normal",
       transitionProperty: "opacity, transform",
@@ -114,7 +116,6 @@ export const imageRecipe = defineSlotRecipe({
       flexShrink: "0",
       justifyContent: "flex-end",
       minHeight: "2rem",
-      paddingInline: "1rem",
       width: "100%",
     },
     close: {
