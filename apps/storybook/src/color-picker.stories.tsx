@@ -1,6 +1,7 @@
-import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ColorPicker, Stack, Text } from "jaci-ui";
+import { useState } from "react";
+import { expect, userEvent, waitFor } from "storybook/test";
 
 const meta = {
   title: "Forms/ColorPicker",
@@ -12,9 +13,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 function Picker({
+  controls = "palette",
   defaultOpen = false,
   showAlpha = false,
 }: {
+  controls?: "palette" | "wheel" | "sliders";
   defaultOpen?: boolean;
   showAlpha?: boolean;
 }) {
@@ -39,8 +42,10 @@ function Picker({
         <ColorPicker.Portal>
           <ColorPicker.Positioner sideOffset={8}>
             <ColorPicker.Popup>
-              <ColorPicker.Palette />
+              {controls === "palette" ? <ColorPicker.Palette /> : null}
+              {controls === "wheel" ? <ColorPicker.ColorWheel /> : null}
               <ColorPicker.Hue />
+              {controls === "wheel" || controls === "sliders" ? <ColorPicker.Intensity /> : null}
               {showAlpha ? <ColorPicker.Alpha /> : null}
               <ColorPicker.Swatches aria-label="Suggested colors" />
               <ColorPicker.Input />
@@ -56,53 +61,101 @@ function Picker({
   );
 }
 
-const hexSource = `import { useState } from "react";
-import { ColorPicker } from "jaci-ui";
+function source({
+  controls = "palette",
+  defaultOpen = false,
+  showAlpha = false,
+}: {
+  controls?: "palette" | "wheel" | "sliders";
+  defaultOpen?: boolean;
+  showAlpha?: boolean;
+}) {
+  const initialColor = showAlpha ? "rgba(37, 99, 235, 0.75)" : "#2563eb";
+  return `import { useState } from "react";
+import { ColorPicker, Stack, Text } from "jaci-ui";
 
-const [color, setColor] = useState("#2563eb");
-
-<ColorPicker.Root
-  format="hex"
-  value={color}
-  onValueChange={setColor}
-  swatches={["#2563eb", "#16a34a", "#dc2626", "#f59e0b"]}
->
-  <ColorPicker.Label>Brand color</ColorPicker.Label>
-  <ColorPicker.Control>
-    <ColorPicker.Trigger>
-      <ColorPicker.Preview />
-      <ColorPicker.Value />
-    </ColorPicker.Trigger>
-  </ColorPicker.Control>
-  <ColorPicker.Portal>
-    <ColorPicker.Positioner sideOffset={8}>
-      <ColorPicker.Popup>
-        <ColorPicker.Palette />
-        <ColorPicker.Hue />
-        <ColorPicker.Swatches aria-label="Suggested colors" />
-        <ColorPicker.Input />
-        <ColorPicker.NativeInput />
-      </ColorPicker.Popup>
-    </ColorPicker.Positioner>
-  </ColorPicker.Portal>
-</ColorPicker.Root>`;
-
-const alphaSource = hexSource
-  .replace('format="hex"', 'format="rgb"\n  showAlpha')
-  .replace('useState("#2563eb")', 'useState("rgba(37, 99, 235, 0.75)")')
-  .replace(
-    "        <ColorPicker.Swatches",
-    "        <ColorPicker.Alpha />\n        <ColorPicker.Swatches",
+function Example() {
+  const [color, setColor] = useState("${initialColor}");
+  return (
+    <Stack gap="sm">
+      <ColorPicker.Root
+        ${defaultOpen ? "defaultOpen\n        " : ""}format="${showAlpha ? "rgb" : "hex"}"
+        onValueChange={setColor}
+        ${showAlpha ? "showAlpha\n        " : ""}swatches={["#2563eb", "#16a34a", "#dc2626", "#f59e0b"]}
+        value={color}
+      >
+        <ColorPicker.Label>Brand color</ColorPicker.Label>
+        <ColorPicker.Control>
+          <ColorPicker.Trigger>
+            <ColorPicker.Preview />
+            <ColorPicker.Value />
+          </ColorPicker.Trigger>
+        </ColorPicker.Control>
+        <ColorPicker.Portal>
+          <ColorPicker.Positioner sideOffset={8}>
+            <ColorPicker.Popup>
+              ${controls === "palette" ? "<ColorPicker.Palette />\n              " : ""}${controls === "wheel" ? "<ColorPicker.ColorWheel />\n              " : ""}<ColorPicker.Hue />
+              ${controls === "wheel" || controls === "sliders" ? "<ColorPicker.Intensity />\n              " : ""}
+              ${showAlpha ? "<ColorPicker.Alpha />\n              " : ""}<ColorPicker.Swatches aria-label="Suggested colors" />
+              <ColorPicker.Input />
+              <ColorPicker.NativeInput />
+            </ColorPicker.Popup>
+          </ColorPicker.Positioner>
+        </ColorPicker.Portal>
+      </ColorPicker.Root>
+      <Text size="sm" tone="muted">Current value: {color}</Text>
+    </Stack>
   );
+}`;
+}
+
+const hexSource = source({});
+const alphaSource = source({ showAlpha: true });
+const paletteSource = source({ defaultOpen: true });
+const copySource = source({ defaultOpen: true });
+const wheelSource = source({ controls: "wheel", defaultOpen: true });
+const slidersSource = source({ controls: "sliders", defaultOpen: true });
 
 export const Hex: Story = {
   render: () => <Picker />,
   parameters: { docs: { source: { code: hexSource, language: "tsx" } } },
+  play: async () => {
+    const trigger = document.querySelector<HTMLButtonElement>("[data-slot='color-picker-trigger']");
+    if (!trigger) throw new Error("The color picker trigger did not render.");
+    await userEvent.click(trigger);
+
+    await waitFor(() => {
+      expect(document.querySelector("[data-slot='color-picker-hue']")).not.toBeNull();
+      expect(document.querySelector("[data-slot='color-picker-native-input']")).not.toBeNull();
+    });
+    const hue = document.querySelector<HTMLInputElement>("[data-slot='color-picker-hue']");
+    const nativeInput = document.querySelector<HTMLInputElement>(
+      "[data-slot='color-picker-native-input']",
+    );
+    if (!hue || !nativeInput) throw new Error("The color controls did not render.");
+
+    expect(hue.style.getPropertyValue("--jaci-color-picker-thumb-color")).toContain("hsl(");
+    expect(nativeInput.getBoundingClientRect().width).toBeGreaterThan(0);
+  },
 };
 
 export const WithAlpha: Story = {
   render: () => <Picker showAlpha />,
   parameters: { docs: { source: { code: alphaSource, language: "tsx" } } },
+  play: async () => {
+    const trigger = document.querySelector<HTMLButtonElement>("[data-slot='color-picker-trigger']");
+    if (!trigger) throw new Error("The color picker trigger did not render.");
+    await userEvent.click(trigger);
+
+    await waitFor(() => {
+      expect(document.querySelector("[data-slot='color-picker-alpha']")).not.toBeNull();
+    });
+    const alpha = document.querySelector<HTMLInputElement>("[data-slot='color-picker-alpha']");
+    if (!alpha) throw new Error("The alpha control did not render.");
+
+    expect(alpha.style.getPropertyValue("--jaci-color-picker-alpha-color")).toContain("rgb(");
+    expect(alpha.getBoundingClientRect().width).toBeGreaterThan(0);
+  },
 };
 
 export const PaletteDrag: Story = {
@@ -112,17 +165,43 @@ export const PaletteDrag: Story = {
       description: {
         story: "Drag across the saturation/lightness palette. The ring marks the current color.",
       },
-      source: {
-        code: `<ColorPicker.Root defaultValue="#2563eb" defaultOpen>
-  <ColorPicker.Trigger><ColorPicker.Preview /><ColorPicker.Value /></ColorPicker.Trigger>
-  <ColorPicker.Portal><ColorPicker.Positioner><ColorPicker.Popup>
-    <ColorPicker.Palette />
-    <ColorPicker.Hue />
-    <ColorPicker.Input />
-  </ColorPicker.Popup></ColorPicker.Positioner></ColorPicker.Portal>
-</ColorPicker.Root>`,
-        language: "tsx",
+      source: { code: paletteSource, language: "tsx" },
+    },
+  },
+};
+
+export const CopyValue: Story = {
+  render: () => <Picker defaultOpen />,
+  parameters: {
+    docs: {
+      description: {
+        story: "Use the Copy action beside the editable value to copy the selected color.",
       },
+      source: { code: copySource, language: "tsx" },
+    },
+  },
+};
+
+export const ColorWheel: Story = {
+  render: () => <Picker controls="wheel" defaultOpen />,
+  parameters: {
+    docs: {
+      description: {
+        story: "Select hue and saturation on the wheel, then adjust brightness below it.",
+      },
+      source: { code: wheelSource, language: "tsx" },
+    },
+  },
+};
+
+export const HueAndIntensity: Story = {
+  render: () => <Picker controls="sliders" defaultOpen />,
+  parameters: {
+    docs: {
+      description: {
+        story: "Use independent hue and HSV brightness controls without a palette.",
+      },
+      source: { code: slidersSource, language: "tsx" },
     },
   },
 };
@@ -143,12 +222,26 @@ export const OverlayBlur: Story = {
     docs: {
       description: { story: "The open popup uses the same translucent blurred surface as Select." },
       source: {
-        code: `<ColorPicker.Root defaultValue="#2563eb" defaultOpen>
-  <ColorPicker.Trigger><ColorPicker.Preview /><ColorPicker.Value /></ColorPicker.Trigger>
-  <ColorPicker.Portal><ColorPicker.Positioner><ColorPicker.Popup>
-    <ColorPicker.Palette /><ColorPicker.Hue /><ColorPicker.Input />
-  </ColorPicker.Popup></ColorPicker.Positioner></ColorPicker.Portal>
-</ColorPicker.Root>`,
+        code: `import { useState } from "react";
+import { ColorPicker, Stack, Text } from "jaci-ui";
+
+function Example() {
+  const [color, setColor] = useState("#2563eb");
+  return (
+    <div style={{ background: "linear-gradient(135deg, #2563eb, #f59e0b)", minHeight: "16rem", padding: "3rem" }}>
+      <Stack gap="sm">
+        <ColorPicker.Root defaultOpen format="hex" onValueChange={setColor} swatches={["#2563eb", "#16a34a", "#dc2626", "#f59e0b"]} value={color}>
+          <ColorPicker.Label>Brand color</ColorPicker.Label>
+          <ColorPicker.Control><ColorPicker.Trigger><ColorPicker.Preview /><ColorPicker.Value /></ColorPicker.Trigger></ColorPicker.Control>
+          <ColorPicker.Portal><ColorPicker.Positioner sideOffset={8}><ColorPicker.Popup>
+            <ColorPicker.Palette /><ColorPicker.Hue /><ColorPicker.Swatches aria-label="Suggested colors" /><ColorPicker.Input /><ColorPicker.NativeInput />
+          </ColorPicker.Popup></ColorPicker.Positioner></ColorPicker.Portal>
+        </ColorPicker.Root>
+        <Text size="sm" tone="muted">Current value: {color}</Text>
+      </Stack>
+    </div>
+  );
+}`,
         language: "tsx",
       },
     },

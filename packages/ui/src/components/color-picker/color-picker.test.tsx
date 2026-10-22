@@ -18,7 +18,7 @@ function renderPalette() {
 }
 
 function pointerEvent(type: string, clientX: number, clientY: number) {
-  const event = new Event(type, { bubbles: true });
+  const event = new Event(type, { bubbles: true, cancelable: true });
   Object.defineProperties(event, {
     clientX: { value: clientX },
     clientY: { value: clientY },
@@ -73,5 +73,185 @@ describe("ColorPicker palette", () => {
     expect(onValueChange).toHaveBeenLastCalledWith("#ff0000");
     expect(palette.style.getPropertyValue("--jaci-color-palette-saturation")).toBe("100%");
     expect(palette.style.getPropertyValue("--jaci-color-palette-lightness")).toBe("0%");
+  });
+
+  it("provides the selected hue and opacity colors to the range controls", () => {
+    const container = renderInDocument(
+      <ColorPicker.Root defaultValue="rgba(37, 99, 235, 0.75)" showAlpha>
+        <ColorPicker.Hue />
+        <ColorPicker.Alpha />
+        <ColorPicker.NativeInput />
+      </ColorPicker.Root>,
+    );
+    const hue = container.querySelector<HTMLInputElement>('[data-slot="color-picker-hue"]');
+    const alpha = container.querySelector<HTMLInputElement>('[data-slot="color-picker-alpha"]');
+    const nativeInput = container.querySelector<HTMLInputElement>(
+      '[data-slot="color-picker-native-input"]',
+    );
+    if (!hue || !alpha || !nativeInput) throw new Error("Color controls were not rendered.");
+
+    expect(hue.style.getPropertyValue("--jaci-color-picker-thumb-color")).toContain("hsl(");
+    expect(alpha.style.getPropertyValue("--jaci-color-picker-alpha-color")).toBe(
+      "rgb(37, 99, 235)",
+    );
+    expect(alpha.style.getPropertyValue("--jaci-color-picker-thumb-color")).toBe(
+      "rgb(37, 99, 235)",
+    );
+    expect(nativeInput.value).toBe("#2563eb");
+  });
+
+  it("does not render the alpha control unless alpha is enabled", () => {
+    const container = renderInDocument(
+      <ColorPicker.Root defaultValue="#2563eb">
+        <ColorPicker.Alpha />
+      </ColorPicker.Root>,
+    );
+    expect(container.querySelector('[data-slot="color-picker-alpha"]')).toBeNull();
+  });
+
+  it("keeps the hue indicator at 360 degrees for the duplicate red endpoint", () => {
+    const onValueChange = vi.fn();
+    const container = renderInDocument(
+      <ColorPicker.Root defaultValue="#ff0000" onValueChange={onValueChange}>
+        <ColorPicker.Hue />
+      </ColorPicker.Root>,
+    );
+    const hue = container.querySelector<HTMLInputElement>('[data-slot="color-picker-hue"]');
+    if (!hue) throw new Error("ColorPicker hue control did not render.");
+
+    act(() => {
+      hue.value = "360";
+      hue.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+
+    expect(hue.value).toBe("360");
+    expect(onValueChange).toHaveBeenLastCalledWith("#ff0000");
+  });
+
+  it("keeps the palette indicator on its last saturation when selecting black", () => {
+    const { palette } = renderPalette();
+    Object.defineProperty(palette, "getBoundingClientRect", {
+      configurable: true,
+      value: () => ({ height: 100, left: 10, top: 20, width: 200 }),
+    });
+
+    act(() => palette.dispatchEvent(pointerEvent("pointerdown", 110, 120)));
+
+    expect(palette.style.getPropertyValue("--jaci-color-palette-saturation")).toBe("50%");
+    expect(palette.style.getPropertyValue("--jaci-color-palette-lightness")).toBe("100%");
+  });
+
+  it("prevents text selection while dragging the palette and color wheel", () => {
+    const container = renderInDocument(
+      <ColorPicker.Root defaultValue="#ff0000">
+        <ColorPicker.Palette />
+        <ColorPicker.ColorWheel />
+      </ColorPicker.Root>,
+    );
+    const palette = container.querySelector<HTMLElement>('[data-slot="color-picker-palette"]');
+    const wheel = container.querySelector<HTMLElement>('[data-slot="color-picker-color-wheel"]');
+    if (!palette || !wheel) throw new Error("ColorPicker drag controls did not render.");
+    for (const control of [palette, wheel]) {
+      Object.defineProperty(control, "getBoundingClientRect", {
+        configurable: true,
+        value: () => ({ height: 100, left: 10, top: 20, width: 100 }),
+      });
+      const event = pointerEvent("pointerdown", 60, 70);
+      act(() => control.dispatchEvent(event));
+      expect(event.defaultPrevented).toBe(true);
+    }
+  });
+
+  it("copies the selected color from the input and announces success", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+    const onCopy = vi.fn();
+    const container = renderInDocument(
+      <ColorPicker.Root defaultValue="#ff0000">
+        <ColorPicker.Input onCopy={onCopy} />
+      </ColorPicker.Root>,
+    );
+    const copy = container.querySelector<HTMLButtonElement>(
+      '[data-slot="color-picker-input-copy"]',
+    );
+    if (!copy) throw new Error("ColorPicker input copy action did not render.");
+
+    await act(async () => copy.click());
+
+    expect(writeText).toHaveBeenCalledWith("#ff0000");
+    expect(onCopy).toHaveBeenCalledWith("#ff0000");
+    expect(copy.dataset.copied).toBe("true");
+    expect(copy.textContent).toContain("Copied");
+  });
+
+  it("positions the color wheel for the current hue and saturation", () => {
+    const container = renderInDocument(
+      <ColorPicker.Root defaultValue="#ff0000">
+        <ColorPicker.ColorWheel />
+      </ColorPicker.Root>,
+    );
+    const wheel = container.querySelector<HTMLElement>('[data-slot="color-picker-color-wheel"]');
+    if (!wheel) throw new Error("ColorPicker color wheel did not render.");
+
+    expect(wheel.style.getPropertyValue("--jaci-color-wheel-indicator-x")).toBe("50%");
+    expect(wheel.style.getPropertyValue("--jaci-color-wheel-indicator-y")).toBe("0%");
+  });
+
+  it("updates hue and saturation from wheel pointer and keyboard input", () => {
+    const onValueChange = vi.fn();
+    const container = renderInDocument(
+      <ColorPicker.Root defaultValue="#ff0000" onValueChange={onValueChange}>
+        <ColorPicker.ColorWheel />
+      </ColorPicker.Root>,
+    );
+    const wheel = container.querySelector<HTMLElement>('[data-slot="color-picker-color-wheel"]');
+    if (!wheel) throw new Error("ColorPicker color wheel did not render.");
+    Object.defineProperty(wheel, "getBoundingClientRect", {
+      configurable: true,
+      value: () => ({ height: 200, left: 10, top: 20, width: 200 }),
+    });
+
+    act(() =>
+      wheel.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "ArrowRight" })),
+    );
+    expect(onValueChange).toHaveBeenLastCalledWith("#ff0400");
+
+    act(() => wheel.dispatchEvent(pointerEvent("pointerdown", 196.6, 70)));
+    expect(onValueChange).toHaveBeenLastCalledWith("#ffff00");
+  });
+
+  it("uses HSV brightness for the intensity slider and composes with hue", () => {
+    const onValueChange = vi.fn();
+    const container = renderInDocument(
+      <ColorPicker.Root defaultValue="rgba(255, 0, 0, 0.5)" onValueChange={onValueChange} showAlpha>
+        <ColorPicker.Hue />
+        <ColorPicker.Intensity />
+      </ColorPicker.Root>,
+    );
+    const hue = container.querySelector<HTMLInputElement>('[data-slot="color-picker-hue"]');
+    const intensity = container.querySelector<HTMLInputElement>(
+      '[data-slot="color-picker-intensity"]',
+    );
+    if (!hue || !intensity) throw new Error("ColorPicker range controls did not render.");
+
+    expect(intensity.style.getPropertyValue("--jaci-color-picker-intensity-color")).toBe(
+      "rgb(255, 0, 0)",
+    );
+    act(() => {
+      intensity.value = "50";
+      intensity.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    expect(onValueChange).toHaveBeenLastCalledWith("#80000080");
+
+    act(() => {
+      hue.value = "120";
+      hue.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    expect(intensity.style.getPropertyValue("--jaci-color-picker-intensity-color")).toBe(
+      "rgb(0, 255, 0)",
+    );
   });
 });

@@ -1,16 +1,17 @@
 "use client";
 
-import { Popover as BasePopover } from "@base-ui/react/popover";
-import { createContext, forwardRef, useContext, useEffect, useId, useState } from "react";
-import type { ComponentPropsWithoutRef, CSSProperties, PointerEvent, ReactNode } from "react";
 import type { PopoverRoot as BasePopoverRoot } from "@base-ui/react/popover";
+import { Popover as BasePopover } from "@base-ui/react/popover";
+import type { ComponentPropsWithoutRef, CSSProperties, PointerEvent, ReactNode } from "react";
+import { createContext, forwardRef, useContext, useEffect, useId, useRef, useState } from "react";
 
 import { cx } from "../../styled-system/css";
 import { colorPicker } from "../../styled-system/recipes";
-import { withRecipeClassName } from "../base-ui";
 import { useThemePortalProps } from "../../theme/theme-scope";
-import { defaultColor, formatColor, parseColor } from "./color-utils";
+import { withRecipeClassName } from "../base-ui";
+import { copyToClipboard } from "../copyable/copy-to-clipboard";
 import type { ColorFormat, ColorModel } from "./color-utils";
+import { defaultColor, formatColor, hslToHsv, hsvToHsl, parseColor } from "./color-utils";
 
 export type { ColorFormat, ColorModel } from "./color-utils";
 export { defaultColor, formatColor, parseColor } from "./color-utils";
@@ -229,14 +230,11 @@ function formatPalettePercentage(value: number) {
 }
 
 function hslToPalettePosition(color: ColorModel) {
-  const lightness = clamp(color.lightness / 100, 0, 1);
-  const saturation = clamp(color.saturation / 100, 0, 1);
-  const chroma = (1 - Math.abs(2 * lightness - 1)) * saturation;
-  const value = lightness + chroma / 2;
+  const hsv = hslToHsv(color);
 
   return {
-    lightness: (1 - value) * 100,
-    saturation: value === 0 ? 0 : (chroma / value) * 100,
+    lightness: 100 - hsv.value,
+    saturation: hsv.saturation,
   };
 }
 
@@ -245,19 +243,14 @@ function palettePositionToHsl(
   lightness: number,
   color: ColorModel,
 ): ColorModel {
-  const hsvSaturation = clamp(saturation / 100, 0, 1);
-  const value = 1 - clamp(lightness / 100, 0, 1);
-  const hslLightness = value * (1 - hsvSaturation / 2);
-  const hslSaturation =
-    hslLightness === 0 || hslLightness === 1
-      ? 0
-      : ((value - hslLightness) / Math.min(hslLightness, 1 - hslLightness)) * 100;
-
-  return {
-    ...color,
-    lightness: hslLightness * 100,
-    saturation: clamp(hslSaturation, 0, 100),
-  };
+  return hsvToHsl(
+    {
+      hue: color.hue,
+      saturation,
+      value: 100 - clamp(lightness, 0, 100),
+    },
+    color.alpha,
+  );
 }
 
 function updateFromPoint(
@@ -269,6 +262,7 @@ function updateFromPoint(
   const saturation = Math.round(clamp((event.clientX - rect.left) / rect.width, 0, 1) * 100);
   const lightness = Math.round(clamp((event.clientY - rect.top) / rect.height, 0, 1) * 100);
   setColor(palettePositionToHsl(saturation, lightness, color));
+  return saturation;
 }
 
 export type ColorPickerPaletteProps = Omit<ComponentPropsWithoutRef<"div">, "onChange">;
@@ -289,11 +283,20 @@ export const ColorPickerPalette = forwardRef<HTMLDivElement, ColorPickerPaletteP
   ) {
     const { color, disabled, setColor, value } = useColorPicker();
     const [isDragging, setIsDragging] = useState(false);
+    const lastSaturationRef = useRef(hslToPalettePosition(color).saturation);
     const background = `linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, hsl(${color.hue} 100% 50%))`;
     const palettePosition = hslToPalettePosition(color);
+    if (palettePosition.lightness < 100) lastSaturationRef.current = palettePosition.saturation;
+    const displayedPalettePosition = {
+      ...palettePosition,
+      saturation:
+        palettePosition.lightness === 100 ? lastSaturationRef.current : palettePosition.saturation,
+    };
     const paletteStyle = {
-      "--jaci-color-palette-lightness": formatPalettePercentage(palettePosition.lightness),
-      "--jaci-color-palette-saturation": formatPalettePercentage(palettePosition.saturation),
+      "--jaci-color-palette-lightness": formatPalettePercentage(displayedPalettePosition.lightness),
+      "--jaci-color-palette-saturation": formatPalettePercentage(
+        displayedPalettePosition.saturation,
+      ),
       background,
       ...style,
     } as CSSProperties;
@@ -340,13 +343,16 @@ export const ColorPickerPalette = forwardRef<HTMLDivElement, ColorPickerPaletteP
                 : event.key === "ArrowUp"
                   ? Math.max(0, palettePosition.lightness - step)
                   : palettePosition.lightness;
+            lastSaturationRef.current = saturation;
             setColor(palettePositionToHsl(saturation, lightness, color));
           }
           onKeyDown?.(event);
         }}
         onPointerDown={(event) => {
           if (!disabled) {
-            updateFromPoint(event, setColor, color);
+            event.preventDefault();
+            event.currentTarget.focus({ preventScroll: true });
+            lastSaturationRef.current = updateFromPoint(event, setColor, color);
             setIsDragging(true);
             try {
               event.currentTarget.setPointerCapture(event.pointerId);
@@ -357,7 +363,9 @@ export const ColorPickerPalette = forwardRef<HTMLDivElement, ColorPickerPaletteP
           onPointerDown?.(event);
         }}
         onPointerMove={(event) => {
-          if (!disabled && isDragging) updateFromPoint(event, setColor, color);
+          if (!disabled && isDragging) {
+            lastSaturationRef.current = updateFromPoint(event, setColor, color);
+          }
           onPointerMove?.(event);
         }}
         onPointerUp={(event) => {
@@ -383,13 +391,153 @@ export const ColorPickerPalette = forwardRef<HTMLDivElement, ColorPickerPaletteP
   },
 );
 
+function updateWheelFromPoint(
+  event: PointerEvent<HTMLDivElement>,
+  setColor: (color: ColorModel) => void,
+  color: ColorModel,
+) {
+  const rect = event.currentTarget.getBoundingClientRect();
+  const radius = Math.min(rect.width, rect.height) / 2;
+  const x = event.clientX - rect.left - rect.width / 2;
+  const y = event.clientY - rect.top - rect.height / 2;
+  const distance = Math.hypot(x, y);
+  const hsv = hslToHsv(color);
+  const saturation = clamp((distance / radius) * 100, 0, 100);
+  const hue = distance === 0 ? hsv.hue : (Math.atan2(x, -y) * 180) / Math.PI;
+
+  setColor(hsvToHsl({ ...hsv, hue: (hue + 360) % 360, saturation }, color.alpha));
+}
+
+export type ColorPickerColorWheelProps = Omit<ComponentPropsWithoutRef<"div">, "onChange">;
+export const ColorPickerColorWheel = forwardRef<HTMLDivElement, ColorPickerColorWheelProps>(
+  function ColorPickerColorWheel(
+    {
+      children,
+      className,
+      onKeyDown,
+      onPointerCancel,
+      onPointerDown,
+      onPointerMove,
+      onPointerUp,
+      style,
+      ...props
+    },
+    ref,
+  ) {
+    const { color, disabled, setColor, value } = useColorPicker();
+    const [isDragging, setIsDragging] = useState(false);
+    const hsv = hslToHsv(color);
+    const radians = (hsv.hue * Math.PI) / 180;
+    const wheelStyle = {
+      "--jaci-color-wheel-indicator-x": formatPalettePercentage(
+        50 + Math.sin(radians) * (hsv.saturation / 2),
+      ),
+      "--jaci-color-wheel-indicator-y": formatPalettePercentage(
+        50 - Math.cos(radians) * (hsv.saturation / 2),
+      ),
+      ...style,
+    } as CSSProperties;
+
+    const releasePointer = (event: PointerEvent<HTMLDivElement>) => {
+      if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+      setIsDragging(false);
+    };
+
+    return (
+      <div
+        {...props}
+        ref={ref}
+        aria-disabled={disabled || undefined}
+        aria-label={props["aria-label"] ?? "Color hue and saturation"}
+        aria-valuemax={100}
+        aria-valuemin={0}
+        aria-valuenow={Math.round(hsv.saturation)}
+        aria-valuetext={`${Math.round(hsv.hue)}° hue, ${Math.round(hsv.saturation)}% saturation, ${Math.round(hsv.value)}% intensity. ${value}`}
+        className={cx(colorPicker().colorWheel, className)}
+        data-disabled={disabled || undefined}
+        data-dragging={isDragging || undefined}
+        data-slot="color-picker-color-wheel"
+        onKeyDown={(event) => {
+          const step = event.shiftKey ? 10 : 1;
+          if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
+            event.preventDefault();
+            const hue =
+              event.key === "ArrowLeft"
+                ? hsv.hue - step
+                : event.key === "ArrowRight"
+                  ? hsv.hue + step
+                  : hsv.hue;
+            const saturation =
+              event.key === "ArrowDown"
+                ? hsv.saturation - step
+                : event.key === "ArrowUp"
+                  ? hsv.saturation + step
+                  : hsv.saturation;
+            setColor(
+              hsvToHsl(
+                { ...hsv, hue: (hue + 360) % 360, saturation: clamp(saturation, 0, 100) },
+                color.alpha,
+              ),
+            );
+          }
+          onKeyDown?.(event);
+        }}
+        onPointerDown={(event) => {
+          if (!disabled) {
+            event.preventDefault();
+            event.currentTarget.focus({ preventScroll: true });
+            updateWheelFromPoint(event, setColor, color);
+            setIsDragging(true);
+            try {
+              event.currentTarget.setPointerCapture(event.pointerId);
+            } catch {
+              // Pointer capture is not available in every test environment.
+            }
+          }
+          onPointerDown?.(event);
+        }}
+        onPointerMove={(event) => {
+          if (!disabled && isDragging) updateWheelFromPoint(event, setColor, color);
+          onPointerMove?.(event);
+        }}
+        onPointerUp={(event) => {
+          releasePointer(event);
+          onPointerUp?.(event);
+        }}
+        onPointerCancel={(event) => {
+          releasePointer(event);
+          onPointerCancel?.(event);
+        }}
+        role="slider"
+        style={wheelStyle}
+        tabIndex={props.tabIndex ?? (disabled ? -1 : 0)}
+      >
+        <span
+          aria-hidden="true"
+          className={colorPicker().colorWheelIndicator}
+          data-slot="color-picker-color-wheel-indicator"
+        />
+        {children}
+      </div>
+    );
+  },
+);
+
 export type ColorPickerHueProps = Omit<
   ComponentPropsWithoutRef<"input">,
   "max" | "min" | "onChange" | "step" | "type" | "value"
 >;
 export const ColorPickerHue = forwardRef<HTMLInputElement, ColorPickerHueProps>(
-  function ColorPickerHue({ className, onInput, ...props }, ref) {
+  function ColorPickerHue({ className, onInput, style, ...props }, ref) {
     const { color, setColor } = useColorPicker();
+    const [position, setPosition] = useState(color.hue);
+
+    useEffect(() => {
+      if (color.hue !== 0 || position !== 360) setPosition(color.hue);
+    }, [color.hue, position]);
+
     return (
       <input
         {...props}
@@ -400,12 +548,59 @@ export const ColorPickerHue = forwardRef<HTMLInputElement, ColorPickerHueProps>(
         max={360}
         min={0}
         onInput={(event) => {
-          setColor({ ...color, hue: Number(event.currentTarget.value) });
+          const nextPosition = Number(event.currentTarget.value);
+          setPosition(nextPosition);
+          setColor({ ...color, hue: nextPosition === 360 ? 0 : nextPosition });
           onInput?.(event);
         }}
         step={1}
+        style={
+          {
+            "--jaci-color-picker-thumb-color": `hsl(${position} 100% 50%)`,
+            ...style,
+          } as CSSProperties
+        }
         type="range"
-        value={color.hue}
+        value={position}
+      />
+    );
+  },
+);
+
+export type ColorPickerIntensityProps = Omit<
+  ComponentPropsWithoutRef<"input">,
+  "max" | "min" | "onChange" | "step" | "type" | "value"
+>;
+export const ColorPickerIntensity = forwardRef<HTMLInputElement, ColorPickerIntensityProps>(
+  function ColorPickerIntensity({ className, onInput, style, ...props }, ref) {
+    const { color, setColor } = useColorPicker();
+    const hsv = hslToHsv(color);
+    const thumbColor = formatColor({ ...color, alpha: 1 }, "rgb");
+    const maximumIntensityColor = formatColor(hsvToHsl({ ...hsv, value: 100 }), "rgb");
+
+    return (
+      <input
+        {...props}
+        ref={ref}
+        aria-label={props["aria-label"] ?? "Color intensity"}
+        className={cx(colorPicker().intensity, className)}
+        data-slot="color-picker-intensity"
+        max={100}
+        min={0}
+        onInput={(event) => {
+          setColor(hsvToHsl({ ...hsv, value: Number(event.currentTarget.value) }, color.alpha));
+          onInput?.(event);
+        }}
+        step={1}
+        style={
+          {
+            "--jaci-color-picker-intensity-color": maximumIntensityColor,
+            "--jaci-color-picker-thumb-color": thumbColor,
+            ...style,
+          } as CSSProperties
+        }
+        type="range"
+        value={Math.round(hsv.value)}
       />
     );
   },
@@ -433,10 +628,13 @@ export const ColorPickerAlpha = forwardRef<HTMLInputElement, ColorPickerAlphaPro
           onInput?.(event);
         }}
         step={0.01}
-        style={{
-          ...style,
-          background: `linear-gradient(to right, transparent, ${formatColor({ ...color, alpha: 1 }, "rgb")})`,
-        }}
+        style={
+          {
+            "--jaci-color-picker-alpha-color": formatColor({ ...color, alpha: 1 }, "rgb"),
+            "--jaci-color-picker-thumb-color": formatColor({ ...color, alpha: 1 }, "rgb"),
+            ...style,
+          } as CSSProperties
+        }
         type="range"
         value={color.alpha}
       />
@@ -492,16 +690,42 @@ export const ColorPickerSwatch = forwardRef<HTMLButtonElement, ColorPickerSwatch
   },
 );
 
-export type ColorPickerInputProps = Omit<
-  ComponentPropsWithoutRef<"input">,
-  "onChange" | "type" | "value"
->;
+export interface ColorPickerInputProps
+  extends Omit<ComponentPropsWithoutRef<"input">, "onChange" | "onCopy" | "type" | "value"> {
+  copiedDuration?: number;
+  copiedLabel?: string;
+  copyable?: boolean;
+  copyLabel?: string;
+  onCopy?: (value: string) => void;
+  onCopyError?: (error: unknown) => void;
+}
 export const ColorPickerInput = forwardRef<HTMLInputElement, ColorPickerInputProps>(
-  function ColorPickerInput({ className, onBlur, onKeyDown, ...props }, ref) {
-    const { format, setColor, showAlpha, value } = useColorPicker();
+  function ColorPickerInput(
+    {
+      className,
+      copiedDuration = 1500,
+      copiedLabel = "Copied",
+      copyable = true,
+      copyLabel = "Copy",
+      onBlur,
+      onCopy,
+      onCopyError,
+      onKeyDown,
+      ...props
+    },
+    ref,
+  ) {
+    const { disabled, format, setColor, showAlpha, value } = useColorPicker();
     const [draft, setDraft] = useState(value);
+    const [copied, setCopied] = useState(false);
     const [invalid, setInvalid] = useState(false);
+    const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
     useEffect(() => setDraft(value), [value]);
+    useEffect(() => {
+      return () => {
+        if (copyTimeoutRef.current !== undefined) clearTimeout(copyTimeoutRef.current);
+      };
+    }, []);
     const commit = () => {
       const parsed = parseColor(draft);
       if (!parsed) {
@@ -513,32 +737,64 @@ export const ColorPickerInput = forwardRef<HTMLInputElement, ColorPickerInputPro
       setColor(parsed);
       setDraft(formatColor(parsed, format, showAlpha));
     };
+    const handleCopy = async () => {
+      try {
+        await copyToClipboard(value);
+        setCopied(true);
+        onCopy?.(value);
+        if (copyTimeoutRef.current !== undefined) clearTimeout(copyTimeoutRef.current);
+        copyTimeoutRef.current = setTimeout(() => setCopied(false), copiedDuration);
+      } catch (error) {
+        setCopied(false);
+        onCopyError?.(error);
+      }
+    };
+
     return (
-      <input
-        {...props}
-        ref={ref}
-        aria-label={props["aria-label"] ?? "Color value"}
-        aria-invalid={invalid || undefined}
-        className={cx(colorPicker().input, className)}
-        data-slot="color-picker-input"
-        onBlur={(event) => {
-          commit();
-          onBlur?.(event);
-        }}
-        onChange={(event) => {
-          setDraft(event.currentTarget.value);
-          setInvalid(false);
-        }}
-        onKeyDown={(event) => {
-          if (event.key === "Enter") {
-            event.preventDefault();
+      <div className={colorPicker().inputControl} data-slot="color-picker-input-control">
+        <input
+          {...props}
+          ref={ref}
+          aria-label={props["aria-label"] ?? "Color value"}
+          aria-invalid={invalid || undefined}
+          className={cx(colorPicker().input, className)}
+          data-slot="color-picker-input"
+          disabled={props.disabled ?? disabled}
+          onBlur={(event) => {
             commit();
-          }
-          onKeyDown?.(event);
-        }}
-        type="text"
-        value={draft}
-      />
+            onBlur?.(event);
+          }}
+          onChange={(event) => {
+            setDraft(event.currentTarget.value);
+            setInvalid(false);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              commit();
+            }
+            onKeyDown?.(event);
+          }}
+          type="text"
+          value={draft}
+        />
+        {copyable ? (
+          <button
+            aria-label={`${copyLabel} color value`}
+            className={colorPicker().inputCopy}
+            data-copied={copied || undefined}
+            data-slot="color-picker-input-copy"
+            disabled={props.disabled ?? disabled}
+            onClick={() => void handleCopy()}
+            type="button"
+          >
+            {copied ? copiedLabel : copyLabel}
+            <span aria-live="polite" className={colorPicker().inputCopyStatus}>
+              {copied ? copiedLabel : ""}
+            </span>
+          </button>
+        ) : null}
+      </div>
     );
   },
 );
@@ -581,7 +837,9 @@ export const ColorPicker = {
   Positioner: ColorPickerPositioner,
   Popup: ColorPickerPopup,
   Palette: ColorPickerPalette,
+  ColorWheel: ColorPickerColorWheel,
   Hue: ColorPickerHue,
+  Intensity: ColorPickerIntensity,
   Alpha: ColorPickerAlpha,
   Swatches: ColorPickerSwatches,
   Swatch: ColorPickerSwatch,

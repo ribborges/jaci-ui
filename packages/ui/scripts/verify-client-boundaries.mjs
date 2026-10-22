@@ -26,6 +26,7 @@ const expectedClientModules = [
   "components/color-picker/color-picker.js",
   "components/checkbox-group/checkbox-group.js",
   "components/copyable/copyable.js",
+  "components/copyable/copy-to-clipboard.js",
   "components/command/command.js",
   "components/data-toolbar/data-toolbar.js",
   "components/menubar/menubar.js",
